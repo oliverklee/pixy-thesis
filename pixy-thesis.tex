@@ -1,16 +1,48 @@
 \documentclass[a4paper,twoside,titlepage]{scrbook}
 \usepackage[utf8]{inputenc}
-\usepackage{ae,hyperref,url,amssymb,color}
 \usepackage[american,ngerman]{babel}
 \usepackage[pdftex]{graphicx}
+\usepackage{ae,amssymb,color,hyperref,makeidx,url}
 
 \newcommand{\fett}[1]{\textsf{\textbf{#1}}}
 \raggedbottom
 
 \selectlanguage{american}
 
+\makeindex
+
 \begin{document}
 
 \input{titlepage}
+
+\tableofcontents
+
+\input{introduction}
+
+\input{php}
+
+\input{vulnerabilities}
+
+\input{static_analysis}
+
+\input{scanners_review}
+
+\input{pixy}
+
+\input{php_54}
+
+\input{alias_analysis}
+
+\input{implementation}
+
+\input{evaluation}
+
+\input{discussion}
+
+\label{sec:literatur}
+\bibliographystyle{alpha}
+\bibliography{literature}
+
+\printindex
 
 \end{document}
