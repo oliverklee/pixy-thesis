@@ -1,48 +1,93 @@
-\documentclass[a4paper,twoside,titlepage]{scrbook}
-\usepackage[utf8]{inputenc}
-\usepackage[american,ngerman]{babel}
-\usepackage[pdftex]{graphicx}
-\usepackage{ae,amssymb,color,hyperref,makeidx,minted,url}
+\documentclass[11pt, a4paper, titlepage]{scrbook}
 
-\newcommand{\fett}[1]{\textsf{\textbf{#1}}}
-\raggedbottom
+% Packages and own commands
+\include{util/i10preamble}
+\include{util/mymacros}
 
-\selectlanguage{american}
+%% Informationen for the PDF file
+\hypersetup{
+ pdfauthor={Oliver Klee, pixy@oliverklee.de},
+ pdftitle={Tainted object propagation analysis for PHP 5 based on Pixy},
+ pdfsubject={Tainted object propagation analysis for PHP 5 based on Pixy},
+ pdfkeywords={PHP, security, static code analysis, web security, code scanning, alias analysis}
+}
 
-\makeindex
+
 
 \begin{document}
 
+\selectlanguage{american}
+% allow more flexible whitespaces to avoid hyphenation and overfull hboxes
+\sloppy
+\raggedbottom
+
+%--------------------------------------------------------------
+\frontmatter
+
 \input{parts/titlepage}
 
+\thispagestyle{empty}
+\emptydoublepage
+
 \tableofcontents
+\emptydoublepage
+
+%--------------------------------------------------------------
+\mainmatter
 
 \input{parts/introduction}
+\emptydoublepage
 
 \input{parts/php}
+\emptydoublepage
 
 \input{parts/vulnerabilities}
+\emptydoublepage
 
 \input{parts/static_analysis}
+\emptydoublepage
 
 \input{parts/scanners_review}
+\emptydoublepage
 
 \input{parts/pixy}
+\emptydoublepage
 
 \input{parts/php_54}
+\emptydoublepage
 
 \input{parts/alias_analysis}
+\emptydoublepage
 
 \input{parts/implementation}
+\emptydoublepage
 
 \input{parts/evaluation}
+\emptydoublepage
 
 \input{parts/discussion}
+\emptydoublepage
 
+%--------------------------------------------------------------
+\backmatter
+
+% bibliography
+\clearpage
 \label{sec:literatur}
-\bibliographystyle{alpha}
-\bibliography{literature}
+\nocite*{}
+\bibliography{pixy-thesis}
+\emptydoublepage
 
+\listoffigures
+\emptydoublepage
+%
+\listoftables
+\emptydoublepage
+
+% index
+\markboth{Index}{Index}
+\thispagestyle{plain}
 \printindex
 
+%--------------------------------------------------------------
 \end{document}
