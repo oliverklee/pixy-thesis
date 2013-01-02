@@ -1,3 +1,61 @@
 \chapter{PHP}
 
+\label{php}
+
+PHP~\cite{php-in-action} is a server-side web scripting language. In its current version, it is object-oriented and dynamically typed. However, it provides some minimal type safety using type hinting, i.e., function parameters can be typed using class names or ``array'',  and \texttt{@var} annotations (which are not evaluated on execution). PHP provides lots of powerful built-in functions for cryptography, string handling, ZIP handling, networking, XML, and more.
+
 \section{Challenges in static analysis for PHP}
+
+In PHP, it is possible to use variables for variable names (which is called ``variable variables''), field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
+
+For example, the following constructs are possible, making static analysis a lot harder than e.g. for Java:
+
+\begin{phpcode}
+// bar contains the name of the class to instantiate.
+$foo = new $bar();
+
+// foo contains the name of the variable that gets assigned a 1.
+$$foo = 1;
+
+// classFile includes the path of the class file to include.
+require_once($classFile);
+
+// To correctly resolve this include, a scanner would need to parse how
+// t3lib_extMgm::extPath creates paths.
+require_once(t3lib_extMgm::extPath('seminars') .
+  'pi2/class.tx_seminars_pi2.php');
+\end{phpcode}
+
+\newpage
+
+\begin{phpcode}
+// Depending on the value of classFlavor, different version of the same
+// class will be used. This results in runtime class resolution.
+switch ($classFlavor) {
+  case FLAVOR_ORANGE:
+    require_once('Orange.php');
+    break;
+  case FLAVOR_VANILLA:
+    require_once('Vanilla.php');
+    break;
+  default;
+    require_once('Default.php');
+    break;
+}
+$bar = new MyClass();
+
+// The class file for this class has not been included and will be
+// implictly loaded on-demand by the autoloader.
+$container = new SmartContainer();
+\end{phpcode}
+
+In addition, type-hinted parameters can be overwritten within a function:
+
+\begin{phpcode}
+protected function foo(array $bar) {
+  if (empty($bar)) {
+    // bar changes its type from an array to an integer.
+    $bar = 42;
+  }
+}
+\end{phpcode}

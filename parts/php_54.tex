@@ -1,1 +1,69 @@
 \chapter{PHP 5.4}
+\label{php54}
+
+Pixy in its current version is only able to deal with PHP 4 code. However, in the meantime PHP has progressed to version 5.4. This version has brought some major changes over 4.x that affects static code analysis:
+
+\myTable{
+\begin{tabular}{|l|l|}
+  \hline
+  \bb{New language feature} & \bb{Effect on static code analysis} \\
+  \hline
+  new keywords & language definition for the lexer/parser\\
+  \hline
+  constants & the ``place'' abstraction for variables\\
+    & (three-address code \emph{P-TAC})\\
+  \hline
+  default pass-by-reference & alias analysis\\
+  \hline
+  type hinting & lexer/parser, type inference\\
+  \hline
+  visibility keywords & lexer/parser,\\
+    \emph{private, protected, public} & control-flow analysis, data-flow analysis\\
+  \hline
+  autoloader & loading of class files\\
+  \hline
+  namespaces & lexer/parser, loading of class files\\
+  \hline
+  late static binding & lexer/parser, control-flow graph\\
+  \hline
+  anonymous functions (from PHP 5.4)& lexer/parser, control-flow analysis\\
+  \hline
+\end{tabular}
+}{Major changes in PHP 5.4 over 4.x}{php54table}
+
+Note: The new visibility keywords affect both the control-flow analysis as well as the data-flow analysis as they influence which methods can be reached from a class at all and which fields are visible.
+
+The following example demonstrates this issue:
+
+\begin{phpcode}
+class A {
+  /**
+   * @var string
+   */
+  public $publicField = 'public ... ';
+  /**
+   * @var string
+   */
+  protected $protectedField = 'protected ... ';
+  /**
+   * @var string
+   */
+  private $privateField = 'private ...';
+}
+
+class B extends A {
+  /**
+   * @return string
+   */
+  public function getFields() {
+    return $this->publicField . $this->protectedField .
+      $this->privateField;
+  }
+}
+
+$b = new B();
+echo $b->getFields;
+\end{phpcode}
+
+
+This example will echo \texttt{public ... protected ... } as \texttt{\$this->privateField} accesses an (undeclared) field \texttt{B::privateField} (which will have a default value of \texttt{NULL}, which will be automatically cast to an empty string) instead of the existing, but inaccessible \texttt{A::privateField}.
