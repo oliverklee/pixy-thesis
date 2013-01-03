@@ -250,6 +250,9 @@
 % Provide syntax highlighting for code
 \usepackage[chapter]{minted}
 \newminted{php}{bgcolor=lightgrey,startinline=true,linenos=true}
+\newminted{html}{bgcolor=lightgrey,startinline=true,linenos=true}
+\newminted{sql}{bgcolor=lightgrey,linenos=false}
+\newminted{text}{bgcolor=lightgrey,linenos=false}
 
 % includes ListOfFigures etc. in TOC
 \usepackage[nottoc]{tocbibind}
@@ -340,7 +343,7 @@
 
 %Maximale Gliederungstiefe, die noch ins Inhaltsverzeichnis aufgenommen wird
 %maximum depth for the table of contents
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{1}
 
 %Vorschlag für ein schönes Farbschema
 %Set of colors which look nice together
