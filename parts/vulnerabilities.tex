@@ -8,7 +8,7 @@ This list of vulnerabilities is by no means complete, but should cover the most 
 \emph{Note: The URLs of all examples in this section are not URL-encoded to make them easier to read. In real life, the URL would be URL-encoded, e.g., spaces would be encoded as \texttt{\%20}.}
 
 \section{The ``Common Weakness Enumeration'' List}
-
+\index{Common Weakness Enumeration}\index{CWE|see{Common Weakness Enumeration}}
 The \emph{Common Weakness Enumeration (CWE)}~\cite{cwe} is a widely-used formal list of software vulnerabilities that strives to serve as a common language for the vulnerabilities. This list includes extensive information on the vulnerability, including examples of vulnerable code, tips for mitigation, and information on whether this types of vulnerability can be found using dynamic or static program analysis. Organizations like Apple, Coverity or IBM make use of this list and provide tools that are compatible with it~\cite{cwe-organizations}.
 
 The CWE issues a yearly list of the ``Top 25 Most Dangerous Software Errors''~\cite{cwe-top-25} which includes many of the issues listed here. This list includes the ``top issues'' both concerning how critical they are as well as how widespread they are, based on a survey of a selected number of organizations. Still, it does not cover all types of vulnerabilities listed in this section because this section focuses on web applications written in PHP, and the top 25 list is intended to cover web applications in all languages.
@@ -16,6 +16,7 @@ The CWE issues a yearly list of the ``Top 25 Most Dangerous Software Errors''~\c
 All in all, the CWE contains 909 entries and should cover most types of vulnerabilities.~\cite{cwe-all}
 
 \section{Tainted object propagation vulnerabilities}
+\index{Tainted object propagation vulnerabilities}
 Tainted object propagation vulnerabilities~\cite{finding-security-vulnerabilities} refers to a class of problems where untrusted data is used without sanitizing it properly for the context where it is used. There are already some (documented) approaches to generally finding these problems in web applications. Pixy as a scanner for tainted object propagation vulnerabilities currently can find SQL injection and reflective cross-site scripting.
 
 \myTable{
@@ -45,7 +46,7 @@ spam via e-mail forms &  & & \\
 }{Selected tainted object propagation vulnerabilities}{tainted-vulnerabilities}
 
 \subsection{SQL injection}
-\label{sql-injection}
+\label{sql-injection}\index{SQL injection}
 An SQL injection vulnerability exists if a string from an external source is directly used in an SQL query. This is an example of vulnerable code:
 
 \begin{phpcode}
@@ -70,7 +71,7 @@ This effectively deletes all records from the \texttt{posts} table.
 
 
 \subsection{Cross-site scripting (XSS)}
-\label{xss}
+\label{xss}\index{cross-site scripting}\index{XSS|see{cross-site scripting}}
 Cross-site-scripting (XSS) means that a string (or generally some data) from an external source is used in the website output, allowing to inject HTML, JavaScript or (seldom) XML. This provides an attacker with leverage for attacks like sending the current cookies to a malicious site. The cookie then can be used for session hijacking.
 
 There are two variants of XSS: \emph{reflective XSS}, where the malicious data is directly transmitted, e.g., via a URL, and is not stored, and \emph{persistent XSS}, where the malicious data gets stored in a database or a file.
@@ -79,6 +80,7 @@ In April 2010, the Apache Foundation reported an incident where an XSS vulnerabi
 
 
 \subsection{Reflective XSS}
+\index{reflective cross-site scripting}\index{reflective XSS|see{reflective cross-site scripting}}
 Reflective cross-site scripting is a variant of XSS where  the malicious output comes directly from the input, but is not stored in the database or file system. Thus loading the page from a non-malicious link will not show the malicious code. This is a simple example of vulnerable code:
 
 \begin{phpcode}
@@ -98,15 +100,14 @@ XSS opens the gates to many kinds of attacks. For example, it is possible to rea
 
 
 \subsection{HTTP response splitting}
-\label{http-response-splitting}
-
+\label{http-response-splitting}\index{HTTP response splitting}
 An HTTP response splitting attack is based on code allowing unsanitized CRLF (0x0d0a) character combinations to be included in HTTP headers, thus creating multiple headers.
 
 However, as of PHP versions 4.4.2 and 5.1.2, the \texttt{header()} function only allows one header at a time, thus preventing header injection attacks. \cite{php-header}
 
 
 \subsection{Directory traversal/path traversal}
-\label{directory-traversal}
+\label{directory-traversal}\index{directory traversal}\index{path traversal}
 Directory traversal (also known as \emph{path traversal}) is possible if a vulnerable application includes or outputs file using a path that comes from an untrusted source. If the application does not check that the path is relative and does not contain two dots (\texttt{..}) (directly or URL-encoded), it is possible to read or overwrite files that should not be visible, e.g. \texttt{/etc/passwd/} or the file with the database credential of the application.
 
 This is an example of vulnerable code:
@@ -132,7 +133,7 @@ This would result in \texttt{/etc/passwd} being displayed. (For this attack to w
 
 
 \subsection{OS command injection}
-\label{os-command-injection}
+\label{os-command-injection}\index{OS command injection}
 OS command injection is based on malicious input getting in while executing shell commands. Vulnerable code could look like this:
 
 \begin{phpcode}
@@ -155,8 +156,7 @@ Calling this URL would delete the application's configuration file.
 
 
 \subsection{PHP File Inclusion, Remote code injection, Remote Command Execution}
-\label{remote-command-injection}
-
+\label{remote-command-injection}\index{PHP file inclusion}\index{remote code injection}\index{remote command execution}
 PHP file inclusion (also known as \emph{remote code injection} or \emph{remote command execution}) is a PHP-specific vulnerability occurs when a PHP script includes another script file and take the path of the file to include from an untrusted source. (Depending on the configuration of the system, the path of the file to include may also be a remote URL, thus making this kind of vulnerability possible in the first place.)
 
 This is an example of vulnerable code:
@@ -181,7 +181,7 @@ This URL then will include and execute the PHP contained in the remote file.
 
 
 \subsection{E-mail header injection}
-\label{header-injection}
+\label{header-injection}\index{e-mail header injection}\index{mail header injection|see{e-mail header injection}}
 E-Mail header injection is an attack that makes use of e-mail forms or other mail functionality that uses untrusted data in e-mail header fields (like \texttt{From:}, \texttt{To:}, \texttt{Cc:} or \texttt{Subject:}),
 
 If header-relevant data in contact forms (like the sender's name or the subject) is not sanitized of linefeeds or carriage returns, it is possible to include additional header lines like bcc:, allowing the form to be misused for sending SPAM e-mails.
@@ -245,7 +245,7 @@ Open Redirect & \#22 & CWE-601 & \cite{open-redirect-google}\\
 
 
 \subsection{Information disclosure/information exposure}
-\label{information-disclosure}
+\label{information-disclosure}\index{information disclosure}
 Information disclosure (also known as \emph{information exposure}) happens when an application discloses internal information like database user names or the executed SQL, e.g. in error messages or HTML comments.
 
 This is an example of vulnerable code:
@@ -268,7 +268,7 @@ Apart from the code itself being vulnerable, having PHP configured with \texttt{
 
 
 \subsection{Full path disclosure}
-\label{path-disclosure}
+\label{path-disclosure}\index{full path disclosure}
 \emph{Full path disclosure} vulnerabilities are a subset of the \emph{information disclosure} class of vulnerabilities. It refers to an application disclosing the full path of the application or file, for example in error messages.
 
 This is an example of vulnerable code:
@@ -291,9 +291,8 @@ public function readFile($path) {
 If the attacker find a case where a file cannot be read, this would expose the path to the file (and thus to the general location of the application's files).  This would provide the attacker with data helpful for a path traversal attack (page~\pageref{directory-traversal}).
 
 
-
 \subsection{Cross-site request forgery (CSRF/XSRF)}
-\label{xscr,csrf}
+\label{xscr,csrf}\index{|see{cross-site request forgery}}\index{CRSF|see{cross-site request forgery}}\index{XSRF|see{cross-site request forgery}}
 Cross-site request forgery (CSRF/XSRF) means that current user session of a web application (e.g., in an open browser tab) is misused to execute certain actions on that site via malicious links, e.g. sending SPAM, changing the user's password or deleting their profile.
 
 A common protection against an CSRF attack is adding requiring a token to be submitted together with the request. This token is unique to the current user session and usually not visible to the user. An attacker that would need to retrieve the current session token, and just submitting a fixed URL with a request would not work anymore. Facebook and TYPO3 use the token technique. \cite{facebook-tokens, typo3-csrf}
@@ -302,7 +301,7 @@ The danger of CSRF is greatly increased if the site is susceptible to XSS becaus
 
 
 \subsection{Persistent XSS}
-\label{persistent-xss}
+\label{persistent-xss}\index{persistent cross-site scripting}\index{persistent XSS|see{persistent cross-site scripting}}
 Persistent cross-site scripting (persistent XSS) is a variant of the XSS vulnerability. It refers to the case when untrusted data is first stored in the file system or database, and some other part of the application then uses the stored data for output, thus inserting the malicious data in the output even if the page is loaded from a clean URL. This is a lot harder to find via tainted object propagation because there is the database between the source and the sink, and the source and the sink come into action in separate executions.
 
 This is an example of vulnerable code:
@@ -347,7 +346,7 @@ This attack is hard to scan for automatically because some redirect may be valid
 Most of the attacks listed here base on a user opening a crafted URL in a browser (either directly in the URL bar or indirectly via a document that loads or includes another URL), containing malicious content. There are several techniques used to obfuscate the malicious nature of a URL:
 
 \subsection{Image tags}
-
+\index{image tags}
 An image tag that loads some URL could look like this:
 
 \begin{htmlcode}
@@ -359,6 +358,7 @@ For this attack vector to work, the loaded script does not necessarily need to r
 
 
 \subsection{Iframes}
+\index{iframes}
 An iframe tag that loads some URL as HTML could look like this:
 
 \begin{htmlcode}
@@ -368,7 +368,7 @@ An iframe tag that loads some URL as HTML could look like this:
 \end{htmlcode}
 
 \subsection{URL shortening services}
-
+\index{URL shortening services}\index{bit.ly|see{URL shortening services}}\index{tinyurl|see{URL shortening services}}\index{goo.gl|see{URL shortening services}}
 URL shortening service like bit.ly, tinyurl or goog.gl are particular commonly used in Twitter messages. Those services redirect to a longer URL that is stored for the short link. Shortened URLs for \url{http://www.google.de/} would look like this:
 
 \begin{textcode}
@@ -380,7 +380,7 @@ URL shortening service like bit.ly, tinyurl or goog.gl are particular commonly u
 Without browser add-ons, it is not possible to see where a shortened (and thus also obfuscated) URL might lead.
 
 \subsection{Encoded URL parameters}
-
+\index{encoded URL parameters}\index{URL encoding|see{encoded URL parameters}}
 URL parameters may be encoded in several ways to make suspiciously-looking parts look less suspicious. In the following example, \texttt{<script} is included in the URL in an encoded way.
 
 \begin{textcode}

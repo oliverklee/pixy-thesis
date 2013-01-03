@@ -1,5 +1,5 @@
 \chapter{PHP 5.4}
-\label{php54}
+\label{php54}\index{PHP version 5.4}
 
 Pixy in its current version is only able to deal with PHP 4 code. However, in the meantime PHP has progressed to version 5.4. This version has brought some major changes over 4.x that affects static code analysis:
 
@@ -64,6 +64,5 @@ class B extends A {
 $b = new B();
 echo $b->getFields;
 \end{phpcode}
-
 
 This example will echo \texttt{public ... protected ... } as \texttt{\$this->privateField} accesses an (undeclared) field \texttt{B::privateField} (which will have a default value of \texttt{NULL}, which will be automatically cast to an empty string) instead of the existing, but inaccessible \texttt{A::privateField}.

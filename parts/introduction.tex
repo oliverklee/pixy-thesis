@@ -1,7 +1,7 @@
 \chapter{Introduction}
 
 \section{Motivation: Why a current static PHP security scanners is important}
-
+\index{PHP}
 Currently, there is no free and high-quality static code analysis tool available (and still maintained) that can find vulnerabilities in PHP 5.4.x code. This is a problem because new vulnerabilities in web applications are found almost daily~\cite{osvdb}, and PHP is used for more than 75 \% of the top-million sites~\cite{w3techs-php-usage}, including Facebook (using the HipHop PHP compiler~\cite{hiphop}, Wikipedia and WordPress.com~\cite{w3techs-php-sites}.
 
 \section{Research problems and approach}
@@ -13,9 +13,9 @@ This thesis builds on the PHP security scanner \bb{Pixy}~(\cite{pixy}, p.~\pager
 This thesis tackles the following research goals:
 
 \begin{itemize}
- \item Create an alias analysis that takes PHP 5's pass-by-reference for objects by default into account.
- \item Enhance the lexer and parser (both part of PhpParser) with most of the new keywords and concepts introduced in PHP 5.0 through 5.4.
- \item Analyze the security ramifications of the new keywords and concepts introduced in PHP 5.0 through 5..
+ \item Create an alias analysis that takes PHP~5's pass-by-reference for objects by default into account.
+ \item Enhance the lexer and parser (both part of PhpParser) with most of the new keywords and concepts introduced in PHP~5.0 through 5.4.
+ \item Analyze the security ramifications of the new keywords and concepts introduced in PHP~5.0 through 5.4.
 \end{itemize}
 
 \subsection{Technical goals}
@@ -23,7 +23,7 @@ This thesis tackles the following research goals:
 In addition to the research goals, there are a few technical goals that needed to be achieved in order to achieve the research goals mentioned above:
 
 \begin{itemize}
- \item Adapt Pixy to work with Java 7 without any warnings. (Pixy was created using at most Java 6, but probably only using Java 1.5.)
+ \item Adapt Pixy to work with Java 7 without any warnings. (Pixy was created using at most Java 6, but probably only using Java 1.5.)\index{Java}
  \item Get Pixy to parse PHP 5 code in the first place. (Pixy currently could handle PHP code only up to PHP version 4.2.)
  \item Enhance Pixy to also load PHP class files that are not directly included, but are supposed to be loaded via a PHP autoloader.
 \end{itemize}
