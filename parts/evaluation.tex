@@ -1,1 +1,24 @@
 \chapter{Experimental evaluation of the modified version of Pixy}
+
+\section{Code quality}
+\label{code-quality}
+\index{code quality}
+One of the aims of the thesis is to make Pixy a tool that is and will be useful for other developers, both for using it and for contributing to the project. This includes that the Pixy's code is well-tested, well-readable and of general high quality. For measuring improvements in code quality, the author has decided to use three numbers that are relatively easy to measure:
+
+\begin{itemize}
+  \item the number of warnings and errors issued by javac 1.7 when run with the \texttt{-Xlint} option
+  \item the number of warnings and errors issued by the PMD\footnote{``Project Mess Detector'', but there exists several explanations of what this acronym means~\cite{pmd-meaning}}~\cite{pmd} source code analyzer for Java
+    \index{PMD}
+    \index{Project Mess Detector \see{PMD}}
+  \item the number of JUnit unit tests and the number of failures and errors
+  \index{unit test}
+  \index{JUnit \see{unit tests}}
+\end{itemize}
+
+The aim of this thesis is to get the javac lint and PMD warnings as close to zero as possible and to get all unit tests to pass. In addition, all changes and new features should be covered with unit tests.
+
+This only applies to the Pixy project as most of the code of the related PhpParser is generated, i.e., the author does not have much direct influence on the quality of that code.
+
+\subsection{Java lint warnings}
+
+Before the author made any changes, javac lint issued 688 warnings for Pixy (many of which may be due to Pixy originally being developed for Java 1.5).
