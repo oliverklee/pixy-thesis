@@ -7,7 +7,7 @@ One of the aims of the thesis is to make Pixy a tool that is and will be useful 
 
 \begin{itemize}
   \item the number of warnings and errors issued by javac 1.7 when run with the \texttt{-Xlint} option
-  \item the number of warnings and errors issued by the PMD\footnote{``Project Mess Detector'', but there exists several explanations of what this acronym means~\cite{pmd-meaning}}~\cite{pmd} source code analyzer for Java
+  \item the number of warnings and errors issued by the PMD\footnote{``Project Mess Detector'', but there exists several explanations of what this acronym means~\cite{pmd-meaning}.}~\cite{pmd} source code analyzer for Java
     \index{PMD}
     \index{Project Mess Detector \see{PMD}}
   \item the number of JUnit unit tests and the number of failures and errors
@@ -21,4 +21,86 @@ This only applies to the Pixy project as most of the code of the related PhpPars
 
 \subsection{Java lint warnings}
 
-Before the author made any changes, javac lint issued 688 warnings for Pixy (many of which may be due to Pixy originally being developed for Java 1.5).
+Before the author made any changes, javac lint (version 1.7.0\_13) issued 688 warnings for Pixy (many of which may be due to Pixy originally being developed for Java 1.5).
+
+\subsection{PMD}
+
+The author chose a subset of the available Java-related PMD rule sets that fit to the scope of the Pixy project (e.\,g., a rule set for Android does not make sense for this non-Android project). Other rule sets were skipped as they provided too many false positives for this project.
+
+The PMD version used for these tests was version 5.0.2 (the current version at the time of writing). To avoid changed numbers to do different behavior of subsequent versions, the PMD version was kept at 5.0.2 even if updates were available later.
+
+A description of the rules included in the rule sets is provided in the PMD documentation~\cite{pmd-rulesets}.
+
+This is a comparison of the number of PMD violations in the Pixy project before the author made any changes and after cleanup was finished:
+
+\myTable{
+\begin{tabular}{|l|l|r|r|}
+\hline
+ \bb{Rule set name} & \bb{rule set key} & \bb{before cleanup} & \bb{after cleanup} \\
+\hline
+ Basic & \texttt{java-basic} & 143 & \\
+\hline
+ Braces & \texttt{java-braces} & 358 & \\
+\hline
+ Clone Implementation & \texttt{java-clone} & 5 & \\
+\hline
+ Code Size & \texttt{java-codesize} & 262 & \\
+\hline
+ Coupling & \texttt{java-coupling} & 4809 & \\
+\hline
+ Design & \texttt{java-design} & 739 & \\
+\hline
+ Empty Code & \texttt{java-empty} & 41 & \\
+\hline
+ Finalizer & \texttt{java-finalizers} & 0 & \\
+\hline
+ Import Statements & \texttt{java-imports} & 23 & \\
+\hline
+ JUnit & \texttt{java-junit} & 274 & \\
+\hline
+ Migrations & \texttt{java-migrating} & 394 & \\
+\hline
+ Naming & \texttt{java-naming} & 1245 & \\
+\hline
+ Strict Exceptions & \texttt{java-strictexception} & 328 & \\
+\hline
+ String and StringBuffer & \texttt{java-strings} & 180 & \\
+\hline
+ Security Code Guidelines & \texttt{java-sunsecure} & 2 & \\
+\hline
+ Type Resolutions & \texttt{java-typeresolution} & 160 & \\
+\hline
+ Unnecessary & \texttt{java-unnecessary} & 75 & \\
+\hline
+ Unused Code & \texttt{java-unusedcode} & 24 & \\
+\hline
+ \bb{Total} &  & \bb{9086} & \bb{} \\
+\hline
+\end{tabular}
+}{Number of PMD violations in the Pixy project before and after cleanup}{pmd-violations}
+
+\myTable{
+\begin{tabular}{|p{3.1cm}|p{3.1cm}|r|p{4.7cm}|}
+\hline
+ \bb{Rule set name} & \bb{rule set key} & \bb{violations } & \bb{reason for skipping} \\
+\hline
+ Android & \texttt{java-android} & 0 & n/a \\
+\hline
+ Comments & \texttt{java-comments} & 1829 & The ``line too long'' rule is too restrictive. \\
+\hline
+ Controversial & \texttt{java-controversial} & 2610 & The name says it all. :-)  \\
+\hline
+ J2EE & \texttt{java-j2ee} & 5 & n/a \\
+\hline
+ Java Beans & \texttt{java-javabeans} & 558 & n/a \\
+\hline
+ Jakarta Commons Logging & \texttt{java-logging-jakarta-commons} & 0 & n/a \\
+\hline
+ Java Logging & \texttt{java-logging-java} & 505 & \texttt{System.out.print} actually is okay for this application.\\
+\hline
+ Optimization & \texttt{java-optimizations} & 7880 & Too many low-priority ``\ldots could be declared final'' messages.\\
+\hline
+\end{tabular}
+}{PMD rule sets that have been skipped}{pmd-skipped}
+
+\paragraph{Note:} As PMD does not provide a count of violations when using the \texttt{text} output format on the command line, the output was piped through \texttt{wc -l} to count the number of violations.
