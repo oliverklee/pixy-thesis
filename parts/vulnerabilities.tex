@@ -292,7 +292,7 @@ If the attacker find a case where a file cannot be read, this would expose the p
 
 
 \subsection{Cross-site request forgery (CSRF/XSRF)}
-\label{xscr,csrf}\index{|see{cross-site request forgery}}\index{CSRF|see{cross-site request forgery}}\index{XSRF|see{cross-site request forgery}}
+\label{xscr,csrf}\index{cross-site request forgery}\index{CSRF|see{cross-site request forgery}}\index{XSRF|see{cross-site request forgery}}
 Cross-site request forgery (CSRF/XSRF) means that current user session of a web application (e.g., in an open browser tab) is misused to execute certain actions on that site via malicious links, e.g. sending SPAM, changing the user's password or deleting their profile.
 
 A common protection against an CSRF attack is adding requiring a token to be submitted together with the request. This token is unique to the current user session and usually not visible to the user. An attacker that would need to retrieve the current session token, and just submitting a fixed URL with a request would not work anymore. Facebook and TYPO3 use the token technique. \cite{facebook-tokens, typo3-csrf}
