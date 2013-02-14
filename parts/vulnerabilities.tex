@@ -103,7 +103,7 @@ XSS opens the gates to many kinds of attacks. For example, it is possible to rea
 \label{http-response-splitting}\index{HTTP response splitting}
 An HTTP response splitting attack is based on code allowing unsanitized CRLF (0x0d0a) character combinations to be included in HTTP headers, thus creating multiple headers.
 
-However, as of PHP versions 4.4.2 and 5.1.2, the \texttt{header()} function only allows one header at a time, thus preventing header injection attacks. \cite{php-header}
+However, as of PHP versions 4.4.2 and 5.1.2, the \texttt{header()} function only allows one header at a time, thus preventing header injection attacks. \cite{php-manual-header}
 
 
 \subsection{Directory traversal/path traversal}
