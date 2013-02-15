@@ -41,7 +41,7 @@ switch ($classFlavor) {
     break;
 }
 $bar = new MyClass();
-\end{phpcode}
+\end{phpcode}.
 
 \index{autoloading}\index{autoloader|see{autoloading}}
 \begin{phpcode}
@@ -60,3 +60,91 @@ protected function foo(array $bar) {
   }
 }
 \end{phpcode}
+
+\section{Variables, references and aliases}
+
+To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. This section covers this, including the implementation details of variables in PHP and the various types of references that are possible in PHP.
+
+
+\subsection{Variables}
+
+Variables in PHP are assigned by value by default~\cite{php-manual-variables} and internally stored in a structure called \emph{ZVAL}.\index{ZVAL}\index{PHP variables}\index{variables} In one of the C header files~\cite{php-src-api-headers} in the PHP source code, the structure looks like this:
+
+\begin{ccode}
+struct _zval_struct {
+  /* Variable information */
+  zvalue_value value;       /* value */
+  zend_uint refcount__gc;
+  zend_uchar type;          /* active type */
+  zend_uchar is_ref__gc;
+};
+
+typedef union _zvalue_value {
+  long lval;     /* long value */
+  double dval;   /* double value */
+  struct {
+    char *val;
+    int len;
+  } str;
+  HashTable *ht;  /* hash table value */
+  zend_object_value obj;
+} zvalue_value;
+\end{ccode}
+
+So a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.
+
+Let's assume we have the following code:
+
+\begin{phpcode}
+$x = 42;
+xdebug_debug_zval('x');
+\end{phpcode}
+
+The command \texttt{xdebug\_debug\_zval} from the Xdebug PHP extension~\cite{xdebug-functions} outputs detailed information on the variable:
+
+\begin{textcode}
+x: (refcount=1, is_ref=0)=42
+\end{textcode}
+
+The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}
+
+\begin{phpcode}
+$x = 42;
+$y = $x;
+xdebug_debug_zval('x');
+xdebug_debug_zval('y');
+\end{phpcode}
+
+This code leads to both variables pointing to the same ZVAL:
+
+\begin{textcode}
+x: (refcount=2, is_ref=0)=42
+y: (refcount=2, is_ref=0)=42
+\end{textcode}
+
+When one of the variables is overwritten later, PHP creates a new ZVAL:
+
+\begin{phpcode}
+$x = 3;
+xdebug_debug_zval('x');
+xdebug_debug_zval('y');
+\end{phpcode}
+
+\begin{textcode}
+x: (refcount=1, is_ref=0)=3
+y: (refcount=1, is_ref=0)=42
+\end{textcode}
+
+\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning variables the same value will not lead to both variables sharing one ZVAL. This is different from the way the Java virtual machine handles strings (in order to conserve memory).~\cite[chapter~2]{jvm-spec}
+
+\begin{phpcode}
+$s1 = 'foo';
+$s2 = 'foo';
+xdebug_debug_zval('s1');
+xdebug_debug_zval('s2');
+\end{phpcode}
+
+\begin{textcode}
+s1: (refcount=1, is_ref=0)='foo'
+s2: (refcount=1, is_ref=0)='foo'
+\end{textcode}
