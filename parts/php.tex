@@ -66,7 +66,7 @@ protected function foo(array $bar) {
 To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. This section covers this, including the implementation details of variables in PHP and the various types of references that are possible in PHP.
 
 
-\subsection{Variables}
+\subsection{Variables, ZVALs and reference counting}
 
 Variables in PHP are assigned by value by default~\cite{php-manual-variables} and internally stored in a structure called \emph{ZVAL}.\index{ZVAL}\index{PHP variables}\index{variables} In one of the C header files~\cite{php-src-api-headers} in the PHP source code, the structure looks like this:
 
@@ -91,7 +91,9 @@ typedef union _zvalue_value {
 } zvalue_value;
 \end{ccode}
 
-So a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.
+So a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.\index{reference counting}
+
+\paragraph{Note:} This applies to basic data types like integers, strings or floats. For objects, things are a bit more complicated (see below).
 
 Let's assume we have the following code:
 
@@ -106,7 +108,7 @@ The command \texttt{xdebug\_debug\_zval} from the Xdebug PHP extension~\cite{xde
 x: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}
+The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}
 
 \begin{phpcode}
 $x = 42;
@@ -115,14 +117,25 @@ xdebug_debug_zval('x');
 xdebug_debug_zval('y');
 \end{phpcode}
 
-This code leads to both variables pointing to the same ZVAL:
+This code leads to both variables pointing to the exact same ZVAL, just by different names:
 
 \begin{textcode}
 x: (refcount=2, is_ref=0)=42
 y: (refcount=2, is_ref=0)=42
 \end{textcode}
 
-When one of the variables is overwritten later, PHP creates a new ZVAL:
+When one of the variables is unset, the reference counter is decreased again:
+
+\begin{phpcode}
+unset($y);
+xdebug_debug_zval('x');
+\end{phpcode}
+
+\begin{textcode}
+x: (refcount=1, is_ref=0)=42
+\end{textcode}
+
+When one of the variables is overwritten later, PHP creates a new ZVAL for the new value and decreases the reference count of the first ZVAL:
 
 \begin{phpcode}
 $x = 3;
@@ -135,16 +148,76 @@ x: (refcount=1, is_ref=0)=3
 y: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning variables the same value will not lead to both variables sharing one ZVAL. This is different from the way the Java virtual machine handles strings (in order to conserve memory).~\cite[chapter~2]{jvm-spec}
+\paragraph{Note:} \texttt{xdebug\_debug\_zval} will never display a \texttt{refcount} of zero for a variable because \texttt{xdebug\_debug\_zval} cannot display variables that have been unset (and that, by definition, do not exist at that point anymore).
+
+\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning variables the same value will not lead to both variables sharing one ZVAL. This is different from the way the Java virtual machine handles strings (in order to conserve memory).~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
+
+
+\subsection{References}
+
+References in PHP are two variables pointing to the same ZVAL. The PHP manual takes particular care to make the difference to C pointers clear:~\cite{php-manual-what-references-are}\cite{php-manual-what-references-are-not}\index{references}\index{C/C++ pointers}\index{pointers in C/C++}
+
+\begin{quote}
+References in PHP are a means to access the same variable content by different names. They are not like C pointers; for instance, you cannot perform pointer arithmetic using them, they are not actual memory addresses, and so on.
+\end{quote}
+
+\subsubsection{Assigning by reference}
+
+References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL (instead of one variable pointing to the other), and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in the ZVAL (and thus for both variables).
+
+The corresponding ZVAL is marked with with \texttt{is\_ref=1} (which is a 0/1 boolean flag, not a counter), and the reference count is increased:
 
 \begin{phpcode}
-$s1 = 'foo';
-$s2 = 'foo';
-xdebug_debug_zval('s1');
-xdebug_debug_zval('s2');
+$a1 = 'foo';
+$a2 =& $a1;
+$a1 = 'bar';
+xdebug_debug_zval('a1');
+xdebug_debug_zval('a2');
 \end{phpcode}
 
 \begin{textcode}
-s1: (refcount=1, is_ref=0)='foo'
-s2: (refcount=1, is_ref=0)='foo'
+a1: (refcount=2, is_ref=1)='bar'
+a2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
+
+When a variable that is a reference is unset, PHP cuts the connection between the variable name and the ZVAL and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
+
+There is a difference between cases where there are at least two references to the same ZVAL and cases where there is only one reference left. For at least two references, the ZVAL will still be marked as \texttt{is\_ref=1}:
+
+\begin{phpcode}
+$a1 = 'foo';
+$a2 =& $a1;
+$a3 =& $a1;
+unset($a2);
+xdebug_debug_zval('a1');
+\end{phpcode}
+
+\begin{textcode}
+a1: (refcount=2, is_ref=1)='foo'
+\end{textcode}
+
+If there is only one reference to the ZVAL left, it will be marked as \texttt{is\_ref=0} (even if the variable that is left standing after all its fellows have been unset is not the original first variable):
+
+\begin{phpcode}
+$b1 = 'foo';
+$b2 =& $b1;
+unset($b1);
+xdebug_debug_zval('b2');
+\end{phpcode}
+
+\begin{textcode}
+b2: (refcount=1, is_ref=0)='foo'
+\end{textcode}
+
+
+\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}}, but not to literal values:
+
+\begin{phpcode}
+$answer =& 42;
+\end{phpcode}
+
+\begin{textcode}
+PHP Parse error:  syntax error, unexpected '42' (T_LNUMBER) in
+  /tmp/zval-test.php on line 2
+\end{textcode}
+
