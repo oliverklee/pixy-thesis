@@ -307,9 +307,78 @@ $a = 5;
 changeParameter($a);
 
 xdebug_debug_zval('a');
-
 \end{phpcode}
 
 \begin{textcode}
 a: (refcount=1, is_ref=0)=42
+\end{textcode}
+
+
+\subsection{References and objects}
+
+Starting from PHP~5, objects are always passed kind of by reference:~\cite{php-manual-migration5-oop}
+
+\begin{quote}
+In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).
+\end{quote}
+
+The astute reader might have noticed the wording ``kind of by reference'' above. Actually, objects do not exactly work like references. Instead, variables that are object instances, the ZVAL contains a \emph{handle} (or object \emph{identifier}) for the object, not the object itself. So if variables (inderectly) point to the same object, they variables actually contains \emph{copies} of the indentifier.~\cite{php-manual-oop-references}
+
+As long as the object is merely accessed, object variables work just like references:
+
+\begin{phpcode}
+$instance = new StdClass();
+$instance->field = 'foo';
+
+$instance2 = $instance;
+$instance2->field = 'bar';
+
+xdebug_debug_zval('instance');
+xdebug_debug_zval('instance2');
+\end{phpcode}
+
+\begin{textcode}
+instance: (refcount=2, is_ref=0)=class stdClass
+  { public $field = (refcount=1, is_ref=0)='bar' }
+instance2: (refcount=2, is_ref=0)=class stdClass
+  { public $field = (refcount=1, is_ref=0)='bar' }
+\end{textcode}
+
+(In the output of \texttt{xdebug\_debug\_zval}, it unfortunately is not possible to see that the ZVALs only contain the object identifiers, not the object itself.)
+
+However, if we start to use the object variables like real references and try to overwrite one object by setting the other object, the difference to real references becomes apparent:
+
+\begin{phpcode}
+$someInstance = new StdClass();
+$someInstance->field = 'foo';
+
+$instance2 = $instance;
+$instance2 = 42;
+
+xdebug_debug_zval('instance');
+xdebug_debug_zval('instance2');
+\end{phpcode}
+
+\begin{textcode}
+instance: (refcount=1, is_ref=0)=class stdClass
+  { public $field = (refcount=1, is_ref=0)='bar' }
+instance2: (refcount=1, is_ref=0)=42
+\end{textcode}
+
+However, object variables can also be used as real references (again by using the ampersand \texttt{\&} operator):
+
+\begin{phpcode}
+$someInstance = new StdClass();
+$someInstance->field = 'foo';
+
+$instance2 = $instance;
+$instance2 = 42;
+
+xdebug_debug_zval('instance');
+xdebug_debug_zval('instance2');
+\end{phpcode}
+
+\begin{textcode}
+instance: (refcount=2, is_ref=1)=42
+instance2: (refcount=2, is_ref=1)=42
 \end{textcode}
