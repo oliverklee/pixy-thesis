@@ -124,7 +124,7 @@ x: (refcount=2, is_ref=0)=42
 y: (refcount=2, is_ref=0)=42
 \end{textcode}
 
-When one of the variables is unset, the reference counter is decreased again:
+When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, the reference counter is decreased again:
 
 \begin{phpcode}
 unset($y);
@@ -157,13 +157,18 @@ y: (refcount=1, is_ref=0)=42
 
 References in PHP are two variables pointing to the same ZVAL. The PHP manual takes particular care to make the difference to C pointers clear:~\cite{php-manual-what-references-are}\cite{php-manual-what-references-are-not}\index{references}\index{C/C++ pointers}\index{pointers in C/C++}
 
+There are several ways in which it is possible to create references in PHP: Assigning by reference, passing by reference and returning references.~\cite{php-manual-references}
+
 \begin{quote}
 References in PHP are a means to access the same variable content by different names. They are not like C pointers; for instance, you cannot perform pointer arithmetic using them, they are not actual memory addresses, and so on.
 \end{quote}
 
 \subsubsection{Assigning by reference}
+\index{assigning by reference}
 
-References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL (instead of one variable pointing to the other), and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in the ZVAL (and thus for both variables).
+\paragraph{Creating references:}
+
+References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL (instead of one variable pointing to the other), and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in existing the ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
 
 The corresponding ZVAL is marked with with \texttt{is\_ref=1} (which is a 0/1 boolean flag, not a counter), and the reference count is increased:
 
@@ -180,7 +185,45 @@ a1: (refcount=2, is_ref=1)='bar'
 a2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
 
-When a variable that is a reference is unset, PHP cuts the connection between the variable name and the ZVAL and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
+The same mechanism also applies when the content of a variable is copied to a variable that is a reference. In the following example, the content of \texttt{\$q3} is copied to \texttt{\$q2}, thus also changing the value of \texttt{\$q1} as both \texttt{\$q1} and \texttt{\$q2} are references to the same ZVAL:
+
+\begin{phpcode}
+$q1 = 'foo';
+$q2 =& $q1;
+
+$q3 = 'bar';
+$q2 = $q3;
+xdebug_debug_zval('q1');
+xdebug_debug_zval('q2');
+\end{phpcode}
+
+\begin{textcode}
+a1: (refcount=2, is_ref=1)='bar'
+a2: (refcount=2, is_ref=1)='bar'
+\end{textcode}
+
+
+However, when a variable that is a reference to some variable is changed to be a reference to a different variablem, this changes only the entry in the symbol table, not the ZVAL. In the following exampled, \texttt{\$p2} is a reference to \texttt{\$p1} and then gets changed to be a reference to \texttt{\$p3}. \texttt{\$p1} stays unchanged as the corresponding ZVAL is not modified.
+
+\begin{phpcode}
+$p1 = 'foo';
+$p2 =& $p1;
+
+$p3 = 'bar';
+$p2 =& $p3;
+xdebug_debug_zval('p1');
+xdebug_debug_zval('p2');
+\end{phpcode}
+
+\begin{textcode}
+p1: (refcount=1, is_ref=0)='foo'
+p2: (refcount=2, is_ref=1)='bar'
+\end{textcode}
+
+\paragraph{Dropping references and reference counting:}
+\index{reference counting}
+
+When a variable that is a reference is unset, PHP removes the variable from the symbol table of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
 
 There is a difference between cases where there are at least two references to the same ZVAL and cases where there is only one reference left. For at least two references, the ZVAL will still be marked as \texttt{is\_ref=1}:
 
@@ -209,7 +252,6 @@ xdebug_debug_zval('b2');
 b2: (refcount=1, is_ref=0)='foo'
 \end{textcode}
 
-
 \paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}}, but not to literal values:
 
 \begin{phpcode}
@@ -221,3 +263,53 @@ PHP Parse error:  syntax error, unexpected '42' (T_LNUMBER) in
   /tmp/zval-test.php on line 2
 \end{textcode}
 
+
+\subsubsection{Returning by reference}
+\index{returning by reference}
+
+In PHP, functions (and thus also methods) normally return their return values by value. However, it is possible to change this so that the value is returned by reference:~\cite{php-manual-returning-reference}
+
+\begin{phpcode}
+class Foo {
+  public $property = 0;
+
+  public function &getProperty() {
+    return $this->property;
+  }
+}
+
+$foo = new Foo();
+$property = &$foo->getProperty();
+$property = 4;
+
+xdebug_debug_zval('foo');
+\end{phpcode}
+
+\begin{textcode}
+foo: (refcount=1, is_ref=0)=class Foo
+  { public $property = (refcount=2, is_ref=1)=4 }
+\end{textcode}
+
+For returning by reference to actually work, both ampersand signs are necessary: the ampersand in the function declaration \texttt{function \&getProperty()} (so that the function returns the value by reference) as well as the ampersand when using the return value \texttt{\$property = \&\$foo->getProperty();} (so that \texttt{\$property} is assigned by reference, not by value.
+
+
+\subsubsection{Passing by reference}
+\index{passing by reference}
+
+Variables can also be passed to functions (and methods) by reference. \cite{php-manual-passing-by-reference} This allows the function to change the value of the passed variable. (By default, function parameters are passed by value, not by reference.)
+
+\begin{phpcode}
+function changeParameter(&$parameter) {
+  $parameter = 42;
+}
+
+$a = 5;
+changeParameter($a);
+
+xdebug_debug_zval('a');
+
+\end{phpcode}
+
+\begin{textcode}
+a: (refcount=1, is_ref=0)=42
+\end{textcode}
