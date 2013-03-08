@@ -108,6 +108,14 @@ The command \texttt{xdebug\_debug\_zval} from the Xdebug PHP extension~\cite{xde
 x: (refcount=1, is_ref=0)=42
 \end{textcode}
 
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/x_42}
+    \caption{a simple variable}
+    \label{fig:simple-variable}
+  \end{center}
+\end{figure}
+
 The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}
 
 \begin{phpcode}
@@ -123,6 +131,14 @@ This code leads to both variables pointing to the exact same ZVAL, just by diffe
 x: (refcount=2, is_ref=0)=42
 y: (refcount=2, is_ref=0)=42
 \end{textcode}
+
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/x_y_42}
+    \caption{two variables sharing the same ZVAL via copy-on-write}
+    \label{fig:copy-on-write-variable}
+  \end{center}
+\end{figure}
 
 When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, the reference counter is decreased again:
 
@@ -185,6 +201,15 @@ a1: (refcount=2, is_ref=1)='bar'
 a2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
 
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/a1_a2}
+    \caption{two variables sharing the same ZVAL via a reference}
+    \label{fig:simple-reference}
+  \end{center}
+\end{figure}
+
+
 The same mechanism also applies when the content of a variable is copied to a variable that is a reference. In the following example, the content of \texttt{\$q3} is copied to \texttt{\$q2}, thus also changing the value of \texttt{\$q1} as both \texttt{\$q1} and \texttt{\$q2} are references to the same ZVAL:
 
 \begin{phpcode}
@@ -198,9 +223,18 @@ xdebug_debug_zval('q2');
 \end{phpcode}
 
 \begin{textcode}
-a1: (refcount=2, is_ref=1)='bar'
-a2: (refcount=2, is_ref=1)='bar'
+q1: (refcount=2, is_ref=1)='bar'
+q2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
+
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/q1_q2_q3}
+    \caption{copying the value of one variable to two reference variables}
+    \label{fig:copying-value-to-reference}
+  \end{center}
+\end{figure}
+
 
 
 However, when a variable that is a reference to some variable is changed to be a reference to a different variablem, this changes only the entry in the symbol table, not the ZVAL. In the following exampled, \texttt{\$p2} is a reference to \texttt{\$p1} and then gets changed to be a reference to \texttt{\$p3}. \texttt{\$p1} stays unchanged as the corresponding ZVAL is not modified.
@@ -219,6 +253,17 @@ xdebug_debug_zval('p2');
 p1: (refcount=1, is_ref=0)='foo'
 p2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
+
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/p1_p2_p3}
+    \caption{changing a reference variable from one ZVAL to another ZVAL}
+    \label{fig:changing-references}
+  \end{center}
+\end{figure}
+
+
+
 
 \paragraph{Dropping references and reference counting:}
 \index{reference counting}
@@ -279,7 +324,7 @@ class Foo {
 }
 
 $foo = new Foo();
-$property = &$foo->getProperty();
+$property =& $foo->getProperty();
 $property = 4;
 
 xdebug_debug_zval('foo');
@@ -346,6 +391,16 @@ instance2: (refcount=2, is_ref=0)=class stdClass
 
 (In the output of \texttt{xdebug\_debug\_zval}, it unfortunately is not possible to see that the ZVALs only contain the object identifiers, not the object itself.)
 
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/instance_instance2}
+    \caption{objects using the ZVAL for the object identifier/handle}
+    \label{fig:objects}
+  \end{center}
+\end{figure}
+
+
+
 However, if we start to use the object variables like real references and try to overwrite one object by setting the other object, the difference to real references becomes apparent:
 
 \begin{phpcode}
@@ -365,20 +420,36 @@ instance: (refcount=1, is_ref=0)=class stdClass
 instance2: (refcount=1, is_ref=0)=42
 \end{textcode}
 
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/someInstance_instance2}
+    \caption{object handle variables that do not work like real references}
+    \label{fig:false-object-references}
+  \end{center}
+\end{figure}
+
 However, object variables can also be used as real references (again by using the ampersand \texttt{\&} operator):
 
 \begin{phpcode}
 $someInstance = new StdClass();
 $someInstance->field = 'foo';
 
-$instance2 = $instance;
-$instance2 = 42;
+$instanceReference =& $someInstance;
+$instanceReference = 42;
 
-xdebug_debug_zval('instance');
-xdebug_debug_zval('instance2');
+xdebug_debug_zval('someInstance');
+xdebug_debug_zval('instanceReference');
 \end{phpcode}
 
 \begin{textcode}
-instance: (refcount=2, is_ref=1)=42
-instance2: (refcount=2, is_ref=1)=42
+someInstance: (refcount=2, is_ref=1)=42
+instanceReference: (refcount=2, is_ref=1)=42
 \end{textcode}
+
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/someInstance_instanceReference}
+    \caption{real object references}
+    \label{fig:real-object-references}
+  \end{center}
+\end{figure}
