@@ -33,3 +33,4 @@
 *~
 *.backup
 *.kilepr
+.DS_Store
