@@ -53,7 +53,7 @@
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{115.53975606357741, 63.358778094460732}, {54, 36}}</string>
+			<string>{{115.53975606357744, 63.358778094460732}, {77.590027113323686, 36}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -68,12 +68,13 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 42}</string>
+\f0\fs24 \cf0 42\
+refcount=1}</string>
 			</dict>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{65.499999357252975, 73.858778094460732}, {49.539756774902344, 15}}</string>
+			<string>{{65.49999939004789, 73.858778094460732}, {49.539756774902344, 15}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>Head</key>
@@ -179,7 +180,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{65.499999660291962, 24.500000822801852}, {49.539749145507812, 15}}</string>
+			<string>{{65.500002517274197, 24.500000822801852}, {49.539745330810547, 15}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>Head</key>
@@ -261,7 +262,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{115.53974869203785, 14.000000822801848}, {54, 36}}</string>
+			<string>{{115.53974869203785, 14.000000822801852}, {77.590034484863281, 36}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -276,7 +277,8 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 3}</string>
+\f0\fs24 \cf0 3\
+refcount=1}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -351,7 +353,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-03-07 23:34:14 +0000</string>
+	<string>2013-03-15 12:43:55 +0000</string>
 	<key>Modifier</key>
 	<string>Oliver Klee</string>
 	<key>NotesVisible</key>

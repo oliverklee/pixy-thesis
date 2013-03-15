@@ -53,7 +53,7 @@
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{296.41976016149891, 57.187661196152419}, {50.794460296630859, 15}}</string>
+			<string>{{329.3770703702744, 59.863625610639474}, {50.874713897705078, 15}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>Head</key>
@@ -64,7 +64,7 @@
 			<key>ID</key>
 			<integer>41</integer>
 			<key>Rotation</key>
-			<real>344.70590209960938</real>
+			<real>347.6614990234375</real>
 			<key>Shape</key>
 			<string>AdjustableArrow</string>
 			<key>ShapeData</key>
@@ -137,7 +137,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{243.5114610181966, 60.717562066460715}, {54, 36}}</string>
+			<string>{{275.90815237873005, 60.717562066460715}, {54, 36}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -161,7 +161,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{297.12058515608481, 32.377465618572813}, {49.690029144287109, 15}}</string>
+			<string>{{329.52026504325261, 32.399598659798841}, {50.648403167724609, 15}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>Head</key>
@@ -172,7 +172,7 @@
 			<key>ID</key>
 			<integer>39</integer>
 			<key>Rotation</key>
-			<real>11.553690910339355</real>
+			<real>11.472724914550781</real>
 			<key>Shape</key>
 			<string>AdjustableArrow</string>
 			<key>ShapeData</key>
@@ -245,7 +245,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{346.79706060893875, 32.473286023597794}, {54, 36}}</string>
+			<string>{{380.15268836069561, 25.63359001537134}, {79.607536315917969, 54.961833953857422}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -260,12 +260,14 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 "bar"}</string>
+\f0\fs24 \cf0 "bar"\
+refcount=2\
+is_ref=1}</string>
 			</dict>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{243.51146145616099, 11.358780673011466}, {54, 36}}</string>
+			<string>{{275.90815281669444, 11.358780673011466}, {54, 36}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -289,7 +291,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{180.70717737785864, 33.114506331669006}, {50.382701873779297, 40}}</string>
+			<string>{{213.10386873839246, 33.114506331669006}, {50.382701873779297, 40}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -370,7 +372,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{63.90829870533787, 59.828880523140967}, {50.794460296630859, 15}}</string>
+			<string>{{64.242891049453874, 61.351023498607717}, {50.815628051757812, 15}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>Head</key>
@@ -381,7 +383,7 @@
 			<key>ID</key>
 			<integer>31</integer>
 			<key>Rotation</key>
-			<real>344.70590209960938</real>
+			<real>346.38726806640625</real>
 			<key>Shape</key>
 			<string>AdjustableArrow</string>
 			<key>ShapeData</key>
@@ -478,7 +480,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{64.609123699923785, 35.018684945561354}, {49.690029144287109, 15}}</string>
+			<string>{{64.796770117691494, 33.871532632621239}, {49.94134521484375, 15}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>Head</key>
@@ -489,7 +491,7 @@
 			<key>ID</key>
 			<integer>27</integer>
 			<key>Rotation</key>
-			<real>11.553690910339355</real>
+			<real>10.261202812194824</real>
 			<key>Shape</key>
 			<string>AdjustableArrow</string>
 			<key>ShapeData</key>
@@ -562,7 +564,7 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{114.28559915277764, 35.114505350586342}, {54, 36}}</string>
+			<string>{{114.83073532213434, 25.633589765296364}, {79.607536315917969, 54.961833953857422}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -577,7 +579,9 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\qc
 
-\f0\fs24 \cf0 "foo"}</string>
+\f0\fs24 \cf0 "foo"\
+refcount=2\
+is_ref=1}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -652,7 +656,7 @@
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-03-07 23:37:07 +0000</string>
+	<string>2013-03-15 12:50:29 +0000</string>
 	<key>Modifier</key>
 	<string>Oliver Klee</string>
 	<key>NotesVisible</key>
@@ -728,7 +732,7 @@
 		<key>ExpandedCanvases</key>
 		<array/>
 		<key>Frame</key>
-		<string>{{573, 26}, {693, 922}}</string>
+		<string>{{573, 26}, {823, 922}}</string>
 		<key>ListView</key>
 		<true/>
 		<key>OutlineWidth</key>
@@ -742,7 +746,7 @@
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{4.5801528718156099, 0}, {415.267193711282, 586.25956759239807}}</string>
+		<string>{{4.5801528718156099, 0}, {514.50383926728693, 586.25956759239807}}</string>
 		<key>Zoom</key>
 		<real>1.309999942779541</real>
 		<key>ZoomValues</key>
