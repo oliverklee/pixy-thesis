@@ -164,6 +164,15 @@ x: (refcount=1, is_ref=0)=3
 y: (refcount=1, is_ref=0)=42
 \end{textcode}
 
+\begin{figure}[!h]
+  \begin{center}
+    \includegraphics[scale=0.8]{images/x_3_y_42}
+    \caption{A new ZVAL is created after the value of a variable using a copy-on-write strategy is changed.}
+    \label{fig:copy-on-write}
+  \end{center}
+\end{figure}
+
+
 \paragraph{Note:} \texttt{xdebug\_debug\_zval} will never display a \texttt{refcount} of zero for a variable because \texttt{xdebug\_debug\_zval} cannot display variables that have been unset (and that, by definition, do not exist at that point anymore).
 
 \paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning variables the same value will not lead to both variables sharing one ZVAL. This is different from the way the Java virtual machine handles strings (in order to conserve memory).~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
