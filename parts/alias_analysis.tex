@@ -1,1 +1,10 @@
-\chapter{Alias analysis for the new default pass-by-reference in PHP 5}
+\chapter{Alias analysis}
+
+When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good recall is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them (or stop using the tool).~\cite{understanding-value}
+
+For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus a big part of the exiting work on alias analysis does not directly apply to PHP. Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
+
+\chapter{Alias analysis in Pixy}
+
+
+\section{Alias analysis for the new default pass-by-reference in PHP 5}

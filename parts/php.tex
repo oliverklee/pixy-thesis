@@ -67,6 +67,7 @@ To be able to conduct alias analysis for PHP, it is important to fully understan
 
 
 \subsection{Variables, ZVALs and reference counting}
+\label{sec:zvals}
 
 Variables in PHP are assigned by value by default~\cite{php-manual-variables} and internally stored in a structure called \emph{ZVAL}.\index{ZVAL}\index{PHP variables}\index{variables} In one of the C header files~\cite{php-src-api-headers} in the PHP source code, the structure looks like this:
 
@@ -179,6 +180,7 @@ y: (refcount=1, is_ref=0)=42
 
 
 \subsection{References}
+\label{sec:references}
 
 References in PHP are two variables pointing to the same ZVAL. The PHP manual takes particular care to make the difference to C pointers clear:~\cite{php-manual-what-references-are}\cite{php-manual-what-references-are-not}\index{references}\index{C/C++ pointers}\index{pointers in C/C++}
 
