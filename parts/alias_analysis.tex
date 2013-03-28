@@ -4,21 +4,66 @@ When performing static code analysis, a good alias analysis is helpful as it can
 
 For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
 
-\chapter{Alias analysis in Pixy}
+\section{Alias analysis in Pixy}
 
-For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{khedker}, including the concept of ``must'' and ``may'' aliases.
+For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{data-flow-analysis}, including the concept of ``must'' and ``may'' aliases.
 
-\section{Intraprocedural alias analysis}
+\paragraph{Must-aliases} are relationships between variables that are aliases to the same ZVAL independent of the actual executed program path.
+
+\paragraph{May-aliases} are relationships between variables that are aliases only for some executed program paths.
+
+This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b} are tainted and \texttt{\$a} gets sanitized. If \texttt{\$a} and \texttt{\$b} are must-aliases, \texttt{\$b} can safely considered to be sanitized as well. However, if both variables are may-aliases, the scanner should make a conservative decision and consider \texttt{\$b} still to be tainted.
+
+
+\subsection{Intraprocedural alias analysis}
 
 As described in \cite{pixy}, Pixy keeps record for all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
 
-At the beginning of a function or method, the sets of may-aliases and must-aliases is empty.
+Note: In these examples, the sets of must-aliases and may-aliases always refer to point of execution after the last listed code line.
 
-$must-aliases = $
+At the beginning of a function or method, the sets of may-aliases and must-aliases is empty:
+
+$mustAliases = \{\}, mayAliases = \{\}$
+
+When a reference is created, the pair of both variables is added to the must-aliases:
 
 \begin{phpcode}
-
+$a = &$b;
 \end{phpcode}
+$mustAliases = \{(a, b)\}, mayAliases = \{\}$
 
 
-\section{Alias analysis for the new default pass-by-reference in PHP 5}
+If there is a branch condition, the aliases set within the branch still are considered to be must-aliases, but \emph{only within that particular branch}.
+
+\begin{phpcode}
+$a = &$b;
+if (...) {
+  $c = &$d;
+\end{phpcode}
+$mustAliases = \{(a, b), (c, d)\}, mayAliases = \{\}$
+
+\begin{phpcode}
+$a = &$b;
+if (...) {
+  $c = &$d;
+  $e = &$d;
+\end{phpcode}
+$mustAliases = \{(a, b), (c, d, e)\}, mayAliases = \{\}$
+
+Now, after the branch, the scanner needs to change the must-aliases that have been created during the branch to may-aliases (as it is not safe to assume that the branch will be executed in each and every case):
+
+\begin{phpcode}
+$a = &$b;
+if (...) {
+  $c = &$d;
+  $e = &$d;
+}
+\end{phpcode}
+$mustAliases = \{(a, b)\}, mayAliases = \{(c, d, e\}$
+
+To ease processing, the alias tuples with more than two elements are split into separate pairs:
+
+$mustAliases = \{(a, b)\}, mayAliases = \{(c, d), (c, e), (d, e)\}$
+
+
+\section{Alias analysis for the default pass-by-reference in PHP 5}
