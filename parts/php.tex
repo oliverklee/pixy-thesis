@@ -5,7 +5,7 @@ PHP~\cite{php-in-action} is a server-side web scripting language. In its current
 
 \section{Challenges in static analysis for PHP}
 
-In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables}, field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
+In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
 
 For example, the following constructs are possible, making static analysis a lot harder than e.g. for Java:
 
@@ -66,7 +66,79 @@ protected function foo(array $bar) {
 To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. This section covers this, including the implementation details of variables in PHP and the various types of references that are possible in PHP.
 
 
-\subsection{Variables, ZVALs and reference counting}
+\subsection{Local and global variable scope}
+
+Variables in PHP can have one of two scopes: local and global.~\cite{php-manual-scope} PHP stores the variables in symbol tables, using one symbol table per scope.~\cite{php-manual-reference-counting}
+\index{symbol table}
+
+\subsubsection{Global scope}
+\index{global scope}\index{global variables|see{global scope}}\index{scope!global|see{global scope}}\index{variables!global|see{global scope}}
+
+Any variable that is defined outside of a function of method is considered to be \emph{global}. By default, global variables are available only in the context outside of functions---even in files other where they have been defined (but only \emph{after} they have been declared, of course).
+
+In the following example, the variable \texttt{\$answer} is declared in global scope and thus is available even for code in the included PHP file \texttt{otherFile.php} (as long as the code that accesses the variable is located in global scope as well).
+
+\begin{phpcode}
+$answer = 42;
+include('otherFile.php');
+\end{phpcode}
+
+
+\subsubsection{Local function scope}
+\index{local scope}\index{local variables|see{local scope}}\index{scope!local|see{local scope}}\index{variables!local|see{local scope}}
+
+A variable defined within a function is by default only available in the local function scope, i.\,e., in the function's symbol table. In the following example, there is a global variable \texttt{\$beverage} as well as a local variable \texttt{\$beverage}:
+
+\begin{phpcode}
+$beverage = 'tea';
+
+function breakfast() {
+  $beverage = 'coffee';
+}
+\end{phpcode}
+
+Note: Local scopes works exactly the same way for functions and class methods (which in PHP also use the \texttt{function} keyword).
+
+
+\subsubsection{The ``global'' keyword and \$GLOBALS}
+\label{sec:globals}\index{global (keyword)}\index{\$GLOBALS}
+
+Using the \texttt{global} keyword, it is possible to create a reference from a local variable to a global variable with the same name:
+
+\begin{phpcode}
+function breakfast() {
+  global $beverage;
+  echo 'Let have some ' . $beverage . '!';
+}
+
+$beverage = 'tea';
+breakfast();
+\end{phpcode}
+
+\begin{textcode}
+Let's have some tea!
+\end{textcode}
+
+Using the \texttt{\$GLOBALS} superglobal\index{superglobals} variable, it is possible to access global variables from a local scope without having to add the variable to the local scope:
+
+\begin{phpcode}
+function breakfast() {
+  echo 'Let have some ' . $GLOBALS['beverage'] . '!';
+}
+
+$beverage = 'coffee';
+breakfast();
+\end{phpcode}
+
+\begin{textcode}
+Let's have some coffee!
+\end{textcode}
+
+\paragraph{Note:} Using the \texttt{global} keyword is perfectly valid (as of PHP 5.4), but its usage is not recommended as this will make distinguishing between local and globals variables harder when reading the code. Instead, it is recommended to use the \texttt{\$GLOBALS} superglobal to make the access more explicit. ~\cite{typo3-cgl-php-syntax-formatting}
+
+
+
+\subsection{ZVALs and reference counting}
 
 
 \subsubsection{ZVALs}
@@ -125,6 +197,7 @@ The reference count is used both by the garbage collector as well as to save mem
 
 \subsubsection{Copy-on-write variables}
 \label{sec:copy-on-write}
+\index{copy-on-write variables}\index{variables!copy-on-write|see{copy-on-write variables}}
 
 To preserve memory and improve performance, PHP uses a copy-on-write stragy for variables that are copies of one another. This copy-on-write strategy has no direct impact on alias analysis whatsoever. Still, understanding this phenomenon is necessary to interpret all the reference counter correctly and to differentiate between real aliases and copy-on-write ZVALs.
 
@@ -155,6 +228,8 @@ y: (refcount=2, is_ref=0)=42
 
 \subsubsection{Removing (unsetting) copy-on-write variables from the symbol table}
 \label{sec:unsetting}
+\index{symbol table}
+\index{unsetting variables}\index{variables!unsetting|see{unsetting variables}}
 
 When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, the reference counter is decreased again (figure~\ref{fig:reference-count-decreased} on page~\pageref{fig:reference-count-decreased}):
 
@@ -279,7 +354,7 @@ q2: (refcount=2, is_ref=1)='bar'
 
 
 
-However, when a variable that is a reference to some variable is changed to be a reference to a different variablem, this changes only the entry in the symbol table, not the ZVAL. In the following exampled, \texttt{\$p2} is a reference to \texttt{\$p1} and then gets changed to be a reference to \texttt{\$p3}. \texttt{\$p1} stays unchanged as the corresponding ZVAL is not modified (figure~\ref{fig:changing-references} on page~\pageref{fig:changing-references}):
+However, when a variable that is a reference to some variable is changed to be a reference to a different variable, this changes only the entry in the symbol table, not the ZVAL. In the following exampled, \texttt{\$p2} is a reference to \texttt{\$p1} and then gets changed to be a reference to \texttt{\$p3}. \texttt{\$p1} stays unchanged as the corresponding ZVAL is not modified (figure~\ref{fig:changing-references} on page~\pageref{fig:changing-references}):
 
 \begin{phpcode}
 $p1 = 'foo';
@@ -310,7 +385,7 @@ p2: (refcount=2, is_ref=1)='bar'
 \paragraph{Dropping references and reference counting:}
 \index{reference counting}
 
-When a variable that is a reference is unset, PHP removes the variable from the symbol table of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
+When a variable that is a reference is unset, PHP removes the variable from the symbol table\index{symbol table} of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
 
 There is a difference between cases where there are at least two references to the same ZVAL and cases where there is only one reference left. For at least two references, the ZVAL will still be marked as \texttt{is\_ref=1}:
 
@@ -339,7 +414,7 @@ xdebug_debug_zval('b2');
 b2: (refcount=1, is_ref=0)='foo'
 \end{textcode}
 
-\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}}, but not to literal values:
+\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}}, but not to literal values or expressions:
 
 \begin{phpcode}
 $answer =& 42;
