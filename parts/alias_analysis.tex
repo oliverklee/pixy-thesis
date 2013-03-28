@@ -2,9 +2,23 @@
 
 When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good recall is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them (or stop using the tool).~\cite{understanding-value}
 
-For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus a big part of the exiting work on alias analysis does not directly apply to PHP. Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
+For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
 
 \chapter{Alias analysis in Pixy}
+
+For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{khedker}, including the concept of ``must'' and ``may'' aliases.
+
+\section{Intraprocedural alias analysis}
+
+As described in \cite{pixy}, Pixy keeps record for all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
+
+At the beginning of a function or method, the sets of may-aliases and must-aliases is empty.
+
+$must-aliases = $
+
+\begin{phpcode}
+
+\end{phpcode}
 
 
 \section{Alias analysis for the new default pass-by-reference in PHP 5}
