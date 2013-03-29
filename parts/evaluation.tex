@@ -1,9 +1,11 @@
 \chapter{Experimental evaluation of the modified version of Pixy}
 
+In this section, we will look at the modified version of Pixy both with a code quality perspective as well as a functional perspective.
+
 \section{Code quality}
 \label{code-quality}
 \index{code quality}
-One of the aims of the thesis is to make Pixy a tool that is and will be useful for other developers, both for using it and for contributing to the project. This includes that the Pixy's code is well-tested, well-readable and of general high quality. For measuring improvements in code quality, the author has decided to use three numbers that are relatively easy to measure:
+One of the aims of the thesis is to make Pixy a tool that is and will continue to be useful for other developers, both for using it and for contributing to the project. This includes that the Pixy's code is well-tested, well-readable and of general high quality. For measuring improvements in code quality, the author has decided to use three numbers that are relatively easy to measure:
 
 \begin{itemize}
   \item the number of warnings and errors issued by javac 1.7 when run with the \texttt{-Xlint} option
@@ -25,13 +27,13 @@ Before the author made any changes, javac lint (version 1.7.0\_13) issued 688 wa
 
 \subsection{PMD}
 
-The author chose a subset of the available Java-related PMD rule sets that fit to the scope of the Pixy project (e.\,g., a rule set for Android does not make sense for this non-Android project). Other rule sets were skipped as they provided too many false positives for this project.
+The author chose a subset of the available Java-related PMD rule sets that fit to the scope of the Pixy project (e.\,g., a rule set for Android does not make sense for this non-Android project). Other rule sets were skipped as they provided too many false positives for this project (please see table~\ref{table:pmd-skipped} on page~\pageref{table:pmd-skipped} for a list).
 
 The PMD version used for these tests was version 5.0.2 (the current version at the time of writing). To avoid changed numbers to do different behavior of subsequent versions, the PMD version was kept at 5.0.2 even if updates were available later.
 
 A description of the rules included in the rule sets is provided in the PMD documentation~\cite{pmd-rulesets}.
 
-This is a comparison of the number of PMD violations in the Pixy project before the author made any changes and after cleanup was finished:
+Table~\ref{table:pmd-violations} on page~\pageref{table:junit-before} is a comparison of the number of PMD violations in the Pixy project before the author made any changes and after cleanup was finished.
 
 \myTable{
 \begin{tabular}{|l|l|r|r|}
@@ -77,7 +79,7 @@ This is a comparison of the number of PMD violations in the Pixy project before 
  \bb{Total} &  & \bb{9086} & \bb{} \\
 \hline
 \end{tabular}
-}{Number of PMD violations in the Pixy project before and after cleanup}{pmd-violations}
+}{Number of PMD violations in the Pixy project before and after cleanup}{table:pmd-violations}
 
 \myTable{
 \begin{tabular}{|p{3.1cm}|p{3.1cm}|r|p{4.7cm}|}
@@ -101,6 +103,26 @@ This is a comparison of the number of PMD violations in the Pixy project before 
  Optimization & \texttt{java-optimizations} & 7880 & Too many low-priority ``\ldots could be declared final'' messages.\\
 \hline
 \end{tabular}
-}{PMD rule sets that have been skipped}{pmd-skipped}
+}{PMD rule sets that have been skipped}{table:pmd-skipped}
 
 \paragraph{Note:} As PMD does not provide a count of violations when using the \texttt{text} output format on the command line, the output was piped through \texttt{wc -l} to count the number of violations.
+
+\subsection{JUnit unit tests}
+
+The numbers in table~\ref{table:junit-before} on page~\pageref{table:junit-before} show the state of Pixy before and after the modifications. The code coverage has been determined using the EclEmma tool.~\cite{eclemma}
+
+\myTable{
+\begin{tabular}{|l|r|r|}
+\hline
+  \bb{Metric} & \bb{before modification} & \bb{after modification} \\
+\hline
+  Number of executed tests & 363 & \\
+\hline
+  Test errors & 38 & \\
+\hline
+  Test failures & 1 & \\
+\hline
+  Code coverage (within \texttt{src/}) & 56.2\,\% & \\
+\hline
+\end{tabular}
+}{JUnit test results before the modifications, using Java 1.7 and JUnit 3}{table:junit-before}
