@@ -526,6 +526,8 @@ is_ref=1}</string>
 				<dict>
 					<key>Color</key>
 					<dict>
+						<key>a</key>
+						<string>0.5</string>
 						<key>b</key>
 						<string>1</string>
 						<key>g</key>
@@ -539,6 +541,8 @@ is_ref=1}</string>
 					<real>90</real>
 					<key>GradientColor</key>
 					<dict>
+						<key>a</key>
+						<string>0.5</string>
 						<key>b</key>
 						<string>0.874372</string>
 						<key>g</key>
@@ -569,6 +573,8 @@ is_ref=1}</string>
 				<dict>
 					<key>Color</key>
 					<dict>
+						<key>a</key>
+						<string>0.5</string>
 						<key>b</key>
 						<string>0.794995</string>
 						<key>g</key>
@@ -997,7 +1003,7 @@ is_ref=1}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2013-04-24 15:56:15 +0000</string>
+	<string>2013-04-24 17:21:18 +0000</string>
 	<key>Modifier</key>
 	<string>Oliver Klee</string>
 	<key>NotesVisible</key>
@@ -1073,7 +1079,7 @@ is_ref=1}</string>
 		<key>ExpandedCanvases</key>
 		<array/>
 		<key>Frame</key>
-		<string>{{157, -110}, {855, 922}}</string>
+		<string>{{157, 4}, {855, 922}}</string>
 		<key>ListView</key>
 		<true/>
 		<key>OutlineWidth</key>
