@@ -187,7 +187,7 @@ x: (refcount=1, is_ref=0)=42
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_42}
-    \caption{a simple variable}
+    \caption{A variable basically is an entry in the symbol table, pointing to a ZVAL.}
     \label{fig:simple-variable}
   \end{center}
 \end{figure}
@@ -220,7 +220,7 @@ y: (refcount=2, is_ref=0)=42
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_y_42}
-    \caption{two variables sharing the same ZVAL via copy-on-write}
+    \caption{PHP uses copy-on-write for variables: If one variable is a copy of another variable, both share the same ZVAL until one of the variables is modified.}
     \label{fig:copy-on-write-variable}
   \end{center}
 \end{figure}
@@ -247,7 +247,7 @@ x: (refcount=1, is_ref=0)=42
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_42}
-    \caption{a variable with the reference count decreased from 2 to 1 again}
+    \caption{After one of the two variables (that temporarily shared the same ZVAL via copy-on-write) is unset, the reference count in the ZVAL is back from 2 to 1 again.}
     \label{fig:reference-count-decreased}
   \end{center}
 \end{figure}
@@ -274,7 +274,7 @@ y: (refcount=1, is_ref=0)=42
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_3_y_42}
-    \caption{A new ZVAL is created after the value of a variable using a copy-on-write strategy is changed.}
+    \caption{A new ZVAL is automatically created after the value of one of two variables using a copy-on-write strategy is changed.}
     \label{fig:new-zval-after-copy-on-write}
   \end{center}
 \end{figure}
@@ -321,7 +321,7 @@ a2: (refcount=2, is_ref=1)='bar'
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/a1_a2}
-    \caption{two variables sharing the same ZVAL via a reference}
+    \caption{Two variables that are references to one another share the same ZVAL. Thus changing the value of one variable automatically affect the other variable as well.}
     \label{fig:simple-reference}
   \end{center}
 \end{figure}
@@ -347,7 +347,7 @@ q2: (refcount=2, is_ref=1)='bar'
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/q1_q2_q3}
-    \caption{copying the value of one variable to two reference variables}
+    \caption{Copying the value of one variable to two variables (which are references to each other) changes the value of the target ZVAL. In this case, PHP does not use a copy-on-write strategy because a ZVAL can be either be involved in references or in copy-on-write, but not both at the same time.}
     \label{fig:copying-value-to-reference}
   \end{center}
 \end{figure}
@@ -374,7 +374,7 @@ p2: (refcount=2, is_ref=1)='bar'
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/p1_p2_p3}
-    \caption{changing a reference variable from one ZVAL to another ZVAL}
+    \caption{Changing a variable from a reference to one variable to a reference to another variable basically just rearranges to which ZVAL the symbol table entry is pointing (and adjusts the reference counters in the ZVALS accordingly).}
     \label{fig:changing-references}
   \end{center}
 \end{figure}
@@ -511,7 +511,7 @@ instance2: (refcount=2, is_ref=0)=class stdClass
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/instance_instance2}
-    \caption{objects using the ZVAL for the object identifier/handle}
+    \caption{Objects use the ZVAL just for the object identifier/handle, not for the actual data contained in the object.}
     \label{fig:objects-as-references}
   \end{center}
 \end{figure}
@@ -540,7 +540,7 @@ instance2: (refcount=1, is_ref=0)=42
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/someInstance_instance2}
-    \caption{object handle variables that do not work like real references}
+    \caption{Overwriting an object variable overwrites just the ZVAL. This is a good example of object references not working like real references.}
     \label{fig:false-object-references}
   \end{center}
 \end{figure}
@@ -566,7 +566,7 @@ instanceReference: (refcount=2, is_ref=1)=42
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/someInstance_instanceReference}
-    \caption{real object references}
+    \caption{References to object variables work are real references, though, as overwriting one variable automatically affects the other variable as well.}
     \label{fig:real-object-references}
   \end{center}
 \end{figure}
