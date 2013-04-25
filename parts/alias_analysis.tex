@@ -17,7 +17,9 @@ This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b}
 
 \subsection{Intraprocedural alias analysis}
 
-As described in \cite{pixy}, Pixy keeps record for all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
+This section describes how Pixy conducts alias analysis within a function or method (as explained in~\cite{pixy}).
+
+Pixy keeps record for all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
 
 Note: In these examples, the sets of must-aliases and may-aliases always refer to point of execution after the last code line listed above.
 
@@ -64,6 +66,43 @@ $mustAliases = \{(a, b)\}, mayAliases = \{(c, d, e\}$
 To ease processing, the alias tuples with more than two elements are split into separate pairs:
 
 $mustAliases = \{(a, b)\}, mayAliases = \{(c, d), (c, e), (d, e)\}$
+
+
+\subsection{Interprocedural alias analysis}
+
+This section describes how Pixy conducts alias analysis between functions or methods (as explained in~\cite{pixy}).
+
+Generally, there are two possible scopes for variables in PHP: local variables and global variables. (Please see section \ref{sec:variable-scope} on page \pageref{sec:variable-scope} for details.)
+
+Hence, at the point of a function call, the alias analysis needs to track both alias information that gets propagated into the function, and alias information that is valid when the control flow returns from the function.
+
+So, from the called function's point of view (i.e., from the callee's point of view), the following information is important when the function gets called:
+
+\begin{itemize}
+  \item aliases between global variables
+  \item aliases between the method parameters
+  \item aliases between global variables and the method parameters
+\end{itemize}
+
+After control flow has been returned from a method, the following alias information needs to be obtained (or updated):
+
+\begin{itemize}
+  \item aliases between global variables
+  \item aliases between global variables and the caller's local variables
+\end{itemize}
+
+
+\subsubsection{Aliases between global variables}
+
+For tracking global variables, the notation of must-aliases and may-aliases is changed so that there is an optional method name prefix for the variable name. For the global symbol table, we use a ``special'' function ``m'' (for ``main'').
+
+Let have an example:
+
+At the beginning, there are not must-aliases or may-aliases:
+
+$mustAliases = \{\}, mayAliases = \{\}$
+
+
 
 
 \section{Alias analysis for the default pass-by-reference in PHP 5}
