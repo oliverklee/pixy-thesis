@@ -19,7 +19,7 @@ This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b}
 
 As described in \cite{pixy}, Pixy keeps record for all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
 
-Note: In these examples, the sets of must-aliases and may-aliases always refer to point of execution after the last listed code line.
+Note: In these examples, the sets of must-aliases and may-aliases always refer to point of execution after the last code line listed above.
 
 At the beginning of a function or method, the sets of may-aliases and must-aliases is empty:
 
