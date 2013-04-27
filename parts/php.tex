@@ -1,9 +1,9 @@
-\chapter{PHP (READY FOR FEEDBACK)}
+\chapter{PHP (partly READY FOR FEEDBACK, partly TODO)}
 \label{php}\index{PHP}
 
 PHP~\cite{php-in-action} is a server-side web scripting language. In its current version, it is object-oriented and dynamically typed. However, it provides some minimal type safety using type hinting, i.e., function parameters can be typed using class names or ``array''. PHP provides lots of powerful built-in functions for cryptography, string handling, ZIP handling, networking, XML, and more.
 
-\section{Challenges in static analysis for PHP}
+\section{Challenges in static analysis for PHP (READY FOR FEEDBACK)}
 
 In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
 
@@ -61,7 +61,9 @@ protected function foo(array $bar) {
 }
 \end{phpcode}
 
-\section{Variables, references and aliases}
+
+
+\section{Variables, references and aliases (READY FOR FEEDBACK)}
 
 To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. This section covers this, including the implementation details of variables in PHP and the various types of references that are possible in PHP.
 
@@ -571,3 +573,7 @@ instanceReference: (refcount=2, is_ref=1)=42
     \label{fig:real-object-references}
   \end{center}
 \end{figure}
+
+
+\section{Big changes in recent PHP versions (TODO)}
+TODO: Integrate chapter~\ref{sec:php54} on page\pageref{sec:php54} into this section.
