@@ -182,5 +182,101 @@ function foo() {
 $mustAliases = \{(foo.a1, foo.a2), (m.x1, m.x2, m.x3)\}, mayAliases = \{\}$
 
 
+\subsubsection{Aliases between function parameters passed by reference}
+
+By default, PHP passes function parameters by value. However, it also is possible to have function parameters passed by referenced by using an ampersand in the function declaration. These cases are relevant for the alias analysis.
+
+When the callee has two parameters that are passed by reference, and the caller passes two variables that are aliases, the alias analysis needs to propagate this information into the callee.
+
+Let's have a look an an example:
+
+\begin{phpcode}
+function foo() {
+  $a1 = 42;
+  $a2 = &$a1;
+
+  bar($a1, $a2);
+  ...
+}
+
+function bar(&$b1, &$b2) {
+\end{phpcode}
+
+At the point where \texttt{bar} is called, the alias information looks like this in the \texttt{foo} function:
+
+$mustAliases = \{(foo.a1, foo.a2)\}, mayAliases = \{\}$
+
+Within the \texttt{bar} function, the propagated alias information thus consists of the parameters as must-aliases:
+
+$mustAliases = \{(bar.b1, bar.b2)\}, mayAliases = \{\}$
+
+
+If the parameters that are passed are may-aliases, they correspondingly get propagated as may-aliases:
+
+\begin{phpcode}
+function foo() {
+  $a1 = 42;
+  $a2 = 8;
+
+  if (...) {
+    $a2 = &$a1;
+  }
+
+  bar($a1, $a2);
+  ...
+}
+
+function bar(&$b1, &$b2) {
+\end{phpcode}
+
+At the point where \texttt{bar} is called, the alias information looks like this in the \texttt{foo} function:
+
+$mustAliases = \{\}, mayAliases = \{(foo.a1, foo.a2)\}$
+
+And this is the alias information at the beginning of the \texttt{bar} function:
+
+$mustAliases = \{\}, mayAliases = \{(bar.b1, bar.b2)\}$
+
+
+
+\subsubsection{Aliases between global variables and parameters passed by reference}
+
+As far as global variables are concerned, there are basically three cases to be considered for pass-by-reference parameters:
+
+\begin{itemize}
+  \item The paramater is a global variable (and thus also a trivial must-alias of a global variable).
+  \item The parameter is a must-alias of a global variable.
+  \item The parameter is a may-alias of a global variable.
+\end{itemize}
+
+In all three cases, the parameter gets propagated as the corresponding type of must-alias or may-alias to the global variable into the function:
+
+\begin{phpcode}
+function foo() {
+  $a1 = $GLOBALS['a1'];
+  $a2 = 8;
+
+  if (...) {
+    $a2 = $GLOBALS['a2'];
+  }
+
+  bar($a1, $a2, $GLOBALS['a3']);
+  ...
+}
+
+function bar(&$b1, &$b2, &$b3) {
+\end{phpcode}
+
+At the point where \texttt{bar} is called, the alias information looks like this in the \texttt{foo} function (again using the \texttt{m} function as a fake scope for global variables):
+
+$mustAliases = \{(foo.a1, m.a1)\}, mayAliases = \{(foo.a2, m.a2)\}$
+
+And this is the alias information at the beginning of the \texttt{bar} function:
+
+$mustAliases = \{(bar.b1, m.a1), (bar.b3, m.a3)\}, mayAliases = \{(bar.b2, m.a2)\}$
+
+
+
+
 
 \section{Alias analysis for the default pass-by-reference in PHP 5}
