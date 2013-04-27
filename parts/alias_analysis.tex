@@ -9,13 +9,16 @@ For understanding the intricacies of alias analysis for PHP, it is important to 
 For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{data-flow-analysis}, including the concept of ``must'' and ``may'' aliases.
 
 \paragraph{Must-aliases} are relationships between variables that are aliases to the same ZVAL independent of the actual executed program path.
+\index{must-alias}\index{alias!must-|see{must-alias}}
 
 \paragraph{May-aliases} are relationships between variables that are aliases only for some executed program paths.
+\index{may-alias}\index{alias!may-|see{may-alias}}
 
 This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b} are tainted and \texttt{\$a} gets sanitized. If \texttt{\$a} and \texttt{\$b} are must-aliases, \texttt{\$b} can safely considered to be sanitized as well. However, if both variables are may-aliases, the scanner should make a conservative decision and consider \texttt{\$b} still to be tainted.
 
 
 \subsection{Intraprocedural alias analysis}
+\label{sec:intraprocedural-alias-analysis}\index{alias analysis!intraprocedural}\index{intraprocedural alias analysis|see{alias analysis, intraprocedural}}
 
 This section describes how Pixy conducts alias analysis within a function or method (as explained in~\cite{pixy}).
 
@@ -69,6 +72,7 @@ $mustAliases = \{(a, b)\}, mayAliases = \{(c, d), (c, e), (d, e)\}$
 
 
 \subsection{Interprocedural alias analysis}
+\label{sec:interprocedural-alias-analysis}\index{alias analysis!interprocedural}\index{interprocedural alias analysis|see{alias analysis, interprocedural}}
 
 This section describes how Pixy conducts alias analysis between functions or methods (as explained in~\cite{pixy}).
 
@@ -93,15 +97,89 @@ After control flow has been returned from a method, the following alias informat
 
 
 \subsubsection{Aliases between global variables}
+\label{sec:aliases-globals}\index{aliases between global variables}\index{global variables}
 
-For tracking global variables, the notation of must-aliases and may-aliases is changed so that there is an optional method name prefix for the variable name. For the global symbol table, we use a ``special'' function ``m'' (for ``main'').
+For tracking global variables, the notation of must-aliases and may-aliases is changed so that there is an optional method name prefix for the variable name. For the global symbol table, Pixy uses a ``special'' function \texttt{m} (for \texttt{main}).
 
 Let have an example:
 
-At the beginning, there are not must-aliases or may-aliases:
+At the beginning, there are no must-aliases or may-aliases. This information (particularly, the information on the global aliases) then gets propagated into the function:
+
+\begin{phpcode}
+foo();
+
+function foo() {
+\end{phpcode}
 
 $mustAliases = \{\}, mayAliases = \{\}$
 
+\begin{phpcode}
+foo();
+
+function foo() {
+  $a1 = 42;
+  $a2 = &$a1;
+
+  $GLOBALS['x2'] = &$GLOBALS['x1'];
+\end{phpcode}
+
+$mustAliases = \{(foo.a1, foo.a2), (m.x1, m.x2)\}, mayAliases = \{\}$
+
+At this point of the control flow within the function, the local variables \texttt{\$a1} and \texttt{\$a2} are must-aliases to each other, and the global variables \texttt{\$x1} and \texttt{\$x2} also are must-aliases to each other. This is just applying the intraprocedural techniques described in section~\ref{sec:intraprocedural-alias-analysis}.
+
+Now, when the function \texttt{foo} calls another function \texttt{bar}, only alias information on global variables is propagated into \texttt{bar} (as there are not parameters):
+
+\begin{phpcode}
+foo();
+
+function foo() {
+  $a1 = 42;
+  $a2 = &$a1;
+
+  $GLOBALS['x2'] = &$GLOBALS['x1'];
+  bar();
+  ...
+}
+
+function bar() {
+\end{phpcode}
+
+$mustAliases = \{(m.x1, m.x2)\}, mayAliases = \{\}$
+
+If \texttt{bar} adds aliases on global variables, these get added to the must-aliases (as seen from the perspective of still within \texttt{bar}):
+
+\begin{phpcode}
+foo();
+
+function foo() {
+  $a1 = 42;
+  $a2 = &$a1;
+
+  $GLOBALS['x2'] = &$GLOBALS['x1'];
+  bar();
+  ...
+}
+
+function bar() {
+  $GLOBALS['x3'] = &$GLOBALS['x1'];
+\end{phpcode}
+
+$mustAliases = \{(m.x1, m.x2, m.x3)\}, mayAliases = \{\}$
+
+After the control flow is back from \texttt{bar} in \texttt{foo}, the changed information on global aliases is available within \texttt{foo} as well (in addition to the alias information on the local variables):
+
+\begin{phpcode}
+foo();
+
+function foo() {
+  $a1 = 42;
+  $a2 = &$a1;
+
+  $GLOBALS['x2'] = &$GLOBALS['x1'];
+  bar();
+\end{phpcode}
+
+$mustAliases = \{(foo.a1, foo.a2), (m.x1, m.x2, m.x3)\}, mayAliases = \{\}$
 
 
 
