@@ -1,0 +1,15 @@
+Mit Tainted-Object-Propagation-Analyse gegen Little Bobby Tables und andere Sicherheitslücken in PHP-5-Webanwendungen
+
+In diesem Vortrag stellt Oliver Klee seine Diplomarbeit "Tainted object propagation analysis for PHP 5 based on Pixy". Oliver Klee ist seit 2009 Mitglied des TYPO3-Security-Teams.
+
+Worum geht es?
+
+Webanwendungen haben den Vorteil, bequem über das Web erreichbar zu sein. Und sie haben den Nachteil, bequem über das Web erreichbar zu sein (nämlich auch für Angreifer). Was kann man da tun? Eine Möglichkeit ist, den Code der Anwendung mit einem Scanner auf Sicherheitslücken zu überprüfen (und diese dann zu beseitigen).
+
+Sicherheitslücken wie SQL-Injection und Cross-Site-Scripting (XSS), die beide sehr oft vorkommen, gehören zur Klasse der so genannten "Tainted Object Propagation Vulnerabilities". Diese Klasse von Verwundbarkeiten beschreibt Sicherheitslücken, die dadurch entstehen, dass nicht vertrauenswürdige Daten an sicherheitskritischen Stellen wie beispielsweise SQL-Queries benutzt werde.
+
+Der 2007 als Teil einer Dissertation entstandene Scanner "Pixy", auf den diese Diplomarbeit aufbaut, kann diese Sorte von Sicherheitslücken in PHP-Anwendungen finden. Ein herausragendes Feature von Pixy ist die ausgefeilte Alias-Analyse, die hilft, mehr Sicherheitslücken zu finden und gleichzeitig die Anzahl der "Fehlalarme" zu reduzieren.
+
+Bei der Skriptsprache PHP ist seit einigen Jahren die Version 5 Standard. Die bisherige Version von Pixy kann jedoch nur PHP-4-Code scannen und ist dadurch für die Arbeit an aktuellen Webanwendungen nicht mehr verwendbar.
+
+Beim Sprung von PHP 4 auf 5 hat sich unter anderem das Objektmodell geändert: Insbesondere werden Objekte jetzt immer per Pass-by-Reference an Methoden übergeben. Dieser Vortrag stellt (neben den nötigen Grundlagen) einen Ansatz vor, die Alias-Analyse von Pixy so zu erweitern, dass Pixy auch in PHP 5 Sicherheitslücken finden kann, die durch das neue Objektmodell erst möglich (oder eben auch nicht mehr möglich) sind.
