@@ -109,7 +109,7 @@ Table~\ref{table:pmd-violations} on page~\pageref{table:junit-before} is a compa
 
 \subsection{JUnit unit tests}
 
-The numbers in table~\ref{table:junit-before} on page~\pageref{table:junit-before} show the state of Pixy before and after the modifications. The code coverage has been determined using the EclEmma tool.~\cite{eclemma}
+The numbers in table~\ref{table:junit-before} on page~\pageref{table:junit-before} show the state of Pixy before and after the modifications. The code coverage has been determined using the Cobertura tool.~\cite{cobertura}
 
 \myTable{
 \begin{tabular}{|l|r|r|}
@@ -118,11 +118,13 @@ The numbers in table~\ref{table:junit-before} on page~\pageref{table:junit-befor
 \hline
   Number of executed tests & 363 & \\
 \hline
-  Test errors & 38 & \\
+  Test errors & 0 & \\
 \hline
   Test failures & 1 & \\
 \hline
-  Code coverage (within \texttt{src/}) & 56.2\,\% & \\
+  Line coverage & 67\,\% & \\
+\hline
+  Branch coverage & 44\,\% & \\
 \hline
 \end{tabular}
 }{JUnit test results before the modifications, using Java 1.7 and JUnit 3}{table:junit-before}
