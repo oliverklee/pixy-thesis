@@ -1,10 +1,10 @@
-\chapter{Experimental evaluation of the modified version of Pixy (WORK IN PROGRESS)}
+\chapter{Experimental Evaluation of the Modified Version of Pixy (WORK IN PROGRESS)}
 
 In this section, we will look at the modified version of Pixy both with a code quality perspective as well as a functional perspective.
 
 The original version of Pixy can be found at~\cite{pixy}, and the modified version of Pixy and the related PhpParser project are hosted at Github at \url{https://github.com/oliverklee/pixy} and at \url{https://github.com/oliverklee/phpparser}.\index{Github}
 
-\section{Code quality}
+\section{Code Quality}
 \label{code-quality}
 \index{code quality}
 One of the aims of the thesis is to make Pixy a tool that is and will continue to be useful for other developers, both for using it and for contributing to the project. This includes that the Pixy's code is well-tested, well-readable and of general high quality. For measuring improvements in code quality, the author has decided to use three numbers that are relatively easy to measure:
@@ -23,7 +23,7 @@ The aim of this thesis is to get the javac lint and PMD warnings as close to zer
 
 This only applies to the Pixy project as most of the code of the related PhpParser is generated, i.e., the author does not have much direct influence on the quality of that code.
 
-\subsection{Java lint warnings}
+\subsection{Java Lint Warnings}
 
 Before the author made any changes, javac lint (version 1.7.0\_13) issued 688 warnings for Pixy (many of which may be due to Pixy originally being developed for Java 1.5).
 
@@ -109,7 +109,7 @@ Table~\ref{table:pmd-violations} on page~\pageref{table:junit-before} is a compa
 
 \paragraph{Note:} As PMD does not provide a count of violations when using the \texttt{text} output format on the command line, the output was piped through \texttt{wc -l} to count the number of violations.
 
-\subsection{JUnit unit tests}
+\subsection{JUnit Unit Tests}
 
 The numbers in table~\ref{table:junit-before} on page~\pageref{table:junit-before} show the state of Pixy before and after the modifications. The code coverage has been determined using the Cobertura tool.~\cite{cobertura}
 

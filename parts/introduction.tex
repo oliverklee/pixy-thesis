@@ -1,14 +1,14 @@
 \chapter{Introduction (WORK IN PROGRESS)}
 
-\section{Motivation: Why a current static PHP security scanners is important}
+\section{Motivation: Why a Current Static PHP Security Scanner Is Important}
 \index{PHP}
 Currently, there is no free and high-quality static code analysis tool available (and still maintained) that can find vulnerabilities in PHP 5.4.x code. This is a problem because new vulnerabilities in web applications are found almost daily~\cite{osvdb}, and PHP is used for more than 75 \% of the top-million sites~\cite{w3techs-php-usage}, including Facebook (using the HipHop PHP compiler~\cite{hiphop}, Wikipedia and WordPress.com~\cite{w3techs-php-sites}.
 
-\section{Research problems and approach}
+\section{Research Problems and Approach}
 
 This thesis builds on the PHP security scanner \bb{Pixy}~(\cite{pixy}, p.~\pageref{pixy}) and its subproject \bb{PhpParser}~\cite{phpparser}.
 
-\subsection{Research goals}
+\subsection{Research Goals}
 
 This thesis tackles the following research goals:
 
@@ -18,7 +18,7 @@ This thesis tackles the following research goals:
  \item Analyze the security ramifications of the new keywords and concepts introduced in PHP~5.0 through 5.4.
 \end{itemize}
 
-\subsection{Technical goals}
+\subsection{Technical Goals}
 
 In addition to the research goals, there are a few technical goals that needed to be achieved in order to achieve the research goals mentioned above:
 
@@ -30,6 +30,6 @@ In addition to the research goals, there are a few technical goals that needed t
 
 The technical goals are mostly necessary due to the fact that the Pixy code base had not been maintained (or even touched) since 2006, and both PHP (i.e., the scanned language) as well as Java (i.e., the scanner's language) had evolved in the meantime. In addition, the product code should be maintainable and well-structured so that it will be of real future use instead of a throw-away prototype.
 
-\section{The Pixy project on the web}
+\section{The Pixy Project on the Web}
 
 The Pixy project (including the source code, wiki and issue tracker) currently resides on Github at \url{https://github.com/oliverklee/pixy}. The related PhpParser project is located at \url{https://github.com/oliverklee/phpparser}.\index{Github}

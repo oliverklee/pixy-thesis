@@ -1,14 +1,14 @@
-\chapter{Static analysis (WORK IN PROGRESS)}
+\chapter{Static Analysis (WORK IN PROGRESS)}
 \label{static-analysis}\index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
 
 \emph{Static (code) analysis (SA)} is defined as analyzing the code of a program (i.e., the source code, byte code or machine code) of a program without actually running it~\cite{chess-west}. The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed. The opposite would be \emph{dynamic analysis}, e.g, unit testing or penetration testing on a running system.
 
-\section{Static analysis for finding vulnerabilities}
+\section{Static Analysis for Finding Vulnerabilities}
 \cite{chess-west} explains in detail how static analysis of code works and how it can be used to find bugs and vulnerabilities.
 
 According to \cite{findbugs, evaluating}, tools for static code analysis can find real bugs in production software. \cite{coverity-report} elaborates on the numerous types of vulnerabilities that can be found using static analysis.
 
-\section{Approaches to static analysis}
+\section{Approaches to Static Analysis}
 Generally, there are several approaches when doing static code analysis~\cite{comparison-of-bug-finding-tools, swaat, google-code-search}:
 
 \begin{itemize}
@@ -21,7 +21,7 @@ Generally, there are several approaches when doing static code analysis~\cite{co
 
 Pixy falls into the the data-flow analysis category.
 
-\section{Tainted object propagation}
+\section{Tainted Object Propagation}
 \label{tainting}\index{tainted object propagation}
 \cite{finding-security-vulnerabilities} describes an approach to finding a class of vulnerabilities called \emph{tainted object propagation}. \cite{pixy-short, pixy-long, pixy-dissertation} apply this to PHP.
 

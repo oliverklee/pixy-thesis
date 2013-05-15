@@ -3,7 +3,7 @@
 
 PHP~\cite{php-in-action} is a server-side web scripting language. In its current version, it is object-oriented and dynamically typed. However, it provides some minimal type safety using type hinting, i.e., function parameters can be typed using class names or ``array''. PHP provides lots of powerful built-in functions for cryptography, string handling, ZIP handling, networking, XML, and more.
 
-\section{Challenges in static analysis for PHP (READY FOR FEEDBACK)}
+\section{Challenges in Static Analysis for PHP (READY FOR FEEDBACK)}
 
 In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
 
@@ -63,18 +63,18 @@ protected function foo(array $bar) {
 
 
 
-\section{Variables, references and aliases (READY FOR FEEDBACK)}
+\section{Variables, References and Aliases (READY FOR FEEDBACK)}
 
 To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. This section covers this, including the implementation details of variables in PHP and the various types of references that are possible in PHP.
 
 
-\subsection{Local and global variable scope}
+\subsection{Local and Global Variable Scope}
 \label{sec:variable-scope}
 
 Variables in PHP can have one of two scopes: local and global.~\cite{php-manual-scope} PHP stores the variables in symbol tables, using one symbol table per scope.~\cite{php-manual-reference-counting}
 \index{symbol table}
 
-\subsubsection{Global scope}
+\subsubsection{Global Scope}
 \index{global scope}\index{global variables|see{global scope}}\index{scope!global|see{global scope}}\index{variables!global|see{global scope}}
 
 Any variable that is defined outside of a function of method is considered to be \emph{global}. By default, global variables are available only in the context outside of functions---even in files other where they have been defined (but only \emph{after} they have been declared, of course).
@@ -87,7 +87,7 @@ include('otherFile.php');
 \end{phpcode}
 
 
-\subsubsection{Local function scope}
+\subsubsection{Local Function Scope}
 \index{local scope}\index{local variables|see{local scope}}\index{scope!local|see{local scope}}\index{variables!local|see{local scope}}
 
 A variable defined within a function is by default only available in the local function scope, i.\,e., in the function's symbol table. In the following example, there is a global variable \texttt{\$beverage} as well as a local variable \texttt{\$beverage}:
@@ -103,7 +103,7 @@ function breakfast() {
 Note: Local scopes works exactly the same way for functions and class methods (which in PHP also use the \texttt{function} keyword).
 
 
-\subsubsection{The ``global'' keyword and \$GLOBALS}
+\subsubsection{The ``global'' Keyword and \$GLOBALS}
 \label{sec:globals}\index{global (keyword)}\index{\$GLOBALS}
 
 Using the \texttt{global} keyword, it is possible to create a reference from a local variable to a global variable with the same name:
@@ -141,7 +141,7 @@ Let's have some coffee!
 
 
 
-\subsection{ZVALs and reference counting}
+\subsection{ZVALs and Reference Counting}
 
 
 \subsubsection{ZVALs}
@@ -198,7 +198,7 @@ x: (refcount=1, is_ref=0)=42
 The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}
 
 
-\subsubsection{Copy-on-write variables}
+\subsubsection{Copy-on-Write Variables}
 \label{sec:copy-on-write}
 \index{copy-on-write variables}\index{variables!copy-on-write|see{copy-on-write variables}}
 
@@ -229,7 +229,7 @@ y: (refcount=2, is_ref=0)=42
 \end{figure}
 
 
-\subsubsection{Removing (unsetting) copy-on-write variables from the symbol table}
+\subsubsection{Removing (Unsetting) Copy-on-Write Variables from the Symbol Table}
 \label{sec:unsetting}
 \index{symbol table}
 \index{unsetting variables}\index{variables!unsetting|see{unsetting variables}}
@@ -256,7 +256,7 @@ x: (refcount=1, is_ref=0)=42
 \end{figure}
 
 
-\subsubsection{Overwriting copy-on-write variables}
+\subsubsection{Overwriting Copy-on-Write Variables}
 \label{sec:overwriting}
 
 When one of the variables is overwritten later, PHP creates a new ZVAL for the new value and decreases the reference count of the first ZVAL(figure~\ref{fig:new-zval-after-copy-on-write} on page~\pageref{fig:new-zval-after-copy-on-write}):
@@ -299,10 +299,10 @@ References in PHP are a means to access the same variable content by different n
 There are several ways in which it is possible to create references in PHP: Assigning by reference, passing by reference and returning references. (This list includes all ways that are mentioned in the PHP manual.~\cite{php-manual-references} As the PHP manual is the official source of documentation on PHP, this list should should be pretty complete.)
 
 
-\subsubsection{Assigning by reference}
+\subsubsection{Assigning by Reference}
 \index{assigning by reference}
 
-\paragraph{Creating references:}
+\paragraph{Creating References:}
 
 References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL (instead of one variable pointing to the other), and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in existing the ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
 
@@ -385,7 +385,7 @@ p2: (refcount=2, is_ref=1)='bar'
 
 
 
-\paragraph{Dropping references and reference counting:}
+\paragraph{Dropping References and Reference Counting:}
 \index{reference counting}
 
 When a variable that is a reference is unset, PHP removes the variable from the symbol table\index{symbol table} of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
@@ -429,7 +429,7 @@ PHP Parse error:  syntax error, unexpected '42' (T_LNUMBER) in
 \end{textcode}
 
 
-\subsubsection{Returning by reference}
+\subsubsection{Returning by Reference}
 \index{returning by reference}
 
 In PHP, functions (and thus also methods) normally return their return values by value. However, it is possible to change this so that the value is returned by reference:~\cite{php-manual-returning-reference}
@@ -458,7 +458,7 @@ foo: (refcount=1, is_ref=0)=class Foo
 For returning by reference to actually work, both ampersand signs are necessary: the ampersand in the function declaration \texttt{function \&getProperty()} (so that the function returns the value by reference) as well as the ampersand when using the return value \texttt{\$property = \&\$foo->getProperty();} (so that \texttt{\$property} is assigned by reference, not by value.
 
 
-\subsubsection{Passing by reference}
+\subsubsection{Passing by Reference}
 \index{passing by reference}
 
 Variables can also be passed to functions (and methods) by reference. \cite{php-manual-passing-by-reference} This allows the function to change the value of the passed variable. (By default, function parameters are passed by value, not by reference.)
@@ -479,7 +479,7 @@ a: (refcount=1, is_ref=0)=42
 \end{textcode}
 
 
-\subsection{References and objects}
+\subsection{References and Objects}
 
 Starting from PHP~5, objects are always passed kind of by reference:~\cite{php-manual-migration5-oop}
 
@@ -575,5 +575,5 @@ instanceReference: (refcount=2, is_ref=1)=42
 \end{figure}
 
 
-\section{Big changes in recent PHP versions (TODO)}
+\section{Big Changes in Recent PHP Versions (TODO)}
 TODO: Integrate chapter~\ref{sec:php54} on page\pageref{sec:php54} into this section.
