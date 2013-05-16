@@ -11,7 +11,7 @@ This list of vulnerabilities is by no means complete, but should cover the most 
 \index{Common Weakness Enumeration}\index{CWE|see{Common Weakness Enumeration}}
 The \emph{Common Weakness Enumeration (CWE)}~\cite{cwe} is a widely-used formal list of software vulnerabilities that strives to serve as a common language for the vulnerabilities. This list includes extensive information on the vulnerability, including examples of vulnerable code, tips for mitigation, and information on whether this type of vulnerability can be found using dynamic or static program analysis. Organizations like Apple, Coverity or IBM make use of this list and provide tools that are compatible with it~\cite{cwe-organizations}.
 
-The CWE issues a yearly list of the ``Top 25 Most Dangerous Software Errors''~\cite{cwe-top-25} which includes many of the issues listed here. This list includes the ``top issues'' both concerning how critical they are as well as how widespread they are---based on a survey of a selected number of organizations. Nevertheless, it does not cover all types of vulnerabilities listed in this section due to its focus on web applications written in PHP, whereas the top 25 list is intended to cover web applications in all languages.
+The CWE issues a yearly list of the ``Top 25 Most Dangerous Software Errors''~\cite{cwe-top-25} which includes many of the issues listed here. This list---based on a survey of a selected number of organizations---includes the ``top issues'' both concerning how critical they are as well as how widespread they are. Nevertheless, it does not cover all types of vulnerabilities listed in this section due to its focus on web applications written in PHP, whereas the top 25 list is intended to cover web applications in all languages.
 
 All in all, the CWE contains 909 entries and should cover most types of vulnerabilities.~\cite{cwe-all}
 
@@ -381,7 +381,7 @@ Without browser add-ons, it is not possible to see where a shortened (and thus a
 
 \subsection{Encoded URL Parameters}
 \index{encoded URL parameters}\index{URL encoding|see{encoded URL parameters}}
-URL parameters may be encoded in several ways to make suspiciously-looking parts look less suspicious. In the following example, \texttt{<script} is included in the URL in an encoded way.
+URL parameters may be encoded in several ways to make suspiciously-looking parts look less fishy. In the following example, \texttt{<script} is included in the URL in an encoded way.
 
 \begin{textcode}
 http://example.com/?foo=&#60;&#115;&#99;&#114;&#105;&#112;&#116;...
