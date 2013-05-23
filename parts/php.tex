@@ -19,9 +19,6 @@ $$foo = 1;
 
 \index{require\_once}
 \begin{phpcode}
-// classFile includes the path of the class file to include.
-require_once($classFile);
-
 // To correctly resolve this include, a scanner would need to parse how
 // t3lib_extMgm::extPath creates paths.
 require_once(t3lib_extMgm::extPath('seminars') .
@@ -40,10 +37,18 @@ switch ($classFlavor) {
     require_once('Default.php');
     break;
 }
-$bar = new MyClass();
-\end{phpcode}.
 
+// classFile includes the path of the class file to include.
+require_once($classFile);
+
+// The class definition of MyClass might be different, depending on
+// which file has just been included.
+$bar = new MyClass();
+\end{phpcode}
+
+In addition, PHP starting from version 5 makes use of so-called \emph{autoloading}, i.e., the file with the code of a class gets loaded dynamically when the class is used for the first time. PHP does not provide a default autoloader; instead, programmers need to define their own autoloading routines and register these with PHP.~\cite{php-manual-autoloading}
 \index{autoloading}\index{autoloader|see{autoloading}}
+
 \begin{phpcode}
 // The class file for this class has not been included and will be
 // implictly loaded on-demand by the autoloader.
@@ -204,7 +209,7 @@ The reference count is used both by the garbage collector as well as to save mem
 
 To preserve memory and improve performance, PHP uses a copy-on-write stragy for variables that are copies of one another. This copy-on-write strategy has no direct im\-pact on alias analysis whatsoever. Still, understanding this phenomenon is necessary in order to interpret all the reference counter correctly and to differentiate between real aliases and copy-on-write ZVALs.
 
-Let's have a look at an exmaple:
+Let's have a look at an example:
 
 \begin{phpcode}
 $x = 42;
@@ -284,7 +289,7 @@ y: (refcount=1, is_ref=0)=42
 
 \paragraph{Note:} \texttt{xdebug\_debug\_zval} will never display a \texttt{refcount} of zero for a variable because \texttt{xdebug\_debug\_zval} cannot display variables that have been unset (and that, by definition, do not anymore exist at that point).
 
-\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning the same value to both variables will not lead to both variables sharing one ZVAL. Thus, this behavior is different from the way the Java virtual machine handles strings in order to conserve memory.~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
+\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning the same value to both variables will not lead to both variables sharing one ZVAL. Thus, this behavior is different from the way the Java virtual machine handles strings in order to preserve memory.~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
 
 
 \subsection{References}
@@ -296,7 +301,7 @@ References in PHP are two variables pointing to the same ZVAL. The PHP manual ta
 References in PHP are a means to access the same variable content by different names. They are not like C pointers; for instance, you cannot perform pointer arithmetic using them, they are not actual memory addresses, and so on.
 \end{quote}
 
-There are several ways to create references in PHP: Assigning by reference, passing by reference and returning references. (This list includes all approaches that are mentioned in the PHP manual.~\cite{php-manual-references} As the PHP manual is the official source of documentation on PHP, this list should should be quite complete.)
+There are several ways to create references in PHP: Assigning by reference, passing by reference and returning references. (This list includes all approaches that are mentioned in the PHP manual.~\cite{php-manual-references} As the PHP manual is the official source of documentation on PHP, this list should be quite complete.)
 
 
 \subsubsection{Assigning by Reference}
@@ -304,9 +309,9 @@ There are several ways to create references in PHP: Assigning by reference, pass
 
 \paragraph{Creating References:}
 
-References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL instead of one variable pointing to the other, and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in existing the ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
+References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL instead of one variable pointing to the other, and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in the existing ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
 
-The corresponding ZVAL is marked with with \texttt{is\_ref=1} (which is a 0/1 boolean flag, not a counter), and the reference count is increased (figure~\ref{fig:simple-reference} on page~\pageref{fig:simple-reference}):
+The corresponding ZVAL is marked with \texttt{is\_ref=1} (which is a 0/1 boolean flag, not a counter), and the reference count is increased (figure~\ref{fig:simple-reference} on page~\pageref{fig:simple-reference}):
 
 \begin{phpcode}
 $a1 = 'foo';
@@ -350,14 +355,14 @@ q2: (refcount=2, is_ref=1)='bar'
 \begin{figure}[!h]
   \begin{center}
     \includegraphics[scale=0.8]{images/q1_q2_q3}
-    \caption{Copying the value of one variable to two variables (which are references to each other) changes the value of the target ZVAL. In this case, PHP does not use a copy-on-write strategy because a ZVAL can be either be involved in references or in copy-on-write, but not both at the same time.}
+    \caption{Copying the value of one variable to two variables (which are references to each other) changes the value of the target ZVAL. In this case, PHP does not use a copy-on-write strategy because a ZVAL can be involved either in references or in copy-on-write, but not both at the same time.}
     \label{fig:copying-value-to-reference}
   \end{center}
 \end{figure}
 
 
 
-However, when a variable that is a reference to some variable is changed to be a reference to a different variable, this changes only the entry in the symbol table, not the ZVAL. In the following exampled, \texttt{\$p2} is a reference to \texttt{\$p1} and then gets changed to be a reference to \texttt{\$p3}. \texttt{\$p1} stays unchanged as the corresponding ZVAL is not modified (figure~\ref{fig:changing-references} on page~\pageref{fig:changing-references}):
+However, when a variable that is a reference to some variable is changed to be a reference to a different variable, this changes only the entry in the symbol table, not the ZVAL. In the following example, \texttt{\$p2} is a reference to \texttt{\$p1} and then gets changed to be a reference to \texttt{\$p3}. \texttt{\$p1} stays unchanged as the corresponding ZVAL is not modified (figure~\ref{fig:changing-references} on page~\pageref{fig:changing-references}):
 
 \begin{phpcode}
 $p1 = 'foo';
@@ -487,7 +492,7 @@ Starting from PHP~5, objects are always passed by reference---in a way:~\cite{ph
 In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).
 \end{quote}
 
-The astute reader might have noticed the wording ``kind of by reference'' above. Actually, objects do not exactly work like references. Instead, if a variable in an object instance, the ZVAL contains a \emph{handle} (or object \emph{identifier}) for the object, not the object itself. So if variables (inderectly) point to the same object, the variables actually contains \emph{copies} of the indentifier.~\cite{php-manual-oop-references}
+The astute reader might have noticed the wording ``kind of by reference'' above. Actually, objects do not exactly work like references. Instead, if a variable is an object instance, the ZVAL contains a \emph{handle} (or object \emph{identifier}) for the object, not the object itself. So if variables (indirectly) point to the same object, the variables actually contain \emph{copies} of the indentifier.~\cite{php-manual-oop-references}
 
 As long as the object is merely accessed, object variables work just like references (figure~\ref{fig:objects-as-references} on page~\pageref{fig:objects-as-references}):
 
@@ -575,4 +580,4 @@ instanceReference: (refcount=2, is_ref=1)=42
 
 
 \section{Big Changes in Recent PHP Versions (TODO)}
-TODO: Integrate chapter~\ref{sec:php54} on page\pageref{sec:php54} into this section.
+TODO: Integrate chapter~\ref{sec:php54} on page~\pageref{sec:php54} into this section.
