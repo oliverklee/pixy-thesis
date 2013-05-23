@@ -23,11 +23,6 @@ Static analysis allows all possible program paths to be checked, independent of 
 
 Examples of automated dynamic analysis would be penetration tests (for the outside view) or unit tests.
 
-\section{Static Analysis for Finding Vulnerabilities}
-
-Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems like unintentionally ignored expressions, use-after-free or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly use their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
-
-\cite{chess-west} explains in detail how static analysis of code works and how it can be used to find bugs and vulnerabilities.
 
 
 \section{Approaches to Static Analysis}
@@ -41,19 +36,19 @@ Generally, there are several different approaches when doing static code analysi
 
 The scanner checks for security vulnerabilities by scanning for certain commands or command sequences and heavily relies on the human eye for filtering out false positives. This greatly reduces its practical use as programmers tend to ignore warnings if they contains lots of false positives.~\cite{understanding-value}
 
-Still, it is possible to use this approach for finding some vulnerabilities, for example using Google Code Search\index{Google Code Search}.~\cite{google-code-search}
+Still, it is possible to use this approach for finding some vulnerabilities, for example using \emph{Google Code Search}\index{Google Code Search}.~\cite{google-code-search}
 
 The main drawback of this approach is that there are lots of false positives (e.g., with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot differentiate between a potentially unsafe command being executed with data that is really unsafe and those cases where the data at is ensured to be safe that point.
 
-The most basic way of applying this code analysis is by just using the text search function of a text editor (with or without regular expressions)\index{regular expressions}) or text-search command line tools like \texttt{grep}.
+The most basic way of applying this code analysis is by just using the text search function of a text editor (with or without regular expressions)\index{regular expressions}) or text-search command line tools like \emph{grep}.
 
 
 \subsection{Syntactic Bug Pattern Detection (``Style Checking'')}
 \index{style checking}\index{syntactic bug pattern detection}
 
-Syntactic bug pattern detection means the scanner works a model of the code and its structure, for example a stream of tokens or an abstract syntax tree. However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis.
+Syntactic bug pattern detection means the scanner works a model of the code and its structure, for example a stream of tokens or an abstract syntax tree. However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, e.g., in continuous integration (CI)\index{continuous integration} environments like Jenkins. Hence, these scanners also are called ``style checkers''.
 
-This approach greatly reduces the number of false positives and makes them a lot more useful.~\cite{comparison-of-bug-finding-tools}. Tools like PHPCodeSniffer\index{PHPCodeSniffer}, PMD\index{PMD} or FindBugs\index{FindBugs} fall into this category.
+Compared to string pattern matching for finding bugs, this approach greatly reduces the number of false positives and makes the scanner a lot more useful.~\cite{comparison-of-bug-finding-tools}. Tools like \emph{PHPCodeSniffer}\index{PHPCodeSniffer}, \emph{PMD}\index{PMD} or \emph{FindBugs}\index{FindBugs} fall into this category.
 
 
 \subsection{Data-Flow Analysis}
@@ -65,7 +60,7 @@ Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{i
 
 Data-flow analysis is the most precise way of scanning statically for security vulnerabilities without having to annotate the source code in any way.
 
-Pixy~\cite{pixy} is an example of a security scanner using data-flow analysis.
+\emph{Pixy}~\cite{pixy} is an example of a security scanner using data-flow analysis.
 
 
 \subsection{Theorem Proving}
@@ -73,7 +68,7 @@ Pixy~\cite{pixy} is an example of a security scanner using data-flow analysis.
 
 \emph{Theorem proving} relies on the programmer adding preconditions, postconditions and loop invariants to the source code as code annotations. The scanner then can analyze the program and check whether all conditions are met.~\cite{comparison-of-bug-finding-tools}
 
-ESC/Java\index{ESC/Java} is an example for this class of tools.
+\emph{ESC/Java}\index{ESC/Java} is an example for this class of tools.
 
 
 \subsection{Model Checking}
@@ -81,7 +76,15 @@ ESC/Java\index{ESC/Java} is an example for this class of tools.
 
 Model checking relies on creating suitable models of the program---either by hand or automatically, using code annotations that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs that include library calls are practically impossible to check, which greatly reduces the applicability of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
 
-Bandera\index{Bandera} is a scanner that makes use of model checking.
+\emph{Bandera}\index{Bandera} is a scanner that makes use of model checking.
+
+
+\section{Static Analysis for Finding Vulnerabilities}
+
+Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems like unintentionally ignored expressions, use-after-free or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly use their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
+
+\cite{chess-west} explains in detail how static analysis of code works and how it can be used to find bugs and vulnerabilities.
+
 
 
 \section{Tainted Object Propagation}
