@@ -1,16 +1,27 @@
 \chapter{Static Analysis (WORK IN PROGRESS)}
-\label{static-analysis}\index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
+\label{static-analysis}
+
+This chapter describes static code analysis, the difference to other analysis types, the technical details and the theory behind it.
+
+\section{Static Analysis vs.~Dynamic Analysis}
 
 Generally, there are two basic approaches to program analysis, differentiated by the time of the analysis: \emph{static analysis} and \emph{dynamic analysis}.
 
-\emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the code of a program (i.e., the source code, byte code or machine code) of a program instead---or before---actually running it. The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, e.g., as markers in their development environment, or as feedback from a tool that is run in parallel.
+\subsection{Static Analysis}
+\index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
+
+\emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the way code of a program (the source code, byte code or machine code) will execute instead of---or before---actually running it. The analysis is performed on an abstract level, i.e., it does not use concrete data for checking.~\cite{static-code-analysis}
+
+The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, e.g., as markers in their development environment, or as feedback from a tool that is run in parallel.
 
 Static analysis allows all possible program paths to be checked, independent of whether the program paths actually are executed during the particular set of data used during execution. In addition, the results of static code analysis are repeatable.~\cite{coverity-report}
 
-\section{Static Analysis vs.~Dynamic Analysis}
+\subsection{Dynamic Analysis}
 \index{dynamic analysis}
 
-\emph{Dynamic analysis} is code analysis that happens when the code actually is executed. This usually comes with a performance penalty, but is also increases precision because the analysis works on the actual data instead of a general model of the data.~\cite{chess-west} Examples of dynamic analysis would be penetration tests (for the outside view) or unit tests.
+\emph{Dynamic analysis} is code analysis that happens when the code actually is executed. This usually comes with a performance penalty, but is also increases precision because the analysis works on the actual data instead of a general model of the data.~\cite{chess-west} However, it also considerably reduces the callback as the dynamic analysis always works on a concrete set of data, and the analysis will not find problems that only occur with different data.~\cite{static-code-analysis}
+
+Examples of automated dynamic analysis would be penetration tests (for the outside view) or unit tests.
 
 \section{Static Analysis for Finding Vulnerabilities}
 
