@@ -192,7 +192,7 @@ The command \texttt{xdebug\_debug\_zval} from the Xdebug PHP extension~\cite{xde
 x: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_42}
     \caption{A variable basically is an entry in the symbol table, pointing to a ZVAL.}
@@ -225,7 +225,7 @@ x: (refcount=2, is_ref=0)=42
 y: (refcount=2, is_ref=0)=42
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_y_42}
     \caption{PHP uses copy-on-write for variables: If one variable is a copy of another variable, both share the same ZVAL until one of the variables is modified.}
@@ -252,7 +252,7 @@ xdebug_debug_zval('x');
 x: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_42}
     \caption{After one of the two variables (that temporarily shared the same ZVAL via copy-on-write) is unset, the reference count in the ZVAL is back from 2 to 1 again.}
@@ -279,7 +279,7 @@ x: (refcount=1, is_ref=0)=3
 y: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/x_3_y_42}
     \caption{A new ZVAL is automatically created after the value of one of two variables using a copy-on-write strategy is changed.}
@@ -326,7 +326,7 @@ a1: (refcount=2, is_ref=1)='bar'
 a2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/a1_a2}
     \caption{Two variables that are references to one another share the same ZVAL. Thus, changing the value of one variable automatically affect the other variable as well.}
@@ -352,7 +352,7 @@ q1: (refcount=2, is_ref=1)='bar'
 q2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/q1_q2_q3}
     \caption{Copying the value of one variable to two variables (which are references to each other) changes the value of the target ZVAL. In this case, PHP does not use a copy-on-write strategy because a ZVAL can be involved either in references or in copy-on-write, but not both at the same time.}
@@ -379,7 +379,7 @@ p1: (refcount=1, is_ref=0)='foo'
 p2: (refcount=2, is_ref=1)='bar'
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/p1_p2_p3}
     \caption{Changing a variable from a reference to one variable to a reference to another variable basically just rearranges to which ZVAL the symbol table entry is pointing (and adjusts the reference counters in the ZVALS accordingly).}
@@ -516,7 +516,7 @@ instance2: (refcount=2, is_ref=0)=class stdClass
 
 (In the output of \texttt{xdebug\_debug\_zval}, it unfortunately is not possible to see that the ZVALs only contain the object identifiers, not the object itself. The output also does not make it clear that objects internally are represented using separate symbol tables.)
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/instance_instance2}
     \caption{Objects use the ZVAL just for the object identifier/handle, not for the actual data contained in the object.}
@@ -544,7 +544,7 @@ instance: (refcount=1, is_ref=0)=class stdClass
 instance2: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/someInstance_instance2}
     \caption{Overwriting an object variable overwrites just the ZVAL. This is a good example of object references not working like real references.}
@@ -570,7 +570,7 @@ someInstance: (refcount=2, is_ref=1)=42
 instanceReference: (refcount=2, is_ref=1)=42
 \end{textcode}
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/someInstance_instanceReference}
     \caption{References to object variables work are real references, though, as overwriting one variable automatically affects the other variable as well.}

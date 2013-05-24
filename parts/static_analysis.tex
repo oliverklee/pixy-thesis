@@ -96,7 +96,7 @@ The scanner tracks where potentially untrusted data enters the application in pl
 
 The data is used during an \texttt{echo} call, outputting the data in the request body. Places like this where data gets used in a way that could cause harm are called \bb{sinks}\index{sink}. In this case, the vulnerability would be \emph{cross-site-scripting (XSS)} (section~\ref{xss} on page~\pageref{xss}).
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.75]{images/taint}
     \caption{Tainted data enters the application via a \texttt{\$\_GET} variable source and gets used in an \texttt{echo} sink.}
@@ -108,7 +108,7 @@ Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt
 
 Data originating in a sink (i.e., an untrusted source) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
 
-\begin{figure}[!h]
+\begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.75]{images/taint-and-clean}
    \caption{Tainted data gets sanitized for XSS using \texttt{htmlspecialchars}.}
