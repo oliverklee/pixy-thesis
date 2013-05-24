@@ -16,7 +16,8 @@ The CWE issues a yearly list of the ``Top 25 Most Dangerous Software Errors''~\c
 All in all, the CWE contains 909 entries and should cover most types of vulnerabilities.~\cite{cwe-all}
 
 \section{Tainted Object Propagation Vulnerabilities}
-\index{tainted object propagation vulnerabilities}
+\index{tainted object propagation vulnerabilities}\label{tainted-object-propagation}
+
 The term \emph{tainted object propagation vulnerabilities}~\cite{finding-security-vulnerabilities} refers to a class of problems where untrusted data is used without sanitizing it properly for the context which it is to be used in. There are already some (documented) approaches to generally detecting these problems in web applications. Pixy as a scanner for tainted object propagation vulnerabilities currently is able to find SQL injection and reflective cross-site scripting.
 
 \myTable{

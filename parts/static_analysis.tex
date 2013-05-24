@@ -87,28 +87,45 @@ Tools for static code analysis can find real bugs in production software \cite{f
 
 
 
-\section{Tainted Object Propagation}
-\label{tainting}\index{tainted object propagation}
-\cite{finding-security-vulnerabilities} describes an approach to finding a class of vulnerabilities that is called \emph{tainted object propagation}. \cite{pixy-short, pixy-long, pixy-dissertation} apply this to PHP.
+\section{Scanning for Tainted Object Propagation Problems}
+\label{tainting}\index{tainted object propagation}\index{tainted object propagation scanners}
 
-Tainted object propagation builds on data-flow analysis and traces where untrusted data comes into the system and where it is used. Pixy implements this approach.
+For finding \emph{tainted object propagation} problems (see section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation} for details), scanners use the approach described below.~\cite{finding-security-vulnerabilities, chess-west} This kind of scanner correspondingly is called \emph{tainted object propagation scanner}.
 
-The concepts of this approach are as following:
-\paragraph{Sources} are the places where potentially malicious data comes in. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{\$\_GET} variable ``name'' is a source.\index{source}
-\paragraph{Tainted} means that data is considered to be potentially dangerous.\index{tainting}
-\paragraph{Sinks} are the places where the data is used and where tainted data could cause harm. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{echo} call is a sink.\index{sink}
+The scanner tracks where potentially untrusted data enters the application in places that are called \bb{Sources}\index{source}, for example parts of the Request. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{\$\_GET} variable ``name'' is a source.
+
+The data is used during an \texttt{echo} call, outputting the data in the request body. Places like this where data gets used in a way that could cause harm are called \bb{sinks}\index{sink}. In this case, the vulnerability would be \emph{cross-site-scripting (XSS)} (section~\ref{xss} on page~\pageref{xss}).
 
 \begin{figure}[!h]
-  \includegraphics[scale=0.8]{images/taint}
-  \caption{Tainted data can be traced on its way from the source to the sink.}
-  \label{fig:taint}
+  \begin{center}
+    \includegraphics[scale=0.75]{images/taint}
+    \caption{Tainted data enters the application via a \texttt{\$\_GET} variable source and gets used in an \texttt{echo} sink.}
+    \label{fig:taint}
+  \end{center}
 \end{figure}
 
-\paragraph{Sanitizing} tainted data from a source changes it so that it will not cause any harm when put into a sink. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars} call sanitized the tainted data.\index{sanitizing}\index{sanitation|see{sanitizing}}
+Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but not for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas an \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. On the other hand, sources are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
+
+Data originating in a sink (i.e., an untrusted source) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
 
 \begin{figure}[!h]
- \includegraphics[scale=0.8]{images/taint-and-clean}
- \caption{Tainted data gets sanitized on its way from the source to the sink.}
- \label{fig:taint-and-clean}
+  \begin{center}
+    \includegraphics[scale=0.75]{images/taint-and-clean}
+   \caption{Tainted data gets sanitized for XSS using \texttt{htmlspecialchars}.}
+   \label{fig:taint-and-clean}
+  \end{center}
 \end{figure}
 
+A tainted object propagation scanner uses data-flow analysis\index{data-flow analysis} to track the state of data (tainted or untainted in regard to certain vulnerability types) at each point of the program. When data flows into a sink for a certain type of vulnerability, and the data is tainted for this type of vulnerability, the scanner has found a vulnerability.
+
+In their scanner \emph{Pixy}~\cite{pixy-short, pixy-long, pixy-dissertation}\index{Pixy}, the authors apply the tainted object propagation scanning approach to PHP.
+
+In the author's experience in the TYPO3 security team~\cite{security-team-members}, most programmers have a rough understanding of the tainted object  propagation concept, but lack in understanding which sinks and which sanitation functions relate to what type of vulnerability. A common e-mail exchange about a vulnerable TYPO3 extension would go like this:
+
+\paragraph*{Security team member:} Dear TYPO3 extension author, an SQL injection vulnerability has been found in your extension and confirmed by our team. In line~172 of the files \texttt{foo.php}, data is read from a GET variable and then used for an SQL query in line~208 without being sanitized first.
+
+Could you please send us a patch that fixes this issue together with an updated version of your extension?
+
+\paragraph*{TYPO3 extension author:} Thanks for your e-mail. Please find attached the patch and the new version of the extension.
+
+\paragraph*{Security team member:} (looks at the patch and finds an \texttt{htmlspecialchars} call that is supposed to fix the SQL injection) \emph{Sigh.}
