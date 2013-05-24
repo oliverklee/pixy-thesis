@@ -1,13 +1,13 @@
 \chapter{PHP (partly READY FOR FEEDBACK, partly TODO)}
 \label{php}\index{PHP}
 
-PHP~\cite{php-in-action} is a server-side web scripting language. In its current version, it is object-oriented and dynamically typed. However, it provides some minimal type safety using type hinting, i.e., function parameters can be typed using class names or ``array''. PHP provides lots of powerful built-in functions for cryptography, string handling, ZIP handling, networking, XML, and more.
+PHP~\cite{php-in-action} is a server-side web scripting language. In its current version, it is object-oriented and dynamically typed. However, it provides some minimal type safety using type hinting, \ie function parameters can be typed using class names or ``array''. PHP provides lots of powerful built-in functions for cryptography, string handling, ZIP handling, networking, XML, and more.
 
 \section{Challenges in Static Analysis for PHP (READY FOR FEEDBACK, PROOFREAD)}
 
 In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
 
-For example, the following constructs are possible, making static analysis a lot harder than e.g. for Java:
+For example, the following constructs are possible, making static analysis a lot harder than \eg for Java:
 
 \begin{phpcode}
 // bar contains the name of the class to instantiate.
@@ -46,7 +46,7 @@ require_once($classFile);
 $bar = new MyClass();
 \end{phpcode}
 
-In addition, PHP starting from version 5 makes use of so-called \emph{autoloading}, i.e., the file with the code of a class gets loaded dynamically when the class is used for the first time. PHP does not provide a default autoloader; instead, programmers need to define their own autoloading routines and register these with PHP.~\cite{php-manual-autoloading}
+In addition, PHP starting from version 5 makes use of so-called \emph{autoloading}, \ie the file with the code of a class gets loaded dynamically when the class is used for the first time. PHP does not provide a default autoloader; instead, programmers need to define their own autoloading routines and register these with PHP.~\cite{php-manual-autoloading}
 \index{autoloading}\index{autoloader|see{autoloading}}
 
 \begin{phpcode}

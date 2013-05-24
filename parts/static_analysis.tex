@@ -10,9 +10,9 @@ Generally, there are two basic approaches to program analysis, differentiated by
 \subsection{Static Analysis}
 \index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
 
-\emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the way code of a program (the source code, byte code or machine code) will execute instead of---or before---actually running it. The analysis is performed on an abstract level, i.e., it does not use concrete data for checking.~\cite{static-code-analysis}
+\emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the way code of a program (the source code, byte code or machine code) will execute instead of---or before---actually running it. The analysis is performed on an abstract level, \ie it does not use concrete data for checking.~\cite{static-code-analysis}
 
-The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, e.g., as markers in their development environment, or as feedback from a tool that is run in parallel.
+The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, \eg as markers in their development environment, or as feedback from a tool that is run in parallel.
 
 Static analysis allows all possible program paths to be checked, independent of whether the program paths actually are executed during the particular set of data used during execution. In addition, the results of static code analysis are repeatable.~\cite{coverity-report}
 
@@ -38,7 +38,7 @@ The scanner checks for security vulnerabilities by scanning for certain commands
 
 Still, it is possible to use this approach for finding some vulnerabilities, for example using \emph{Google Code Search}\index{Google Code Search}.~\cite{google-code-search}
 
-The main drawback of this approach is that there are lots of false positives (e.g., with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot differentiate between a potentially unsafe command being executed with data that is really unsafe and those cases where the data at is ensured to be safe that point.
+The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot differentiate between a potentially unsafe command being executed with data that is really unsafe and those cases where the data at is ensured to be safe that point.
 
 The most basic way of applying this code analysis is by just using the text search function of a text editor (with or without regular expressions)\index{regular expressions}) or text-search command line tools like \emph{grep}.
 
@@ -46,7 +46,7 @@ The most basic way of applying this code analysis is by just using the text sear
 \subsection{Syntactic Bug Pattern Detection (``Style Checking'')}
 \index{style checking}\index{syntactic bug pattern detection}
 
-Syntactic bug pattern detection means the scanner works a model of the code and its structure, for example a stream of tokens or an abstract syntax tree. However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, e.g., in continuous integration (CI)\index{continuous integration} environments like Jenkins. Hence, these scanners also are called ``style checkers''.
+Syntactic bug pattern detection means the scanner works a model of the code and its structure, for example a stream of tokens or an abstract syntax tree. However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, \eg in continuous integration (CI)\index{continuous integration} environments like Jenkins. Hence, these scanners also are called ``style checkers''.
 
 Compared to string pattern matching for finding bugs, this approach greatly reduces the number of false positives and makes the scanner a lot more useful.~\cite{comparison-of-bug-finding-tools}. Tools like \emph{PHPCodeSniffer}\index{PHPCodeSniffer}, \emph{PMD}\index{PMD} or \emph{FindBugs}\index{FindBugs} fall into this category.
 
@@ -54,9 +54,9 @@ Compared to string pattern matching for finding bugs, this approach greatly redu
 \subsection{Data-Flow Analysis}
 \index{data-flow analysis}\index{control-flow analysis}
 
-Scanners that rely on data-flow analysis first create information about the control flow, i.e., about the possible paths through the program. On top of this information, they compute information about the what data is used or modified at which program point.~\cite{data-flow-analysis} This information usually is an approximation of the real data that is used during program execution.
+Scanners that rely on data-flow analysis first create information about the control flow, \ie about the possible paths through the program. On top of this information, they compute information about the what data is used or modified at which program point.~\cite{data-flow-analysis} This information usually is an approximation of the real data that is used during program execution.
 
-Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{intraproceducal data-flow analysis} (i.e., the analysis of the data flow within a function and in the global scope) and \emph{interproceducal data-flow analysis}\index{interproceducal data-flow analysis} (i.e., the analysis of the data flow between functions).
+Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{intraproceducal data-flow analysis} (\ie the analysis of the data flow within a function and in the global scope) and \emph{interproceducal data-flow analysis}\index{interproceducal data-flow analysis} (\ie the analysis of the data flow between functions).
 
 Data-flow analysis is the most precise way of scanning statically for security vulnerabilities without having to annotate the source code in any way.
 
@@ -106,7 +106,7 @@ The data is used during an \texttt{echo} call, outputting the data in the reques
 
 Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but not for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. On the other hand, sources are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
 
-Data originating in a sink (i.e., an untrusted source) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
+Data originating in a sink (\ie an untrusted source) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
 
 \begin{figure}[htb]
   \begin{center}

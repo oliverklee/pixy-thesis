@@ -5,7 +5,7 @@ The vulnerabilities in this chapter are divided into two parts: Tainted object p
 
 This list of vulnerabilities is by no means complete, but should cover the most common vulnerabilities found in PHP web applications (according to the author's experience as a member of the TYPO3 Security Team since 2008~\cite{security-team-members}). The code examples are all by the author.
 
-\emph{Note: The URLs of all examples in this section are not URL-encoded to make them easier to read. In real life, the URL would be URL-encoded, e.g., spaces would be encoded as \texttt{\%20}.}
+\emph{Note: The URLs of all examples in this section are not URL-encoded to make them easier to read. In real life, the URL would be URL-encoded, \eg spaces would be encoded as \texttt{\%20}.}
 
 \section{The ``Common Weakness Enumeration'' List}
 \index{Common Weakness Enumeration}\index{CWE|see{Common Weakness Enumeration}}
@@ -75,7 +75,7 @@ This effectively deletes all records from the \texttt{posts} table.
 \label{xss}\index{cross-site scripting}\index{XSS|see{cross-site scripting}}
 Cross-site-scripting (XSS) means that a string (or generally some data) from an external source is used in the website output, allowing to inject HTML, JavaScript or (seldom) XML. This provides an attacker with leverage for attacks such as sending the current cookies to a malicious site. The cookie then can be used for session hijacking.
 
-There are two variants of XSS: \emph{reflective XSS}, where the malicious data is directly transmitted without having been stored, e.g., via a URL, and \emph{persistent XSS}, where the malicious data gets stored in a database or a file.
+There are two variants of XSS: \emph{reflective XSS}, where the malicious data is directly transmitted without having been stored, \eg via a URL, and \emph{persistent XSS}, where the malicious data gets stored in a database or a file.
 
 In April 2010, the Apache Foundation reported an incident where an XSS vulnerability was used for a series of attacks that resulted in an attacker gaining root privileges for a server. \cite{apache-incident-report}
 
@@ -131,7 +131,7 @@ However, as of PHP versions 4.4.2 and 5.1.2, the \texttt{header()} function only
 
 \subsection{Directory Traversal/Path Traversal}
 \label{directory-traversal}\index{directory traversal}\index{path traversal}
-Directory traversal (also known as \emph{path traversal}) is possible if a vulnerable application includes or outputs a file using a path that comes from an untrusted source. If the application does not check that the path is relative and does not contain two dots (\texttt{..}) (directly or URL-encoded), it is possible to read or overwrite files that should not be visible, e.g. \texttt{/etc/passwd/} or the file with the database credential of the application.
+Directory traversal (also known as \emph{path traversal}) is possible if a vulnerable application includes or outputs a file using a path that comes from an untrusted source. If the application does not check that the path is relative and does not contain two dots (\texttt{..}) (directly or URL-encoded), it is possible to read or overwrite files that should not be visible, \eg \texttt{/etc/passwd/} or the file with the database credential of the application.
 
 This is an example of vulnerable code:
 
@@ -272,7 +272,7 @@ Open Redirect & \#22 & CWE-601 & \cite{open-redirect-google}\\
 
 \subsection{Information Disclosure/Information Exposure}
 \label{information-disclosure}\index{information disclosure}
-Information disclosure (also known as \emph{information exposure}) emerges when an application discloses internal information like database user names or the executed SQL, e.g. in error messages or HTML comments.
+Information disclosure (also known as \emph{information exposure}) emerges when an application discloses internal information like database user names or the executed SQL, \eg in error messages or HTML comments.
 
 This is an example of vulnerable code:
 
@@ -319,7 +319,7 @@ If the attacker finds a case of a file not being readable, this would expose the
 
 \subsection{Cross-Site Request Forgery (CSRF/XSRF)}
 \label{xscr,csrf}\index{cross-site request forgery}\index{CSRF|see{cross-site request forgery}}\index{XSRF|see{cross-site request forgery}}\index{session}
-Cross-site request forgery (CSRF/XSRF) means that the current user session of a web application (e.g., in an open browser tab) is misused to execute certain actions on that site via malicious links, e.g. sending SPAM, changing the user's password or deleting their profile.
+Cross-site request forgery (CSRF/XSRF) means that the current user session of a web application (e.g., in an open browser tab) is misused to execute certain actions on that site via malicious links, \eg sending SPAM, changing the user's password or deleting their profile.
 
 A common protection against an CSRF attack is requiring a token to be submitted together with the request. This token is unique to the current user session and usually not visible to the user. An attacker would need to retrieve the current session token, and merely submitting a fixed URL with a request would not work anymore. Facebook and TYPO3 use the token technique.~\cite{facebook-tokens, typo3-csrf}
 

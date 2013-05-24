@@ -1,7 +1,7 @@
 \chapter{Review of Existing Static PHP Vulnerability Scanners (READY FOR FEEDBACK, PROOFREAD)}
 \label{scanners}
 
-For this thesis, an existing scanner was needed that already worked reasonably well and could be modified (i.e., it needed to be under an Open Source license like the Gnu Public License).
+For this thesis, an existing scanner was needed that already worked reasonably well and could be modified (\ie it needed to be under an Open Source license like the Gnu Public License).
 
 \section{Used Test Suite}
 The author created a small test suite that was used to check the abilities of the various scanners. The test suite contains several instances of XSS and SQL injection in various forms:
@@ -20,7 +20,7 @@ The author created a small test suite that was used to check the abilities of th
 \label{swaat}\index{SWAAT}
 SWAAT~\cite{swaat} is closed-source freeware or open source (depending on whether the enclosed FAQ file or the web site should be considered the more current source), programmed in .NET. It solely relies on string matching. On the test suite, it listed practically all SQL queries as ``security sensitive functionality'', recommending ``manual source code review''. Effectively, it produced many false positive and did not find any of the existing XSS issues.
 
-This project has been orphaned, i.e. development and maintenance have ceased.
+This project has been orphaned, \ie development and maintenance have ceased.
 
 \section{CodeSecure Verifier}
 \label{armorize}\index{Code Secure Verifier}\index{Armorize Code Secure Verifier}
