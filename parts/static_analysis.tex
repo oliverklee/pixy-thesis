@@ -1,4 +1,4 @@
-\chapter{Static Analysis (WORK IN PROGRESS)}
+\chapter{Static Analysis (READY FOR FEEDBACK)}
 \label{static-analysis}
 
 This chapter describes static code analysis, the difference to other analysis types, the technical details and the theory behind it.
@@ -79,11 +79,38 @@ Model checking relies on creating suitable models of the program---either by han
 \emph{Bandera}\index{Bandera} is a scanner that makes use of model checking.
 
 
+
+\section{The Components of a Code Analyzer using Data-flow Analysis}
+
+The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzer and compilers start with the source code as a plain text file and need some abstract semantic information on the program to work with.
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=1.0]{images/compiler-parts}
+    \caption{The main components in the processing chain of a code analyzer using data-flow analysis basically are the same as these from a compiler.}
+    \label{fig:compiler-parts}
+  \end{center}
+\end{figure}
+
+
+\subsection{Lexer, Lexical Analyzer, Scanner, Tokenizer}
+\index{lexer}\index{lexical analyzer}\index{scanner}\index{tokenizer}\index{token manager}
+
+The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\footnote{In all other places of this thesis, the author uses the term \emph{scanner} with the meaning ``security scanner''.} or \emph{tokenizer}) takes the stream of characters of the source program as input and converts them into meaningful sequences called \emph{tokens} or \emph{lexemes}.~\cite{compilers, compiler-construction}\index{token}\index{lexem}
+
+
+\subsection{Parser, Syntax Analyzer}
+\index{parser}\index{syntax analyzer}
+
+The \emph{parser} (also referred to as \emph{syntax analyzer}) takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the tokens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}\index{three-address code}\index{TAC\see{three-address code}}
+
+
 \section{Static Analysis for Finding Vulnerabilities}
 
 Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems like unintentionally ignored expressions, use-after-free or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly use their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
 
 \cite{chess-west} explains in detail how static analysis of code works and how it can be used to find bugs and vulnerabilities.
+
 
 
 
