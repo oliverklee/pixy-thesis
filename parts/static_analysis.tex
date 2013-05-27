@@ -5,7 +5,7 @@ This chapter describes static code analysis, the difference to other analysis ty
 
 \section{Static Analysis vs.~Dynamic Analysis}
 
-Generally, there are two basic approaches to program analysis, differentiated by the time of the analysis: \emph{static analysis} and \emph{dynamic analysis}.
+Generally, there are two basic approaches to program analysis, differentiated by the time the analysis is performed: \emph{static analysis} and \emph{dynamic analysis}.
 
 \subsection{Static Analysis}
 \index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
@@ -14,33 +14,33 @@ Generally, there are two basic approaches to program analysis, differentiated by
 
 The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, \eg as markers in their development environment, or as feedback from a tool that is run in parallel.
 
-Static analysis allows all possible program paths to be checked, independent of whether the program paths actually are executed during the particular set of data used during execution. In addition, the results of static code analysis are repeatable.~\cite{coverity-report}
+Static analysis allows all possible program paths to be checked, independent of the program paths actually being executed during the particular set of data used during execution. In addition, the results of static code analysis are repeatable.~\cite{coverity-report}
 
 \subsection{Dynamic Analysis}
 \index{dynamic analysis}
 
-\emph{Dynamic analysis} is code analysis that happens when the code actually is executed. This usually comes with a performance penalty, but is also increases precision because the analysis works on the actual data instead of a general model of the data.~\cite{chess-west} However, it also considerably reduces the callback as the dynamic analysis always works on a concrete set of data, and the analysis will not find problems that only occur with different data.~\cite{static-code-analysis}
+\emph{Dynamic analysis} is code analysis that happens when the code is executed. This usually comes with a performance penalty, but it also increases precision because the analysis works on the actual data instead of a general model of the data.~\cite{chess-west} However, it also considerably reduces the callback as the dynamic analysis always works on a concrete set of data, and the analysis will not find problems that only occur with different data.~\cite{static-code-analysis}
 
-Examples of automated dynamic analysis would be penetration tests (for the outside view) or unit tests.
+Examples of automated dynamic analysis would be penetration tests for the outside view or unit tests.
 
 
 
 \section{Approaches to Static Analysis}
-Generally, there are several different approaches when doing static code analysis~\cite{comparison-of-bug-finding-tools}: string pattern matching, syntactic bug pattern detection, data-flow analysis, theorem proving and model checking.
+Generally, there are several different approaches when doing static code analysis~\cite{comparison-of-bug-finding-tools}: string pattern matching, syntactic bug pattern detection, data-flow analysis, theorem proving and model checking, all of which are to be explained in this section.
 
 
 \subsection{String Pattern Matching}
 \index{string pattern matching}
 
-\emph{String pattern matching} is the most simple form of static code analysis. With this approach, the scanner approaches the program basically just as list of lines, which consist of characters. This kind of scanner does not operate on tokens or any other abstracted structure of the program.
+\emph{String pattern matching} is the most simple form of static code analysis. With this ap\-proach, the scanner approaches the program basically just as list of lines, which consist of characters. This kind of scanner does not operate on tokens or any other abstracted structure of the program.
 
-The scanner checks for security vulnerabilities by scanning for certain commands or command sequences and heavily relies on the human eye for filtering out false positives. This greatly reduces its practical use as programmers tend to ignore warnings if they contains lots of false positives.~\cite{understanding-value}
+The scanner checks for security vulnerabilities by scanning for certain commands or command sequences and heavily relies on the human eye for filtering out false positives. This greatly reduces its practical use as programmers tend to ignore warnings if they contain lots of false positives.~\cite{understanding-value}
 
 Still, it is possible to use this approach for finding some vulnerabilities, for example using \emph{Google Code Search}\index{Google Code Search}.~\cite{google-code-search}
 
-The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot differentiate between a potentially unsafe command being executed with data that is really unsafe and those cases where the data at is ensured to be safe that point.
+The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot distinguish between a potentially unsafe command being executed with data that is in fact unsafe and those cases where the data at is ensured to be safe at that point.
 
-The most basic way of applying this code analysis is by just using the text search function of a text editor (with or without regular expressions)\index{regular expressions}) or text-search command line tools like \emph{grep}.
+The most basic way of applying this code analysis is by simply using the text search function of a text editor---possibly with regular expressions\index{regular expressions}---or text-search command line tools like \emph{grep}.
 
 
 \subsection{Syntactic Bug Pattern Detection (``Style Checking'')}
@@ -54,9 +54,9 @@ Compared to string pattern matching for finding bugs, this approach greatly redu
 \subsection{Data-Flow Analysis}
 \index{data-flow analysis}\index{control-flow analysis}
 
-Scanners that rely on data-flow analysis first create information about the control flow, \ie about the possible paths through the program. On top of this information, they compute information about the what data is used or modified at which program point.~\cite{data-flow-analysis} This information usually is an approximation of the real data that is used during program execution.
+Scanners that rely on data-flow analysis first create information about the control flow, \ie about the possible paths through the program. On top of this information, they compute information about what data is used or modified at which program point.~\cite{data-flow-analysis} This information usually is an approximation of the real data that is used during program execution.
 
-Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{intraproceducal data-flow analysis} (\ie the analysis of the data flow within a function and in the global scope) and \emph{interproceducal data-flow analysis}\index{interproceducal data-flow analysis} (\ie the analysis of the data flow between functions).
+Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{intraproceducal data-flow analysis} (\ie the analysis of the data flow both within a function as well as in the global scope) and \emph{interproceducal data-flow analysis}\index{interproceducal data-flow analysis}, \ie the analysis of the data flow between functions.
 
 Data-flow analysis is the most precise way of scanning statically for security vulnerabilities without having to annotate the source code in any way.
 
@@ -68,13 +68,13 @@ Data-flow analysis is the most precise way of scanning statically for security v
 
 \emph{Theorem proving} relies on the programmer adding preconditions, postconditions and loop invariants to the source code as code annotations. The scanner then can analyze the program and check whether all conditions are met.~\cite{comparison-of-bug-finding-tools}
 
-\emph{ESC/Java}\index{ESC/Java} is an example for this class of tools.
+\emph{ESC/Java}\index{ESC/Java} is an example from this class of tools.
 
 
 \subsection{Model Checking}
 \index{model checking}
 
-Model checking relies on creating suitable models of the program---either by hand or automatically, using code annotations that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs that include library calls are practically impossible to check, which greatly reduces the applicability of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
+Model checking relies on creating suitable models of the program---either manually or automatically by using code annotations that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs including library calls are practically impossible to check as it would be necessary to model their complete behavior, not just \eg the fact that they do (or do not) sanitize their inputs. This greatly reduces the 	feasibility of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
 
 \emph{Bandera}\index{Bandera} is a scanner that makes use of model checking.
 
@@ -82,7 +82,7 @@ Model checking relies on creating suitable models of the program---either by han
 
 \section{The Components of a Code Analyzer using Data-flow Analysis}
 
-The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzer and compilers start with the source code as a plain text file and need some abstract semantic information on the program to work with.
+The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzers and compilers start with the source code as a plain text file and need some abstract semantic information on the program to work with.
 
 \begin{figure}[htb]
   \begin{center}
@@ -102,7 +102,7 @@ The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\fo
 \subsection{Parser, Syntax Analyzer}
 \index{parser}\index{syntax analyzer}
 
-The \emph{parser} (also referred to as \emph{syntax analyzer}) takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the tokens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}\index{three-address code}\index{TAC\see{three-address code}}
+The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the to\-kens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}\index{three-address code}\index{TAC\see{three-address code}}
 
 
 \section{Three-address Code (TAC) (TODO)}
@@ -114,10 +114,9 @@ The \emph{parser} (also referred to as \emph{syntax analyzer}) takes the lexemes
 
 \section{Static Analysis for Finding Vulnerabilities}
 
-Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems like unintentionally ignored expressions, use-after-free or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly use their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
+Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems such as unintentionally ignored expressions, use-after-free or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly uses their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
 
-\cite{chess-west} explains in detail how static analysis of code works and how it can be used to find bugs and vulnerabilities.
-
+\cite{chess-west} explains in detail the way static analysis of code works and the techniques to use it to find bugs and vulnerabilities.
 
 
 
@@ -126,9 +125,9 @@ Tools for static code analysis can find real bugs in production software \cite{f
 
 For finding \emph{tainted object propagation} problems (see section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation} for details), scanners use the approach described below.~\cite{finding-security-vulnerabilities, chess-west} This kind of scanner correspondingly is called \emph{tainted object propagation scanner}.
 
-The scanner tracks where potentially untrusted data enters the application in places that are called \bb{Sources}\index{source}, for example parts of the Request. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{\$\_GET} variable ``name'' is a source.
+The scanner tracks where potentially untrusted data enters the application in places that are called \bb{Sources}\index{source}, for example parts of the request. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{\$\_GET} variable ``name'' is a source.
 
-The data is used during an \texttt{echo} call, outputting the data in the request body. Places like this where data gets used in a way that could cause harm are called \bb{sinks}\index{sink}. In this case, the vulnerability would be \emph{cross-site-scripting (XSS)} (section~\ref{xss} on page~\pageref{xss}).
+The data is used during an \texttt{echo} call, outputting the data in the request body. Places like this in which data gets used in a way that could cause harm are called \bb{sinks}\index{sink}. In this case, the vulnerability would be \emph{cross-site-scripting (XSS)} (section~\ref{xss} on page~\pageref{xss}).
 
 \begin{figure}[htb]
   \begin{center}
@@ -138,7 +137,7 @@ The data is used during an \texttt{echo} call, outputting the data in the reques
   \end{center}
 \end{figure}
 
-Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but not for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. On the other hand, sources are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
+Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but it is not a sink for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. Sources, however, are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
 
 Data originating in a sink (\ie an untrusted source) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
 
@@ -156,10 +155,14 @@ In their scanner \emph{Pixy}~\cite{pixy-short, pixy-long, pixy-dissertation}\ind
 
 In the author's experience in the TYPO3 security team~\cite{security-team-members}, most programmers have a rough understanding of the tainted object  propagation concept, but lack in understanding which sinks and which sanitation functions relate to what type of vulnerability. A common e-mail exchange about a vulnerable TYPO3 extension would go like this:
 
-\paragraph*{Security team member:} Dear TYPO3 extension author, an SQL injection vulnerability has been found in your extension and confirmed by our team. In line~172 of the files \texttt{foo.php}, data is read from a GET variable and then used for an SQL query in line~208 without being sanitized first.
+\begin{quote}
+
+\bb{Security team member:} Dear TYPO3 extension author, an SQL injection vulnerability has been found in your extension and confirmed by our team. In line~172 of the file \texttt{foo.php}, data is read from a GET variable and then used for an SQL query in line~208 without being sanitized first.
 
 Could you please send us a patch that fixes this issue together with an updated version of your extension?
 
-\paragraph*{TYPO3 extension author:} Thanks for your e-mail. Please find attached the patch and the new version of the extension.
+\bb{TYPO3 extension author:} Thanks for your e-mail. Please find attached the patch and the new version of the extension.
 
-\paragraph*{Security team member:} (looks at the patch and finds an \texttt{htmlspecialchars} call that is supposed to fix the SQL injection) \emph{Sigh.}
+\bb{Security team member:} (looks at the patch and finds an \texttt{htmlspecialchars} call that is supposed to fix the SQL injection) \emph{Sigh.}
+
+\end{quote}
