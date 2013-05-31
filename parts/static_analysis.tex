@@ -32,13 +32,17 @@ Generally, there are several different approaches when doing static code analysi
 \subsection{String Pattern Matching}
 \index{string pattern matching}
 
-\emph{String pattern matching} is the most simple form of static code analysis. With this ap\-proach, the scanner approaches the program basically just as list of lines, which consist of characters. This kind of scanner does not operate on tokens or any other abstracted structure of the program.
+\emph{String pattern matching} is the most simple form of static code analysis.
+
+With this ap\-proach, the scanner approaches the source code basically just as list of lines, which consist of characters. This kind of scanner does not operate on tokens or any other abstracted structure of the program.
+
+To the author's knowledge, this approach is only used in security scanners, but not for other static code analysis tools.
 
 The scanner checks for security vulnerabilities by scanning for certain commands or command sequences and heavily relies on the human eye for filtering out false positives. This greatly reduces its practical use as programmers tend to ignore warnings if they contain lots of false positives.~\cite{understanding-value}
 
 Still, it is possible to use this approach for finding some vulnerabilities, for example using \emph{Google Code Search}\index{Google Code Search}.~\cite{google-code-search}
 
-The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot distinguish between a potentially unsafe command being executed with data that is in fact unsafe and those cases where the data at is ensured to be safe at that point.
+The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot distinguish between a potentially unsafe command being executed with data that is in fact unsafe and those cases where the data is already ensured to be safe at that point.
 
 The most basic way of applying this code analysis is by simply using the text search function of a text editor---possibly with regular expressions\index{regular expressions}---or text-search command line tools like \emph{grep}.
 
@@ -46,7 +50,7 @@ The most basic way of applying this code analysis is by simply using the text se
 \subsection{Syntactic Bug Pattern Detection (``Style Checking'')}
 \index{style checking}\index{syntactic bug pattern detection}
 
-Syntactic bug pattern detection means the scanner works a model of the code and its structure, for example a stream of tokens or an abstract syntax tree. However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, \eg in continuous integration (CI)\index{continuous integration} environments like Jenkins. Hence, these scanners also are called ``style checkers''.
+Syntactic bug pattern detection means the scanner works a model of the code and its structure, for example a stream of tokens or an abstract syntax tree (section~\ref{ast}). However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, \eg in continuous integration (CI)\index{continuous integration} environments like \emph{Jenkins}~\cite{jenkins}. Hence, these scanners also are called ``style checkers''.
 
 Compared to string pattern matching for finding bugs, this approach greatly reduces the number of false positives and makes the scanner a lot more useful.~\cite{comparison-of-bug-finding-tools}. Tools like \emph{PHPCodeSniffer}\index{PHPCodeSniffer}, \emph{PMD}\index{PMD} or \emph{FindBugs}\index{FindBugs} fall into this category.
 
@@ -58,7 +62,7 @@ Scanners that rely on data-flow analysis first create information about the cont
 
 Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{intraproceducal data-flow analysis} (\ie the analysis of the data flow both within a function as well as in the global scope) and \emph{interproceducal data-flow analysis}\index{interproceducal data-flow analysis}, \ie the analysis of the data flow between functions.
 
-Data-flow analysis is the most precise way of scanning statically for security vulnerabilities without having to annotate the source code in any way.
+Data-flow analysis is the most precise way of scanning statically for security vulnerabilities without having to annotate the source code in any way.~\cite{comparison-of-bug-finding-tools}
 
 \emph{Pixy}~\cite{pixy} is an example of a security scanner using data-flow analysis.
 
@@ -82,7 +86,9 @@ Model checking relies on creating suitable models of the program---either manual
 
 \section{The Components of a Code Analyzer using Data-flow Analysis}
 
-The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzers and compilers start with the source code as a plain text file and need some abstract semantic information on the program to work with.
+The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzers and compilers can start with the source code as a plain text file and need some abstract semantic information on the program to work with.
+
+If the static code analyzer works on a later product of the compiler tool chain (like bytecode or machine code), the static code analyzer of course does not need to have the components that already have been used by the compiler. For example, JLint works on Java bytecode~\cite{comparison-of-bug-finding-tools}, and Bytekit works on the bytecode generated during the PHP interpreter's compilation phase, providing control flow graphs.~\cite{bytekit, bytekit-cli}\index{bytecode}
 
 \begin{figure}[htb]
   \begin{center}
@@ -105,16 +111,26 @@ The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\fo
 The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the to\-kens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}\index{three-address code}\index{TAC\see{three-address code}}
 
 
-\section{Three-address Code (TAC) (TODO)}
+\section{Abstract Syntax Trees (AST)}
+\label{ast}
+\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}
 
+\section{Parse Tree/Concrete Syntax Tree}
+\label{parse-tree}
+\index{parse tree}\index{concrete syntax tree}
+
+\section{Three-address Code (TAC) (TODO)}
+\label{tac}
+\index{three-address code}\index{TAC\see{three-address code}}
 
 \section{Control-flow Graphs (TODO)}
-
+\label{cfg}
+\index{control-flow graph}\index{CFG\see{control-flow graph}}
 
 
 \section{Static Analysis for Finding Vulnerabilities}
 
-Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems such as unintentionally ignored expressions, use-after-free or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly uses their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
+Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems such as unintentionally ignored expressions, use-after-free~\cite{use-after-free-definition} or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly uses their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
 
 \cite{chess-west} explains in detail the way static analysis of code works and the techniques to use it to find bugs and vulnerabilities.
 
@@ -125,7 +141,7 @@ Tools for static code analysis can find real bugs in production software \cite{f
 
 For finding \emph{tainted object propagation} problems (see section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation} for details), scanners use the approach described below.~\cite{finding-security-vulnerabilities, chess-west} This kind of scanner correspondingly is called \emph{tainted object propagation scanner}.
 
-The scanner tracks where potentially untrusted data enters the application in places that are called \bb{Sources}\index{source}, for example parts of the request. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{\$\_GET} variable ``name'' is a source.
+The scanner tracks where potentially untrusted data enters the application in places that are called \bb{sources}\index{source}, for example parts of the request. In the example (figure \ref{fig:taint} on page \pageref{fig:taint}), the \texttt{\$\_GET} variable ``name'' is a source.
 
 The data is used during an \texttt{echo} call, outputting the data in the request body. Places like this in which data gets used in a way that could cause harm are called \bb{sinks}\index{sink}. In this case, the vulnerability would be \emph{cross-site-scripting (XSS)} (section~\ref{xss} on page~\pageref{xss}).
 
