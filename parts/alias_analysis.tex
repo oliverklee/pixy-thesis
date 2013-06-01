@@ -1,10 +1,10 @@
-\chapter{Alias Analysis (WORK IN PROGRESS)}
+\chapter{Alias Analysis (party READY FOR FEEDBACK, PRROFREAD, partly TODO)}
 
 When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good recall is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them---or stop using the tool.~\cite{understanding-value}
 
 For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus, a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
 
-\section{Alias Analysis in Pixy}
+\section{Alias Analysis in Pixy (READY FOR FEEDBACK, PROOFREAD)}
 
 For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{data-flow-analysis}, including the concept of ``must'' and ``may'' aliases.
 
@@ -19,7 +19,7 @@ This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b}
 This concept comes into use both for intraprocedural as well as interprocedural alias analysis.
 
 
-\subsection{Intraprocedural Alias Analysis (READY FOR FEEDBACK, PROOFREAD)}
+\subsection{Intraprocedural Alias Analysis}
 \label{sec:intraprocedural-alias-analysis}\index{alias analysis!intraprocedural}\index{intraprocedural alias analysis|see{alias analysis, intraprocedural}}
 
 This section describes how Pixy conducts alias analysis within a function or method (as explained in~\cite{pixy}).
@@ -73,7 +73,7 @@ To ease processing, the alias tuples with more than two elements are split into 
 $mustAliases = \{(a, b)\}, mayAliases = \{(c, d), (c, e), (d, e)\}$
 
 
-\subsection{Interprocedural Alias Analysis (READY FOR FEEDBACK, PROOFREAD)}
+\subsection{Interprocedural Alias Analysis}
 \label{sec:interprocedural-alias-analysis}\index{alias analysis!interprocedural}\index{interprocedural alias analysis|see{alias analysis, interprocedural}}
 
 This section describes how Pixy conducts alias analysis between functions or methods (as explained in~\cite{pixy}).
@@ -280,7 +280,7 @@ $mustAliases = \{(bar.b1, m.a1), (bar.b3, m.a3)\}, mayAliases = \{(bar.b2, m.a2)
 
 
 
-\section{Alias Analysis and Tainted Object Propagation Scanning (READY FOR FEEDBACK)}
+\section{Alias Analysis and Tainted Object Propagation Scanning (READY FOR FEEDBACK, PROOFREAD)}
 
 When a tainted object propagation scanner (see section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation}) tracks the taint state of variables, alias information is very important both for increasing recall (\ie reducing the number of false negatives) as well as for increasing precision (\ie reducing the number of false positives).
 
@@ -319,4 +319,4 @@ Let's have a look at the two relevant cases here: When a variable gets tainted--
 
 
 
-\section{Alias Analysis for the Default Pass-by-Reference in PHP~5}
+\section{Alias Analysis for the Default Pass-by-Reference in PHP~5 (TODO)}
