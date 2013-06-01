@@ -166,6 +166,46 @@ if ($x > $y) {
 \label{tac}
 \index{three-address code}\index{TAC\see{three-address code}}
 
+\emph{Three-address code (TAC)}~\cite{compiler-construction, compilers} is a theoretical concept for an intermediate program representation that roughly resembles assembly code and that is particularly useful for data-flow analysis. Three-address codes each consist of a basic operation and up to three addresses (hence the name). Addresses (sometimes also called ``places'') can be variables, constants, literals, compiler-generated temporaries, or jump targets.
+
+Let's see how some example PHP code translates into three-address code:
+
+\begin{phpcode}
+$x = 1;
+$y = 2;
+$x = $x + $y;
+if ($x == 3) {
+  $z = 4;
+}
+\end{phpcode}
+
+There are two approaches to writing three-address code. The first approach lists the operator first, making the notation more strict:
+
+\begin{textcode}
+     (=, x, 1)            // x = 1
+     (=, y, 2)            // y = 2
+     (+, t0, x, y)        // t0 is a compiler-generated temporary as
+                          // x gets overwritten, making x non-unique.
+     (if_neq, t0, 3, @L0) // Jumpo to @L0 if t0 is not equal to 3.
+     (=, z, 4)            // z = 4
+@L0:                      // The jump target is labelled @L0.
+\end{textcode}
+
+Another approach is to put the operator(s) where they fit more naturally, making the notation more human-readable:
+
+\begin{textcode}
+     (x = 1)
+     (y = 2)
+     (t0 = x + y)
+     (if t0 != 3 goto @L0)
+     (z = 4)
+@L0:
+\end{textcode}
+
+This is still the same three-address code, just written a bit differently.
+
+
+
 \section{Control-flow Graphs (TODO)}
 \label{cfg}
 \index{control-flow graph}\index{CFG\see{control-flow graph}}
