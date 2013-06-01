@@ -71,6 +71,7 @@ protected function foo(array $bar) {
 
 
 \section{Variables, References and Aliases (READY FOR FEEDBACK, PROOFREAD)}
+\label{php-variables}\index{variables in PHP}
 
 To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. The following section covers this, including the implementation details of variables in PHP as well as the various types of references that are possible in PHP.
 
@@ -584,6 +585,29 @@ instanceReference: (refcount=2, is_ref=1)=42
     \label{fig:real-object-references}
   \end{center}
 \end{figure}
+
+
+\section{Register\_globals (READY FOR FEEDBACK)}
+\label{register-globals}\index{register\_globals}
+
+In the PHP configuration, there is an option \texttt{register\_globals}. If this option is set to \texttt{On}, uninitialized variables are automatically initialized with data from the request using the same key as the variable name.
+
+If a program does not properly initialize a variable (which would be considered very bad style), this could allow attackers to inject variable content via the request, creating a vulnerability.
+
+The following code demonstrates this:
+
+\begin{phpcode}
+if ($this->isUserLoggedIn()) {
+  $user = $this->getLoggedInUser();
+  $escapedUserName = htmlspecialchars($user->getName());
+}
+
+echo '<h2>Welcome back, ' . $escapedUserName . '!</h2>';
+\end{phpcode}
+
+If no user is logged in, the \texttt{\$escapedUserName} variable is uninitialized in line 6, causing the code to be susceptible to cross-site-scripting via the \texttt{escapedUserName} request parameter. (See section~\ref{xss} for details on cross-site scripting.)
+
+\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables need to be regarded as tainted.
 
 
 \section{Big Changes in Recent PHP Versions (TODO)}
