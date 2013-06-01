@@ -111,7 +111,7 @@ The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\fo
 The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the to\-kens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}\index{three-address code}\index{TAC\see{three-address code}}
 
 
-\section{Abstract Syntax Trees (AST)}
+\section{Abstract Syntax Trees (AST) (READY FOR FEEDBACK)}
 \label{ast}
 \index{abstract syntax tree}\index{AST\see{abstract syntax tree}}
 
@@ -137,9 +137,30 @@ An abstract syntax tree is still mostly human-readable---if the reader knows how
 
 
 
-\section{Parse Tree/Concrete Syntax Tree}
+\section{Parse Trees/Concrete Syntax Trees (READY FOR FEEDBACK)}
 \label{parse-tree}
 \index{parse tree}\index{concrete syntax tree}
+
+A \emph{concrete syntax tree} or \emph{parse tree}~\cite{compiler-construction, compilers} contains all elements of the original source code in a semantic structure, including parenthesis, and comments. It is possible to fully reconstruct the original code from a parse tree---except for some indentation details---, making a parse tree also useful for transformations in within the source code. On the downside, parse trees are very verbose in comparison to abstract syntax trees, which are reduced to the bare semantics.
+
+For the following code example (which is the same as in section~\ref{ast}), figure~\ref{fig:parse-tree} on page~\pageref{fig:parse-tree} shows the corresponding PHP parse tree as created by the PhpParser package. The difference in size---for the exact same source code---is striking.
+
+The figure also shows that the PHP opcodes also are listed with their opcode name, \eg \emph{T\_CLOSE\_BRACES}.
+
+\begin{phpcode}
+if ($x > $y) {
+  $z = 42;
+}
+\end{phpcode}
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=0.6]{images/parse-tree}
+    \caption{A parse tree contains all the syntactic details of the original code, making it extremely verbose.}
+    \label{fig:parse-tree}
+  \end{center}
+\end{figure}
+
 
 \section{Three-address Code (TAC) (TODO)}
 \label{tac}
