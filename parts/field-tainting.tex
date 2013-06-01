@@ -1,0 +1,56 @@
+\chapter{Taint Analysis for Member Variables (WORK IN PROGRESS)}
+\label{field-tainting}
+
+This chapter describes a concept for adding taint analysis on for member variables to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
+
+\section{Modeling Member Variables as Three-Address Code (TAC)}
+\index{member variables}\index{fields}\index{three-address code}
+
+To track tainting for member variables, Pixy needs to create ``places'' both for the object as well as the individual member variables while converting the PHP parse tree to three-address code (TAC). This approach models the way PHP actually manages object and variables in memory (see section~\ref{php-variables} on page~\pageref{php-variables}~ff.).
+
+\subsection{Creating Symbol Table Entries for Objects (READY FOR FEEDBACK)}
+
+\subsubsection{Class Declaration}
+
+For the following code for declaring a class with one field, the corresponding subtree of the PHP parse tree looks like depicted in figure~\ref{fig:parse-tree-foo-class} on page~\pageref{fig:parse-tree-foo-class}.
+
+\begin{phpcode}
+class Foo {
+  var $field = 42;
+}
+\end{phpcode}
+
+Note: This piece of code still uses the PHP~4 way of declaring member variables. Using the PHP~5 way with access keywords like \texttt{public}, \texttt{protected} or \texttt{private} would work correspondingly.
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=0.5]{images/parsetree-foo-class-declaration}
+   \caption{The subtree of the PHP parse tree for declaring a class \texttt{Foo} with a single field \texttt{\$field} with a default value of \texttt{42}.}
+   \label{fig:parse-tree-foo-class}
+  \end{center}
+\end{figure}
+
+At the point where the \texttt{TacConverter} class encounters the class definition, it would be neither necessary nor helpful to save the taint state of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always considers literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
+
+In addition, the list of declared fields might be only a subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
+
+
+\subsubsection{Class Instantiation}
+
+In the following code example, class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
+
+\begin{phpcode}
+$foo = new Foo();
+\end{phpcode}
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=0.5]{images/parsetree-new-foo}
+   \caption{The subtree of the PHP parse tree for creating an instance \texttt{\$foo} of the class \texttt{Foo}.}
+   \label{fig:parse-tree-new-foo}
+  \end{center}
+\end{figure}
+
+
+\subsubsection{Field Access}
+
