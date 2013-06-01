@@ -59,13 +59,13 @@ $queryResult = mysql_query(
 An attacker would use a URL like this:
 
 \begin{textcode}
-http://example.com/blog.php?postUid=1;TRUNCATE DATABASE posts
+http://example.com/blog.php?postUid=1;TRUNCATE TABLE posts
 \end{textcode}
 
 This URL then would result in the following SQL getting executed:
 
 \begin{sqlcode}
-SELECT * FROM posts WHERE uid = 1;TRUNCATE DATABASE posts;
+SELECT * FROM posts WHERE uid = 1;TRUNCATE TABLE posts;
 \end{sqlcode}
 
 This effectively deletes all records from the \texttt{posts} table.
@@ -152,7 +152,7 @@ http://www.example.com/index.php?file=../../../etc/passwd
 \end{textcode}
 
 
-This would result in \texttt{/etc/passwd} (the file containing the login names of all system users) being displayed. (For this attack to work, the exact number of \texttt{../} has to match the directory structure of the server, and the file needs to be readable by the web server user.)
+This would result in \texttt{/etc/passwd} (the file containing the login names of all system users) being displayed. (For this attack to work, the file needs to be readable by the web server user.)
 
 
 \subsection{OS Command Injection}
@@ -172,7 +172,7 @@ echo $createFooter();
 An attacker then would use a URL like this:
 
 \begin{textcode}
-http://www.example.com/index.php?file=file\%26\%20rm\%20../../config.php
+http://www.example.com/index.php?file=file & rm ../../config.php
 \end{textcode}
 
 Calling this URL would delete the application's configuration file because the command that is encoded in the URL and that will be executed actually will be this:
@@ -180,7 +180,6 @@ Calling this URL would delete the application's configuration file because the c
 \begin{textcode}
 touch file & rm ../../config.php
 \end{textcode}
-
 
 
 \subsection{PHP File Inclusion, Remote Code Injection, Remote Command Execution}
@@ -250,7 +249,7 @@ To: sales@example.com
 
 
 \section{Problems not Detectable by Tainted Object Propagation Scanners}
-The following problems do not rely on a direct connection between data sources\footnote{Please see section~\ref{tainting} on page~\pageref{tainting} for details on tainted object propagation, sources and sinks.} and sinks to be exploitable and thus cannot be found using a tainted object propagation scanner.
+The following problems do not rely on a direct connection between data sources\footnote{Please see section~\ref{tainting} on page~\pageref{tainting} for details on tainted object propagation, sources and sinks.} and sinks to be exploitable and thus cannot be found using a tainted object propagation scanner. This list is not considered to complete---these are just some common examples.
 
 \myTable{
 \begin{tabular}{|l|l|l|l|}

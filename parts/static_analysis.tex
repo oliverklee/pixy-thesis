@@ -155,7 +155,7 @@ The data is used during an \texttt{echo} call, outputting the data in the reques
 
 Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but it is not a sink for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. Sources, however, are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
 
-Data originating in a sink (\ie an untrusted source) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
+Data originating in a source (\ie untrusted data) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
 
 \begin{figure}[htb]
   \begin{center}
