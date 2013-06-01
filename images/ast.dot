@@ -1,0 +1,16 @@
+digraph abstract_syntax_tree {
+  n1 [label="command\nif"];
+  n2 [label="operator\n>"];
+  n3 [label="variable\n$x"];
+  n4 [label="variable\n$y"];
+  n5 [label="command\n="];
+  n6 [label="variable\n$z"];
+  n7 [label="literal\n42"];
+ 
+  n1 -> n2;
+  n2 -> n3;
+  n2 -> n4;
+  n1 -> n5;
+  n5 -> n6;
+  n5 -> n7;
+}

@@ -115,6 +115,28 @@ The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexem
 \label{ast}
 \index{abstract syntax tree}\index{AST\see{abstract syntax tree}}
 
+An \emph{abstract syntax tree (AST)}~\cite{compiler-construction} is an abstract representation of the structure of program. This representation is stripped of anything that is not essential for the semantics of the program: For exampled, the tree does not contain parenthesis; instead, the order of execution is represented in the order and hierarchy of the tree. Thus, it is not possible to reconstruct the exact source code back from an abstract syntax tree, while it still is possible to rebuild a program that has the same semantics as the original program.
+
+For the following code example, figure~\ref{fig:ast} on page~\pageref{fig:ast} shows the corresponding abstract syntax tree.
+
+\begin{phpcode}
+if ($x > $y) {
+  $z = 42;
+}
+\end{phpcode}
+
+An abstract syntax tree is still mostly human-readable---if the reader knows how to read a tree using a pre-order walk.
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=0.4]{images/ast}
+    \caption{An abstract syntax tree (AST) represents the semantic structure of the original program, but does not contain the syntactic details.}
+    \label{fig:ast}
+  \end{center}
+\end{figure}
+
+
+
 \section{Parse Tree/Concrete Syntax Tree}
 \label{parse-tree}
 \index{parse tree}\index{concrete syntax tree}
