@@ -1,0 +1,35 @@
+digraph parse_tree {
+  n18 [label="top_statement"];
+  n17 [label="statement"];
+  n18 -> n17;
+  n16 [label="unticked_statement"];
+  n17 -> n16;
+  n15 [label="expr"];
+  n16 -> n15;
+  n14 [label="expr_without_variable"];
+  n15 -> n14;
+  n7 [label="cvar"];
+  n14 -> n7;
+  n6 [label="cvar_without_objects"];
+  n7 -> n6;
+  n5 [label="reference_variable"];
+  n6 -> n5;
+  n4 [label="compound_variable"];
+  n5 -> n4;
+  n0 [label="T_VARIABLE\n$x"];
+  n4 -> n0;
+  n3 [label="T_ASSIGN\n="];
+  n14 -> n3;
+  n13 [label="expr"];
+  n14 -> n13;
+  n12 [label="expr_without_variable"];
+  n13 -> n12;
+  n11 [label="scalar"];
+  n12 -> n11;
+  n10 [label="common_scalar"];
+  n11 -> n10;
+  n8 [label="T_LNUMBER\n42"];
+  n10 -> n8;
+  n9 [label="T_SEMICOLON\n;"];
+  n16 -> n9;
+}
