@@ -18,6 +18,41 @@ As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data
 
 \begin{figure}[htb]
  \includegraphics[scale=0.8]{images/Pixy-Arbeitsweise}
- \caption{The main data structures in Pixy}
+ \caption{From the PHP parse tree, Pixy generates a control-flow graph and P-TAC, using these for the dependency analysis and the taint analysis.}
  \label{fig:pixy-data-structures}
 \end{figure}
+
+\section{P-TAC as an Intermediate Representation in the Control-Flow Graph (WORK IN PROGRESS)}
+\label{p-tac}\index{P-TAC}
+
+As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow grap} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place}
+
+As described in~\cite{pixy-dissertation}, the main types of control-flow graph nodes are listed in table~\ref{table:p-tac} on page~\pageref{table:p-tac}.
+
+\myTable{
+\begin{tabular}{|l|l|l|}
+\hline
+  \bb{CFG node} & \bb{description} & \bb{class} \\
+\hline
+ simple assignment  & $variable$ \texttt{=} $place$ & \texttt{AssignSimple} \\
+\hline
+ unary assignment  & $variable \texttt{=}  operator\ place$ & \texttt{AssignUnary} \\
+\hline
+ binary assignment  & $variable \texttt{=} place\ operator\ place$ & \texttt{AssignBinary} \\
+\hline
+ array assignment  & $variable$  \texttt{= array()} & \texttt{AssignArray} \\
+\hline
+ assignment by reference  & $variable$ \texttt{=\&} $variable$ & \texttt{AssignReference} \\
+\hline
+ unset & \texttt{unset($variable$)} & \texttt{Unset} \\
+\hline
+ global & \texttt{global} $variable$ & \texttt{Global} \\
+\hline
+ call preparation & a call node's predecessor & \texttt{CallPreparation} \\
+\hline
+ call & a function or method call & \texttt{Call} \\
+\hline
+ call return & a call node's successor & \texttt{CallReturn} \\
+\hline
+\end{tabular}
+}{The main types of control-flow graph nodes in P-TAC as used by Pixy. The class names are within the package \texttt{at.ac.tuwien.infosys.www.pixy.conversion.cfgnodes}.}{table:p-tac}
