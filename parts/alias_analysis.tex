@@ -1,10 +1,10 @@
-\chapter{Alias Analysis (party READY FOR FEEDBACK, PRROFREAD, partly TODO)}
+\chapter{Alias Analysis (READY FOR FEEDBACK, PRROFREAD)}
 
 When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good recall is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them---or stop using the tool.~\cite{understanding-value}
 
 For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus, a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
 
-\section{Alias Analysis in Pixy (READY FOR FEEDBACK, PROOFREAD)}
+\section{Alias Analysis in Pixy}
 
 For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{data-flow-analysis}, including the concept of ``must'' and ``may'' aliases.
 
@@ -280,7 +280,7 @@ $mustAliases = \{(bar.b1, m.a1), (bar.b3, m.a3)\}, mayAliases = \{(bar.b2, m.a2)
 
 
 
-\section{Alias Analysis and Tainted Object Propagation Scanning (READY FOR FEEDBACK, PROOFREAD)}
+\section{Alias Analysis and Tainted Object Propagation Scanning}
 
 When a tainted object propagation scanner (see section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation}) tracks the taint state of variables, alias information is very important both for increasing recall (\ie reducing the number of false negatives) as well as for increasing precision (\ie reducing the number of false positives).
 
@@ -315,8 +315,3 @@ Let's have a look at the two relevant cases here: When a variable gets tainted--
 \hline
 \end{tabular}
 }{The effects of tainting and untainting on must-aliases and may-aliases, using a fictional \bb{optimistic} approach.}{table:alias-tainting-optimistic}
-
-
-
-
-\section{Alias Analysis for the Default Pass-by-Reference in PHP~5 (TODO)}
