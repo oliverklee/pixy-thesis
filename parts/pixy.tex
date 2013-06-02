@@ -22,7 +22,7 @@ As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data
  \label{fig:pixy-data-structures}
 \end{figure}
 
-\section{P-TAC as an Intermediate Representation in the Control-Flow Graph (WORK IN PROGRESS)}
+\section{P-TAC as an Intermediate Representation in the Control-Flow Graph (READY FOR FEEDBACK)}
 \label{p-tac}\index{P-TAC}
 
 As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow grap} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place}
@@ -30,7 +30,7 @@ As an intermediate representation, Pixy uses a combination of a modified version
 As described in~\cite{pixy-dissertation}, the main types of control-flow graph nodes are listed in table~\ref{table:p-tac} on page~\pageref{table:p-tac}.
 
 \myTable{
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|p{5.5cm}|l|}
 \hline
   \bb{CFG node} & \bb{description} & \bb{class} \\
 \hline
@@ -53,6 +53,24 @@ As described in~\cite{pixy-dissertation}, the main types of control-flow graph n
  call & a function or method call & \texttt{Call} \\
 \hline
  call return & a call node's successor & \texttt{CallReturn} \\
+\hline
+ basic block & a basic block containing other nodes & \texttt{BasicBlock} \\
+\hline
+ PHP function call & a call of one of PHP's built-in functions & \texttt{CallBuiltinFunction} \\
+\hline
+ unknown function call & a function call that can not be resolved during analysis & \texttt{CallUnknownFunction} \\
+\hline
+ entry node & the entry node of the control-flow graph & \texttt{CfgEntry} \\
+\hline
+ exit node & an exit node of the control-flow graph & \texttt{CfgExit} \\
+\hline
+ constant definition & \texttt{define($key, value$)} & \texttt{Define} \\
+\hline
+ echo call & \texttt{echo $variable$} & \texttt{Echo} \\
+\hline
+ if & \texttt{if($true$|$false$) goto $target$} & \texttt{If} \\
+\hline
+ file inclusion & \texttt{include $variable$} & \texttt{Include} \\
 \hline
 \end{tabular}
 }{The main types of control-flow graph nodes in P-TAC as used by Pixy. The class names are within the package \texttt{at.ac.tuwien.infosys.www.pixy.conversion.cfgnodes}.}{table:p-tac}
