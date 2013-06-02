@@ -1,0 +1,16 @@
+digraph control_flow_graph {
+  n1 [label="ENTRY", shape="box"];
+  n2 [label="$count = 0;\n$output = '';", shape="box"];
+  n3 [label="if (strlen($output) >= 99) goto L0;", shape="box"];
+  n4 [label="$output .= 'Hello world! ';\n$count++;", shape="box"];
+  n5 [label="L0:\necho $output;", shape="box"];
+  n6 [label="EXIT", shape="box"];
+ 
+  n1 -> n2;
+  n2 -> n3;
+  n3 -> n4;
+  n4:sw -> n3:w;
+  n4 -> n5 [style="invis"];
+  n3:se -> n5:e;
+  n5 -> n6;
+}

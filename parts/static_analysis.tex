@@ -210,9 +210,44 @@ This is still the same three-address code, just written a bit differently.
 
 
 
-\section{Control-flow Graphs (TODO)}
+\section{Control-flow Graphs (READY FOR FEEDBACK)}
 \label{cfg}
-\index{control-flow graph}\index{CFG\see{control-flow graph}}
+\index{control-flow graph}\index{CFG\see{control-flow graph}}\index{flow graphs\see{control-flow graphs}}
+
+A \emph{control-flow graph (CFG)}~\cite{chess-west} or \emph{flow graphs}~\cite{compilers} is a directed graph build on top of an abstract syntax tree or a parse tree that models the different paths through a program. Control-flow graphs are an important structure used in data-flow analysis.
+
+Let's have an example. For the following PHP code example, figure~\ref{fig:cfg} on page~\pageref{fig:cfg} depicts the corresponding control-flow graph. Note that the loops is changed to a conditional jump.
+
+\begin{phpcode}
+$count = 0;
+$output = '';
+
+while (strlen($output) < 99) {
+  $output .= 'Hello world! ';
+  $count++;
+}
+
+echo $output;
+\end{phpcode}
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=0.6]{images/cfg}
+    \caption{A control-flow graph represents all possible paths through a program.}
+    \label{fig:cfg}
+  \end{center}
+\end{figure}
+
+There are two special nodes in this graph---called \emph{ENTRY} and \emph{EXIT}. Those nodes do not represent any executable code, but are merely markers for the control-flow. The \emph{ENTRY} must not have any incoming edges, and the \emph{EXIT} nodes must not have any outgoing edges---actually, they are the only nodes without any outgoing edges. A control-flow graph may have only one entry node, but several exit nodes.
+
+Note that a non-entry node without any incoming nodes is not reachable, \ie the code contained in that node is \emph{dead code}.
+
+A node may contain several instructions. These multi-instruction nodes are called \emph{basic blocks}. However, an incoming edge can only point a node, not to an individual instruction within a node. Thus, if an instruction is the target of the jump, the instruction needs to be the first instruction of a basic block.
+
+The same goes for outgoing edges: Outgoing edges can only be attached to a complete node, not to individual instructions within that node. Thus, if an instruction that contains a jump, it needs to be the last instruction in a basic block, and the following instructions needs to be placed within another basic block.
+
+This allows for control-flow graphs to model all possible execution paths through a program in a way that each basic block either gets executed as whole, or it does not get executed at all.
+
 
 
 \section{Static Analysis for Finding Vulnerabilities}
