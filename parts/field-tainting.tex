@@ -120,47 +120,47 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.7]{images/simple-variable-assignment}
-   \caption{The PHP parse subtree of \texttt{\$x = 42;}.}
+    \includegraphics[trim = 30mm 0mm 50mm 10mm, scale=0.8]{images/simple-variable-assignment}
+   \caption{The PHP parse subtree of \texttt{\$x = 42;}}
    \label{fig:simple-variable-assignment}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.7]{images/one-level-field-access-left}
-   \caption{The PHP parse subtree of \texttt{\$foo->bar = 42;}.}
+    \includegraphics[trim = 60mm 0mm 0mm 20mm, scale=0.8]{images/one-level-field-access-left}
+   \caption{The PHP parse subtree of \texttt{\$foo->bar = 42;}}
    \label{fig:one-level-field-access-left}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.7]{images/one-level-field-access-right}
-   \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar;}.}
+    \includegraphics[trim = 40mm 0mm 0mm 10mm, scale=0.9]{images/one-level-field-access-right}
+   \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar;}}
    \label{fig:one-level-field-access-right}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.6]{images/multi-level-field-access-left}
-   \caption{The PHP parse subtree of \texttt{\$foo->bar->baz = 42;}.}
+    \includegraphics[trim = 50mm 0mm 0mm 25mm, scale=0.75]{images/multi-level-field-access-left}
+   \caption{The PHP parse subtree of \texttt{\$foo->bar->baz = 42;}}
    \label{fig:multi-level-field-access-left}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.6]{images/multi-level-field-access-right}
-   \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar->baz;}.}
+    \includegraphics[trim = 30mm 0mm 0mm 20mm, scale=0.8]{images/multi-level-field-access-right}
+   \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar->baz;}}
    \label{fig:multi-level-field-access-right}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.6]{images/variable-field-access-left}
+    \includegraphics[trim = 60mm 0mm 0mm 10mm, scale=0.8]{images/variable-field-access-left}
    \caption{The PHP parse subtree of \texttt{\$foo->\$fieldName = 42;}.}
    \label{fig:variable-field-access-left}
   \end{center}
@@ -168,7 +168,7 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.7]{images/variable-field-access-right}
+    \includegraphics[trim = 40mm 0mm 0mm 20mm, scale=0.8]{images/variable-field-access-right}
    \caption{The PHP parse subtree of \texttt{\$x = \$foo->\$fieldName;}.}
    \label{fig:variable-field-access-right}
   \end{center}
@@ -176,7 +176,7 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either.
 
-Looking at the big picture, both for left-side and right-side expressions, the TacConverter walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as needed. In pseudo-code that expands the code listed above, this approach looks like this:
+Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as needed. In pseudo-code that expands the code listed above, this approach looks like this:
 
 \begin{textcode}
 assign(subTree) {

@@ -1,158 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg height="600" viewBox="0 0 866 906" width="800"
     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <g style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:12">
+    <g style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:12">
         <ellipse cx="641" cy="22" rx="83" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="641" y="26">top_statement</text>
         <ellipse cx="641" cy="96" rx="62" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="641" y="100">statement</text>
         <path d="M641 41C641 49 641 58 641 67" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="645,67 641,77 638,67 645,67" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="641" cy="170" rx="109" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="641" y="174">unticked_statement</text>
         <path d="M641 115C641 123 641 132 641 141" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="645,141 641,151 638,141 645,141" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="574" cy="256" rx="33" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="574" y="260">expr</text>
         <path d="M626 189C617 201 604 217 594 231" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="596,233 587,239 591,229 596,233" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="708" cy="256" rx="83" ry="31" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="708" y="251">T_SEMICOLON</text>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="708" y="269">;</text>
         <path d="M656 189C662 197 671 208 679 218" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="681,216 685,226 676,220 681,216" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="574" cy="342" rx="121" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="574" y="346">expr_without_variable</text>
         <path d="M574 275C574 286 574 301 574 313" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="578,313 574,323 571,313 578,313" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="392" cy="428" rx="32" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="392" y="432">cvar</text>
         <path d="M537 360C504 375 458 397 426 412" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="428,415 417,416 425,409 428,415" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="574" cy="428" rx="61" ry="31" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="574" y="423">T_ASSIGN</text>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="574" y="441">=</text>
         <path d="M574 361C574 368 574 378 574 387" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="578,387 574,397 571,387 578,387" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="722" cy="428" rx="33" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="722" y="432">expr</text>
         <path d="M605 360C630 375 665 395 690 409" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="692,406 699,415 688,413 692,406" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="119" cy="526" rx="116" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="119" y="530">cvar_without_objects</text>
         <path d="M365 438C321 454 234 485 176 506" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="177,509 166,509 174,502 177,509" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="374" cy="526" rx="121" ry="31" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="374" y="521">T_OBJECT_OPERATOR</text>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="374" y="539">-&gt;</text>
         <path d="M389 446C387 457 384 472 382 485" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="385,486 380,495 378,484 385,486" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="557" cy="526" rx="44" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="557" y="530">ref_list</text>
         <path d="M415 441C443 458 490 486 523 506" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="525,503 531,511 521,509 525,503" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="119" cy="612" rx="102" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="119" y="616">reference_variable</text>
         <path d="M119 545C119 556 119 571 119 583" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="123,583 119,593 116,583 123,583" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="119" cy="686" rx="105" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="119" y="690">compound_variable</text>
         <path d="M119 631C119 639 119 648 119 657" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="123,657 119,667 116,657 123,657" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="119" cy="772" rx="73" ry="31" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="119" y="767">T_VARIABLE</text>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="119" y="785">$foo</text>
         <path d="M119 705C119 712 119 722 119 731" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="123,731 119,741 116,731 123,731" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="555" cy="612" rx="88" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="555" y="616">object_property</text>
         <path d="M557 545C556 556 556 571 556 583" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="559,583 555,593 552,583 559,583" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="554" cy="686" rx="83" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="554" y="690">object_dim_list</text>
         <path d="M555 631C555 639 555 648 554 657" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="558,657 554,667 551,657 558,657" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="554" cy="772" rx="82" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="554" y="776">variable_name</text>
         <path d="M554 705C554 716 554 731 554 743" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="558,743 554,753 551,743 558,743" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="554" cy="870" rx="61" ry="31" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="554" y="865">T_STRING</text>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="554" y="883">bar</text>
         <path d="M554 791C554 802 554 815 554 829" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="558,829 554,839 551,829 558,829" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="740" cy="526" rx="121" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="740" y="530">expr_without_variable</text>
         <path d="M725 446C728 461 732 481 735 497" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="738,497 737,507 731,498 738,497" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="740" cy="612" rx="39" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="740" y="616">scalar</text>
         <path d="M740 545C740 556 740 571 740 583" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="744,583 740,593 737,583 744,583" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="741" cy="686" rx="86" ry="18" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="741" y="690">common_scalar</text>
         <path d="M740 631C740 639 740 648 741 657" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="744,657 741,667 737,657 744,657" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <ellipse cx="741" cy="772" rx="73" ry="31" style="fill:none;stroke:rgb(0,0,0);fill-opacity:1.0"/>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="741" y="767">T_LNUMBER</text>
         <text
-            style="font-family:Dialog,serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
+            style="font-family:Arial,sans-serif;font-style:normal;font-weight:normal;font-size:14;fill:rgb(0,0,0)"
             text-anchor="middle" x="741" y="785">42</text>
         <path d="M741 705C741 712 741 722 741 731" style="fill:none;stroke:rgb(0,0,0)"/>
         <polygon points="745,731 741,741 738,731 745,731" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);fill-opacity:1.0"/>
