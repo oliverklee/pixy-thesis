@@ -295,3 +295,114 @@ AbstractPlace expr_without_variable(ParseNode subtreeRoot) {
 For the sake of brevity, this pseudo-code omits the part about creating temporary variables if a variable already is present in the symbol table. This feature already exists in Pixy and does not need to be changed.
 
 
+\section{Alias Analysis for Objects and Fields}
+
+An alias analysis for objects needs to take two aspects into account: that objects are passed by reference (see section~\ref{object-references} on page~\pageref{object-references}, and the alias relationships between fields. This is important because objects cannot have a taint status, but their fields can.
+
+
+\subsection{Object References}
+
+In addition to the must-aliases and may-aliases, Pixy needs to track references between objects. In order to do so, Pixy needs to leverage its existing type detection for variables. The approach to object references is quite similar to that for variables aliases: As with may-aliases and must-aliases for variables, the analysis tracks \emph{must-references} and \emph{may-references} for objects.
+
+In the object reference analysis, the same cases as with the alias analysis are relevant: assignments, \texttt{unset} calls, and function calls with parameters.
+
+
+\subsubsection{Assignments}
+
+Let's assume that there are no must-references and may-references yet:
+
+$mustReferences = \{\}, mayReferences = \{\}$
+
+If an object is created and then copied to another variable, the pair of both variables is added to the $mustReferences$ set:
+
+\begin{phpcode}
+$foo = new Foo();
+$bar = $foo;
+\end{phpcode}
+
+$mustReferences = \{(foo, bar)\}, mayReferences = \{\}$
+
+If there is a condition, the must-reference is changed to a may-reference after the end of the condition:
+
+\begin{phpcode}
+$foo = new Foo();
+
+if (...) {
+  $bar = $foo;
+}
+\end{phpcode}
+
+$mustReferences = \{\}, mayReferences = \{(foo, bar)\}$
+
+If an existing variable that is listed in the must-references or may-references is overwritten, it needs to get removed from the references:
+
+$mustReferences = \{\}, mayReferences = \{(foo, bar)\}$
+
+\begin{phpcode}
+$bar = 42;
+\end{phpcode}
+
+$mustReferences = \{\}, mayReferences = \{\}$
+
+All of these steps can be repeated with several commands, causing the reference sets to change accordingly. For example, a variable can first used for a reference and then be overwritten with a different reference, causing the first reference to be deleted and the new reference to be created:
+
+\begin{phpcode}
+$foo = new Foo();
+$bar = $foo;
+
+$foo2 = new Foo();
+$bar = $foo2;
+\end{phpcode}
+
+$mustReferences = \{(bar, foo2)\}, mayReferences = \{\}$
+
+If a must-reference is overwritten during a codition, it gets changed to a may-reference, and the new reference is added as a may-reference just as in the example above:
+
+\begin{phpcode}
+$foo = new Foo();
+$bar = $foo;
+
+$foo2 = new Foo();
+if (...) {
+  $bar = $foo2;
+}
+\end{phpcode}
+
+$mustReferences = \{\}, mayReferences = \{(bar, foo), (bar, foo2)\}$
+
+\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and get handled accordingly.
+
+
+\subsubsection{Unset Calls}
+
+An \texttt{unset} call removes the corresponding object variable from all must-references and may-references:
+
+$mustReferences = \{(bar, foo)\}, mayReferences = \{(bar, foo2)\}$
+
+\begin{phpcode}
+unset($bar);
+\end{phpcode}
+
+$mustReferences = \{\}, mayReferences = \{\}$
+
+
+\subsubsection{Function Calls}
+
+As function parameters are passed by value---which in the case of objects means a copy of object handle pointing to one and the same object---, this creates a reference from the caller's object variable and the callee's parameter.
+
+$mustReferences = \{\}, mayReferences = \{\}$
+
+\begin{phpcode}
+function someFunction() {
+  $foo = new Foo();
+  otherFunction(foo);
+}
+
+function otherFunction(Foo foo) {
+\end{phpcode}
+
+At this point within the texttt{otherFunction} function, there is a must-reference:
+
+$mustReferences = \{(someFunction.foo, otherFunction.foo)\}, mayReferences = \{\}$
+
+The dot notation for the function name in the variable names in the reference sets is the as in the alias sets used in section~\ref{sec:aliases-globals}.
