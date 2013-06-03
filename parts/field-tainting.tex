@@ -1,19 +1,13 @@
-\chapter{Taint Analysis for Member Variables (WORK IN PROGRESS)}
+\chapter{Taint Analysis for Objects (WORK IN PROGRESS)}
 \label{field-tainting}
 
 This chapter describes a concept for adding taint analysis for member variables of objects to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
 
-\section{Modeling Member Variables as Places for Three-Address Code (TAC)}
-\index{member variables}\index{fields}\index{three-address code}
 
-Pixy models variables as ``places'' for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). For taint analysis, it uses this ``place'' abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
-
-Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
+\section{Modeling Objects and Member Variables}
 
 
-\subsection{Creating Symbol Table Entries for Objects}
-
-\subsubsection{Class Declaration}
+\subsection{Class Declaration}
 
 For the following code for declaring a class with one field, the corresponding subtree of the PHP parse tree is depicted in figure~\ref{fig:parse-tree-foo-class} on page~\pageref{fig:parse-tree-foo-class}.
 
@@ -38,57 +32,20 @@ At the point where the \texttt{TacConverter} class encounters the class definiti
 In addition, the list of declared fields might be only a subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
 
 
-\subsubsection{Class Instantiation}
 
-In the following code example, class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
+\subsection{Storing Objects with Member Variables as Places for Three-Address Code (TAC)}
+\index{member variables}\index{fields}\index{three-address code}
 
-\begin{phpcode}
-$foo = new Foo();
-\end{phpcode}
+Pixy models variables as ``places'' for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). For taint analysis, it uses this ``place'' abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
 
-\begin{figure}[htb]
-  \begin{center}
-    \includegraphics[scale=0.5]{images/parsetree-new-foo}
-   \caption{The subtree of the PHP parse tree for creating an instance \texttt{\$foo} of the class \texttt{Foo}.}
-   \label{fig:parse-tree-new-foo}
-  \end{center}
-\end{figure}
+Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
 
-Currently, the \texttt{TacConverter} already adds a \texttt{Variable} entry into the current function's symbol table. To closely model the way PHP stores object instances with a separate symbol table per instance (see section~\ref{php-variables} on page~\pageref{php-variables}~ff.), we need a subclass \texttt{ObjectVariable extends Object} that holds a reference to a symbol table instance.
-
-In pseudo-code, processing this assignment would look like this:
-
-\begin{textcode}
-AbstractPlace expr_without_variable(subtree) {
-  // Extract children from subtree here.
-
-  if (secondChild == T_ASSIGN) {
-    assign(subtree);
-    return null;
-  }
-
-  if (firstChild == T_NEW) {
-    return new ObjectVariable();
-  }
-
-  // More existing code for processing variables and literals.
-}
-
-assign(subTree) {
-  variableName = getVariableNameFromLeftSubtree(subtree);
-  rightPlace = expr_without_variable(subTree->rightChild->firstChild);
-  addVariableToSymbolTable(variableName, rightPlace);
-}
-\end{textcode}
-
-\paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because is occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
-
-For the sake of brevity, this pseudo-code omits the part about creating temporary variables if a variable already is present in the symbol table. This feature already exists in Pixy and does not need to be changed.
+The \texttt{TacConverter} already adds a \texttt{Variable} entry into the current function's symbol table. To closely model the way PHP stores object instances with a separate symbol table per instance (see section~\ref{php-variables} on page~\pageref{php-variables}~ff.), we need a subclass \texttt{ObjectVariable extends Object} that holds a reference to a symbol table instance---which then holds references to several \texttt{AbstractPlace} instances that represent the member variables.
 
 
-\subsubsection{Field Access}
+\subsection{Field Access}
 
-To track tainting for member variables, Pixy needs to create ``places'' for all member variables that are accessed---even for those that have not been declared beforehand. (PHP will happily create it on the fly while issuing a PHP warning.)
+To track tainting for member variables, Pixy needs to create ``places'' for all member variables that are accessed---even for those that have not been declared beforehand. (PHP will however happily create it on the fly while issuing a PHP warning.)
 
 Both for the left side of assignments as well as for all expressions, we need to add a way to handle field access as places. In addition to the already existing cases (\eg function calls, literals, normal variables etc.), the following cases are new and need to be modeled:
 
@@ -290,3 +247,51 @@ Variable getOrCreateVariableInSymbolTable(
   return newVariable;
 }
 \end{textcode}
+
+
+\subsection{Class Instantiation}
+
+When a class gets instantiated, the \texttt{TacConverter} needs to create a symbol table entry to store a new \texttt{ObjectVariable} instance in.
+
+In the following code example, class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
+
+\begin{phpcode}
+$foo = new Foo();
+\end{phpcode}
+
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[scale=0.5]{images/parsetree-new-foo}
+   \caption{The subtree of the PHP parse tree for creating an instance \texttt{\$foo} of the class \texttt{Foo}.}
+   \label{fig:parse-tree-new-foo}
+  \end{center}
+\end{figure}
+
+In pseudo-code, processing this assignment would look like this:
+
+\begin{textcode}
+/**
+ * Processes an expr_without_variable node and returns the
+ * AbstractPlace contained in the node (if any).
+ */
+AbstractPlace expr_without_variable(ParseNode subtreeRoot) {
+  if (subtreeRoot.secondChild() == T_ASSIGN) {
+    // We take for granted that TacConverter already has an assign()#
+    // function.
+    assign(subtreeRoot);
+    return null;
+  }
+
+  if (firstChild == T_NEW) {
+    return new ObjectVariable();
+  }
+
+  // More existing code for processing variables and literals.
+}
+\end{textcode}
+
+\paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because is occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
+
+For the sake of brevity, this pseudo-code omits the part about creating temporary variables if a variable already is present in the symbol table. This feature already exists in Pixy and does not need to be changed.
+
+
