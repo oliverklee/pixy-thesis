@@ -1,4 +1,4 @@
-\chapter{Taint Analysis for Objects (WORK IN PROGRESS)}
+\chapter{Taint Analysis for Objects (READY FOR FEEDBACK)}
 \label{field-tainting}
 
 This chapter describes a concept for adding taint analysis for member variables of objects to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
@@ -27,7 +27,7 @@ Note: This piece of code still uses the PHP~4 way of declaring member variables.
   \end{center}
 \end{figure}
 
-At the point where the \texttt{TacConverter} class encounters the class definition, it would be neither necessary nor helpful to save the taint state\footnote{See section~\ref{taint-state} on page~\pageref{taint-state} for details.} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
+At the point where the \texttt{TacConverter} class encounters the class definition, it would be neither necessary nor helpful to save the taint state\footnote{See section~\ref{taint-state} on page~\pageref{taint-state} for details.}\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
 
 In addition, the list of declared fields might be only a subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
 
@@ -406,3 +406,114 @@ At this point within the \texttt{otherFunction} function, there is a must-refere
 $mustReferences = \{(someFunction.foo, otherFunction.foo)\}, mayReferences = \{\}$
 
 The dot notation for the function name in the variable names in the reference sets is the as in the alias sets used in section~\ref{sec:aliases-globals}.
+
+
+\subsection{Member Field Aliases}
+
+As mentioned further above in section~\ref{fields-not-saved-on-new}, it is not helpful to store the fields of an object at the point of instantiation as far as tainting is concerned. Instead, the fields need to be added on the fly as they are read or written.
+
+
+\subsubsection{Field Accesses}
+
+When a field is written or read, the alias analyzer needs to check and update alias information for that field and then take the corresponding line of code into further alias analysis. After a field has been added as a must-alias or may-alias, Pixy's existing alias analysis can kick in.
+
+The basic rules at that point are:
+
+\begin{itemize}
+  \item Create field must-aliases for all must-aliases and must-references of the particular object.
+  \item Create field may-aliases for all may-aliases and may-references of the particular object.
+\end{itemize}
+
+
+\paragraph{Object aliases:} Let's have a look at an example for object aliases first. At the beginning, we already have one must-alias and one may-alias for some objects:
+
+$mustAliases = \{(a, b)\}, mayAliases = \{(a, c)\}$
+
+Now a field is accessed, causing the field to be created if it does not exist at that point:
+
+\begin{phpcode}
+$x = $a->name;
+\end{phpcode}
+
+Before any further alias information for this line of code is evaluated, the alias information gets updated as following:
+
+$mustAliases = \{(a, b), (a.name, b.name)\}, mayAliases = \{(a, c), (a.name, c.name)\}$
+
+
+\paragraph{Object references:} A similar example with object references instead of object aliases works basically the same:
+
+$\begin{array}{llll}
+mustReferences & = \{(a, b)\}, & mayReferences & = \{(a, c)\} \\
+mustAliases & = \{\}, & mayAliases & = \{\}
+\end{array}$
+
+\begin{phpcode}
+$x = $a->name;
+\end{phpcode}
+
+$\begin{array}{llll}
+mustReferences & = \{(a, b)\}, & mayReferences & = \{(a, c)\} \\
+mustAliases & = \{(a.name, b.name)\}, & mayAliases & = \{(a.name, c.name)\}
+\end{array}$
+
+
+\subsubsection{Unset: Removing aliases or references}
+
+When an object variable is dropped from the symbol table via \texttt{unset}, all occurrences of this object's fields need to be removed from all must-aliases, and may-aliases.
+
+For example, we have the following must-aliases and may-aliases:
+
+$\begin{array}{ll}
+mustAliases & = \{(a, b), (x, y), (a.name, b.name), (x.name, y.name)\} \\
+mayAliases & = \{(a, c), (x, z), (a.name, c.name), (x.name, z.name)\}
+\end{array}$
+
+Now \texttt{\$a} is unset:
+
+\begin{phpcode}
+unset($a);
+\end{phpcode}
+
+After \texttt{\$a} has been unset, the pruned alias sets do not contain any fields of \texttt{\$a} anymore:
+
+$\begin{array}{ll}
+mustAliases & = \{(x, y), (x.name, y.name)\} \\
+mayAliases & = \{(x, z), (x.name, z.name)\}
+\end{array}$
+
+
+\subsubsection{Changing Must-Aliases to May-Aliases}
+
+When a must-alias for an object is changed to a may-alias or a must-reference is changed to a may-reference, the field alias information need to be changed accordingly.
+
+Let's say we are within a condition:
+
+\begin{phpcode}
+$a = new Foo();
+if (...) {
+  $b = $a;
+  $b->name = $x;
+\end{phpcode}
+
+Still within the condition, \texttt{\$b} and \texttt{\$a} after must-references, and the fields corresponding are must-references.
+
+$\begin{array}{llll}
+mustReferences & = \{(a, b)\}, & mayReferences & = \{\} \\
+mustAliases & = \{(a.name, b.name)\}, & mayAliases & = \{\}
+\end{array}$
+
+After the end of the condition, the must-reference gets changed to a may-reference, and the must-aliases of the field get changed to may-aliases:
+
+\begin{phpcode}
+$a = new Foo();
+if (...) {
+  $b = $a;
+  $b->name = $x;
+}
+\end{phpcode}
+
+$\begin{array}{llll}
+mustReferences & = \{\}, & mayReferences & = \{(a, b)\} \\
+mustAliases & = \{\}, & mayAliases & = \{(a.name, b.name)\}
+\end{array}$
+
