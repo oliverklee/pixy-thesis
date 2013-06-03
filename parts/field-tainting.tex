@@ -11,8 +11,7 @@ Pixy models variables as ``places'' for three-address code (see section~\ref{tac
 Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
 
 
-
-\subsection{Creating Symbol Table Entries for Objects (READY FOR FEEDBACK)}
+\subsection{Creating Symbol Table Entries for Objects}
 
 \subsubsection{Class Declaration}
 
@@ -85,6 +84,7 @@ assign(subTree) {
 \paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because is occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
 
 For the sake of brevity, this pseudo-code omits the part about creating temporary variables if a variable already is present in the symbol table. This feature already exists in Pixy and does not need to be changed.
+
 
 \subsubsection{Field Access}
 
@@ -174,54 +174,119 @@ Both for the left side of assignments as well as for all expressions, we need to
   \end{center}
 \end{figure}
 
-As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either.
+As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either. Instead, this approach uses Pixy's special place \emph{specialPlaceForVariableVariables} that keeps this place out of taint analysis.
 
-Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as needed. In pseudo-code that expands the code listed above, this approach looks like this:
+Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as needed. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. So this approach expands the \texttt{cvar} function to also return places for field accesses.
+
+\paragraph{Note:} The listed pseudo-code takes a few shortcuts: It assumes that there are some convenience functions available for tree walking, array processing and string processing, and that functions like \texttt{cvar} return \texttt{AbstractPlace} instead of a \texttt{TacAttributes} wrapper.
 
 \begin{textcode}
-assign(subTree) {
-  leftPlace = getLeftPlaceFromLeftSubtree(subtree);
-  rightPlace = expr_without_variable(subTree->rightChild->firstChild);
-  createCfgNodeForAssignment(leftPlace, rightPlace);
-
-  variableName = getVariableNameFromLeftSubtree(subtree);
-  if (isSimpleVariable(variableName)) {
-    addVariableToSymbolTable(variableName, rightPlace);
-  }
-}
-
-AbstractPlace expr_without_variable(subtree) {
-  // Extract children from subtree here.
-  if (secondChild == T_ASSIGN) {
-    assign(subtree);
-   return null;
-  }
-
-  if (firstChild == T_NEW) {
-    return new ObjectVariable();
-  }
-  // More existing code for processing variables and literals.
-}
-
-AbstractPlace getLeftPlaceFromLeftSubtree(subtree) {
-  fieldChain = createFieldChainFromSubtree(subtree);
-  leftmostVariable = retrieveOrCreateVariableFromSymbolTable(fieldChain[0]);
-  if (fieldChain->length == 1) {
-    // simple variable
-    return leftmostVariable;
-  }
-
-  subtreeAfterFirstArrow = getSubtreeAfterFirstArrow(subtree);
-  leftmostVariable->add
-}
-
 /**
- * @return e.g., ["$foo", "bar", "baz"] for $foo->bar->baz
+ * Returns the AbstractPlace that corresponds to a cvar node in the
+ * parse tree.
  */
-String[] createFieldChainFromSubtree(subtree) {
-  ...
+AbstractPlace cvar(
+  ParseNode subtreeRoot, SymbolTable functionSymbolTable
+) {
+  String[] nameChain = flattenCvarTreeToNameChain(subtreeRoot);
+
+  return getLeftPlaceForNameChain(nameChain, functionSymbolTable);
 }
+\end{textcode}
 
-// Note: To be expanded on Monday.
+\begin{textcode}
+/**
+ * Walks a cvar parse node subtree and extracts the variable name
+ * or chained field names from it. The dollar sign from the first
+ * variable is omitted.
+ *
+ * For example, for a variable $foo, this function returns:
+ * ["foo"]
+ *
+ * For a variable $foo->bar->$baz, this function returns:
+ * ["foo", "bar", "$baz"]
+ */
+String[] flattenCvarTreeToNameChain(ParseNode subtreeRoot) {
+  String[] nameChain;
 
+  for (ParseNode node : subTreeRoot.depthFirstIterator()) {
+    Token token = node.token;
+    if (!(token != T_VARIABLE && token != T_STRING) {
+      continue;
+    }
+
+    // Drop the first dollar sign.
+    if (nameChain.length == 0) {
+      nameChain.append(node.text.dropFirstCharacter);
+    } else {
+      nameChain.append(node.text);
+    }
+  }
+
+  return nameChain;
+}
+\end{textcode}
+
+\begin{textcode}
+/**
+ * Gets the AbstractPlace for a variable name chain from symbolTable.
+ *
+ * If there is no place with that name yet, it will be created on the
+ * fly (if possible).
+ */
+AbstractPlace getLeftPlaceForNameChain(
+  String[] nameChain, SymbolTable symbolTable
+) {
+  String firstElementInNameChain = nameChain[0];
+  if (isVariableVariable(firstElementInNameChain)) {
+    return specialPlaceForVariableVariables;
+  }
+
+  if (nameChain.length == 1) {
+    return getOrCreateVariableInSymbolTable(
+      firstElementInNameChain. symbolTable
+    );
+  }
+
+  // At this point, we have more than one element in the name chain,
+  // i.e., a field access.
+  if (!symbolTable.has(firstElementInNameChain)) {
+    throw new Exception("Field access on nonexistent object.");
+  }
+
+  AbstractPlace firstPlaceFromNameChain = symbolTable.getByName(
+    firstElementInNameChain
+  );
+  if (!firstPlaceFromNameChain instanceof ObjectVariable) {
+    throw new Exception("Field access on non-object variable.");
+  }
+
+  String[] nameChainWithoutFirstElement = nameChain.dropFirst();
+  return getLeftPlaceForNameChain(
+    nameChainWithoutFirstElement,
+    ((ObjectVariable) firstPlaceFromNameChain).symbolTable
+  );
+}
+\end{textcode}
+
+\begin{textcode}
+/**
+ * Retrieves the Variable stored under the given variableName from
+ * the symbolTable.
+ *
+ * If there is no entry for that variableName yet, creates a new
+ * Variable entry, stores it in the symbolTable and returns it.
+ */
+Variable getOrCreateVariableInSymbolTable(
+  String variableName, SymbolTable symbolTable
+) {
+  if (symbolTable.has(variableName)) {
+    return symbolTable.getByName(variableName))
+  }
+
+  Variable newVariable = new Variable();
+  symbolTable.addByName(variableName, newVariable);
+
+  return newVariable;
+}
 \end{textcode}
