@@ -492,10 +492,10 @@ Note: In the context of the function, the ZVAL's reference count is two (because
 
 \subsection{References and Objects}
 
-Starting from PHP~5, objects are always passed by reference---in a way:~\cite{php-manual-migration5-oop}
+Starting from PHP~5, objects are always passed by reference---in a way:~\cite{php-manual-migration5-oop, php-src-rfc-object-handles}
 
 \begin{quote}
-In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).
+In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).\index{object handles}
 \end{quote}
 
 In a nutshell, PHP does not pass objects by reference, but instead by default passes copies of the object handle---and all copies of one object handle point to the same object instance. So PHP does not pass direct references, but indirect references. This causes PHP to exhibit a strange mix of behavior---in some regards, it looks as though objects are actually passed by reference, while there are some puzzling exceptions and edge-cases.
