@@ -36,9 +36,9 @@ As described in~\cite{pixy-dissertation}, the main types of control-flow graph n
 \hline
  simple assignment  & $variable$ \texttt{=} $place$ & \texttt{AssignSimple} \\
 \hline
- unary assignment  & $variable \texttt{=}  operator\ place$ & \texttt{AssignUnary} \\
+ unary assignment  & $variable$ \texttt{=}  $operator\ place$ & \texttt{AssignUnary} \\
 \hline
- binary assignment  & $variable \texttt{=} place\ operator\ place$ & \texttt{AssignBinary} \\
+ binary assignment  & $variable$ \texttt{=} $place\ operator\ place$ & \texttt{AssignBinary} \\
 \hline
  array assignment  & $variable$  \texttt{= array()} & \texttt{AssignArray} \\
 \hline
@@ -58,7 +58,7 @@ As described in~\cite{pixy-dissertation}, the main types of control-flow graph n
 \hline
  PHP function call & a call of one of PHP's built-in functions & \texttt{CallBuiltinFunction} \\
 \hline
- unknown function call & a function call that can not be resolved during analysis & \texttt{CallUnknownFunction} \\
+ unknown function call & a function call that cannot be resolved during analysis & \texttt{CallUnknownFunction} \\
 \hline
  entry node & the entry node of the control-flow graph & \texttt{CfgEntry} \\
 \hline

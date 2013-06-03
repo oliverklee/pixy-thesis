@@ -30,9 +30,9 @@ This scanner is based on the research published in \cite{huang-securing}.
 
 \section{PHP-SAT}
 \label{php-sat}\index{PHP-SAT}
-PHP-SAT~\cite{php-sat} is an Open Source tool programmed in Stratego/XT~\cite{stratego} using intraprocedural data-flow analysis. It is based on PHP-front~\cite{php-front} and can work with PHP 4 and 5. There is no stable release yet, and development has ceased in 2007.
+PHP-SAT~\cite{php-sat} is an Open Source tool programmed in Stratego/XT~\cite{stratego} that uses intraprocedural data-flow analysis. It is based on PHP-front~\cite{php-front} and is able to work on code written in PHP~4 and 5. There is no stable release yet, and development has ceased in 2007.
 
-This tool does not compile on Ubuntu (the used testing environment), and has very scarce documentation.
+This tool does not compile on the used testing environment Ubuntu, and has very scarce documentation.
 
 \section{Pixy}
 \label{pixy-comparison}\index{Pixy}
@@ -42,7 +42,7 @@ Pixy currently works only on PHP 4 code. After changing the test suite to PHP 4-
 
 \section{Yasca---Yet Another Source Code Analyzer}
 \label{yasca}\index{Yasca}
-Yasca~\cite{yasca} is an Open Source tool programmed in PHP that combines its own pattern-matching search with the output of other scanners included as plug-ins, including Pixy and PHPlint.
+Yasca~\cite{yasca} is an Open Source tool programmed in PHP that combines its own pattern-matching search with the output of other scanners included as plug-ins, among them Pixy and PHPlint.
 
 Using only its own scanning engine, Yasca was not able to find a single vulnerability.
 

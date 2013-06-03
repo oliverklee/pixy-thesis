@@ -1,14 +1,14 @@
 \chapter{Taint Analysis for Member Variables (WORK IN PROGRESS)}
 \label{field-tainting}
 
-This chapter describes a concept for adding taint analysis on for member variables of objects to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
+This chapter describes a concept for adding taint analysis for member variables of objects to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
 
 \section{Modeling Member Variables as Places for Three-Address Code (TAC)}
 \index{member variables}\index{fields}\index{three-address code}
 
-Pixy models variables as ``places'' for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). For taint analysis, it uses this ``place'' abstraction instead of the variables from the parse tree to model the flow of data through the program.
+Pixy models variables as ``places'' for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). For taint analysis, it uses this ``place'' abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
 
-Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen the \texttt{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
+Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
 
 
 
@@ -16,7 +16,7 @@ Hence, we need a way to convert access to member variables from the PHP parse tr
 
 \subsubsection{Class Declaration}
 
-For the following code for declaring a class with one field, the corresponding subtree of the PHP parse tree looks like depicted in figure~\ref{fig:parse-tree-foo-class} on page~\pageref{fig:parse-tree-foo-class}.
+For the following code for declaring a class with one field, the corresponding subtree of the PHP parse tree is depicted in figure~\ref{fig:parse-tree-foo-class} on page~\pageref{fig:parse-tree-foo-class}.
 
 \begin{phpcode}
 class Foo {
@@ -29,12 +29,12 @@ Note: This piece of code still uses the PHP~4 way of declaring member variables.
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.5]{images/parsetree-foo-class-declaration}
-   \caption{The subtree of the PHP parse tree for declaring a class \texttt{Foo} with a single field \texttt{\$field} with a default value of \texttt{42}.}
+   \caption{The subtree of the PHP parse tree for declaring a class \texttt{Foo} with a single field \texttt{\$field} that has a default value of \texttt{42}.}
    \label{fig:parse-tree-foo-class}
   \end{center}
 \end{figure}
 
-At the point where the \texttt{TacConverter} class encounters the class definition, it would be neither necessary nor helpful to save the taint state of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always considers literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
+At the point where the \texttt{TacConverter} class encounters the class definition, it would be neither necessary nor helpful to save the taint state\footnote{See section~\ref{taint-state} on page~\pageref{taint-state} for details.} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
 
 In addition, the list of declared fields might be only a subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
 
@@ -84,7 +84,7 @@ assign(subTree) {
 
 \paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because is occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
 
-For the sake of brevity, this pseudo-code omit the part about creating temporary variables if a variable already is present in the symbol table. This feature already is present in Pixy and does not need to be changed.
+For the sake of brevity, this pseudo-code omits the part about creating temporary variables if a variable already is present in the symbol table. This feature already exists in Pixy and does not need to be changed.
 
 \subsubsection{Field Access}
 
@@ -115,7 +115,7 @@ Both for the left side of assignments as well as for all expressions, we need to
 \end{tabular}
 }{Field accesses that need to be modeled}{table:field-access-cases}
 
-\paragraph{Note:} Method chaining in PHP is possible, as is field access chaining. After field chaining, method calls are possible. However, even if a method returns an object, chained field accesses on that object are not possible. This approach does not cover method call after field accesses as Pixy already is quite good at finding out which method from which class gets called.
+\paragraph{Note:} Method chaining in PHP is possible, as is field access chaining. After field chaining, method calls are possible. However, even if a method returns an object, chained field accesses on that object are not possible. This approach does not cover method call after field accesses as Pixy already is quite versed at finding out which method from which class gets called.
 
 
 \begin{figure}[htb]
@@ -174,7 +174,7 @@ Both for the left side of assignments as well as for all expressions, we need to
   \end{center}
 \end{figure}
 
-As Pixy currently does not model the---relative rare---case of variable variables, this approach does not model them either on the field level.
+As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either.
 
 Looking at the big picture, both for left-side and right-side expressions, the TacConverter walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as needed. In pseudo-code that expands the code listed above, this approach looks like this:
 

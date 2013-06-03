@@ -88,7 +88,7 @@ Model checking relies on creating suitable models of the program---either manual
 
 The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzers and compilers can start with the source code as a plain text file and need some abstract semantic information on the program to work with.
 
-If the static code analyzer works on a later product of the compiler tool chain (like bytecode or machine code), the static code analyzer of course does not need to have the components that already have been used by the compiler. For example, JLint works on Java bytecode~\cite{comparison-of-bug-finding-tools}, and Bytekit works on the bytecode generated during the PHP interpreter's compilation phase, providing control flow graphs.~\cite{bytekit, bytekit-cli}\index{bytecode}
+If the static code analyzer works on a later product of the compiler tool chain (such as bytecode or machine code), the static code analyzer of course does not need to have the components that already have been used by the compiler. For example, JLint works on Java bytecode~\cite{comparison-of-bug-finding-tools}, and Bytekit works on the bytecode generated during the PHP interpreter's compilation phase, providing control flow graphs.~\cite{bytekit, bytekit-cli}\index{bytecode}
 
 \begin{figure}[htb]
   \begin{center}
@@ -102,7 +102,7 @@ If the static code analyzer works on a later product of the compiler tool chain 
 \subsection{Lexer, Lexical Analyzer, Scanner, Tokenizer}
 \index{lexer}\index{lexical analyzer}\index{scanner}\index{tokenizer}\index{token manager}
 
-The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\footnote{In all other places of this thesis, the author uses the term \emph{scanner} with the meaning ``security scanner''.} or \emph{tokenizer}) takes the stream of characters of the source program as input and converts them into meaningful sequences called \emph{tokens} or \emph{lexemes}.~\cite{compilers, compiler-construction}\index{token}\index{lexem}
+The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\footnote{In all other places of this thesis, the author uses the term \emph{scanner} with the meaning ``security scanner''.} of \emph{tokenizer}) takes the stream of characters of the source program as input and converts them into meaningful sequences called \emph{tokens} or \emph{lexemes}.~\cite{compilers, compiler-construction}\index{token}\index{lexeme}
 
 
 \subsection{Parser, Syntax Analyzer}
@@ -115,7 +115,7 @@ The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexem
 \label{ast}
 \index{abstract syntax tree}\index{AST\see{abstract syntax tree}}
 
-An \emph{abstract syntax tree (AST)}~\cite{compiler-construction} is an abstract representation of the structure of program. This representation is stripped of anything that is not essential for the semantics of the program: For exampled, the tree does not contain parenthesis; instead, the order of execution is represented in the order and hierarchy of the tree. Thus, it is not possible to reconstruct the exact source code back from an abstract syntax tree, while it still is possible to rebuild a program that has the same semantics as the original program.
+An \emph{abstract syntax tree (AST)}~\cite{compiler-construction} is an abstract representation of the structure of program. This representation is stripped of anything that is not essential for the semantics of the program: For example, the tree does not contain parenthesis; instead, the order of execution is represented in the order and hierarchy of the tree. Thus, it is not possible to reconstruct the exact source code back from an abstract syntax tree, while it still is possible to rebuild a program that has the same semantics as the original program.
 
 For the following code example, figure~\ref{fig:ast} on page~\pageref{fig:ast} shows the corresponding abstract syntax tree.
 
@@ -125,7 +125,7 @@ if ($x > $y) {
 }
 \end{phpcode}
 
-An abstract syntax tree is still mostly human-readable---if the reader knows how to read a tree using a pre-order walk.
+An abstract syntax tree is still mostly human-readable \ldots if the reader knows how to read a tree using a pre-order walk.
 
 \begin{figure}[htb]
   \begin{center}
@@ -141,11 +141,11 @@ An abstract syntax tree is still mostly human-readable---if the reader knows how
 \label{parse-tree}
 \index{parse tree}\index{concrete syntax tree}
 
-A \emph{concrete syntax tree} or \emph{parse tree}~\cite{compiler-construction, compilers} contains all elements of the original source code in a semantic structure, including parenthesis, and comments. It is possible to fully reconstruct the original code from a parse tree---except for some indentation details---, making a parse tree also useful for transformations in within the source code. On the downside, parse trees are very verbose in comparison to abstract syntax trees, which are reduced to the bare semantics.
+A \emph{concrete syntax tree} or \emph{parse tree}~\cite{compiler-construction, compilers} contains all elements of the original source code in a semantic structure, including parenthesis, and comments. It is possible to fully reconstruct the original code from a parse tree---except for some indentation details---, making a parse tree also useful for transformations within the source code. On the downside, parse trees are very verbose in comparison to abstract syntax trees, which are reduced to the bare semantics.
 
 For the following code example (which is the same as in section~\ref{ast}), figure~\ref{fig:parse-tree} on page~\pageref{fig:parse-tree} shows the corresponding PHP parse tree as created by the PhpParser package. The difference in size---for the exact same source code---is striking.
 
-The figure also shows that the PHP opcodes also are listed with their opcode name, \eg \emph{T\_CLOSE\_BRACES}.
+The figure shows that the PHP opcodes also are listed with their opcode name, \eg \emph{T\_CLOSE\_BRACES}.
 
 \begin{phpcode}
 if ($x > $y) {
@@ -155,20 +155,21 @@ if ($x > $y) {
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.6]{images/parse-tree}
+    \includegraphics[scale=0.7]{images/parse-tree}
     \caption{A parse tree contains all the syntactic details of the original code, making it extremely verbose.}
     \label{fig:parse-tree}
   \end{center}
 \end{figure}
 
 
+
 \section{Three-address Code (TAC) (READY FOR FEEDBACK)}
 \label{tac}
 \index{three-address code}\index{TAC\see{three-address code}}
 
-\emph{Three-address code (TAC)}~\cite{compiler-construction, compilers} is a theoretical concept for an intermediate program representation that roughly resembles assembly code. Three-address codes each consist of a basic operation and up to three operands or ``addresses'' (hence the name). Addresses can be variables, constants, literals, compiler-generated temporaries, or jump targets.
+\emph{Three-address code (TAC)}~\cite{compiler-construction, compilers} is a theoretical concept for an intermediate program representation that roughly resembles assembly code. Three-address codes each consist of a basic operation and up to three operands or eponymic ``addresses''. Addresses can be variables, constants, literals, compiler-generated temporaries, or jump targets.
 
-Three-address code breaks down deep expressions and loops into a relatively simple, linearized structure with simple conditions and jumps, making it particularly useful for data-flow analysis.
+Three-address code breaks down deep expressions and loops into a relatively simple, linearized structure with conditions and jumps, making it particularly useful for data-flow analysis.
 
 Let's see how some example PHP code translates into three-address code:
 
@@ -278,6 +279,8 @@ The data is used during an \texttt{echo} call, outputting the data in the reques
 Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but it is not a sink for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. Sources, however, are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
 
 Data originating in a source (\ie untrusted data) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
+
+Thus, a variable's \emph{taint state}\index{taint state}\label{taint-state} at some point of the program execution can either be \emph{tainted} or \emph{untainted}.
 
 \begin{figure}[htb]
   \begin{center}

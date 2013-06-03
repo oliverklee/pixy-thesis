@@ -73,7 +73,7 @@ protected function foo(array $bar) {
 \section{Variables, References and Aliases (READY FOR FEEDBACK, PROOFREAD)}
 \label{php-variables}\index{variables in PHP}
 
-To be able to conduct alias analysis for PHP, it is important to fully understand how variables and references in PHP work. The following section covers this, including the implementation details of variables in PHP as well as the various types of references that are possible in PHP.
+To be able to conduct alias analysis for PHP, it is important to fully understand the way variables and references in PHP work. The following section covers this, including the implementation details of variables in PHP as well as the various types of references that are possible in PHP.
 
 Many of these language details are referenced in the PHP manual, which---together with the reference implementation---is the authoritative source for details on the PHP language.
 
@@ -110,7 +110,7 @@ function breakfast() {
 }
 \end{phpcode}
 
-Note: Local scope works exactly the same way for functions and class methods (which in PHP also use the \texttt{function} keyword).
+Note: Local scope works exactly the same way for functions and class methods---which in PHP also use the \texttt{function} keyword.
 
 
 \subsubsection{The ``global'' Keyword and \$GLOBALS}
@@ -211,7 +211,7 @@ The reference count is used both by the garbage collector as well as to save mem
 \label{sec:copy-on-write}
 \index{copy-on-write variables}\index{variables!copy-on-write|see{copy-on-write variables}}
 
-To preserve memory and improve performance, PHP uses a copy-on-write stragy for variables that are copies of one another. This copy-on-write strategy has no direct im\-pact on alias analysis whatsoever. Still, understanding this phenomenon is necessary in order to interpret all the reference counter correctly and to differentiate between real aliases and copy-on-write ZVALs.
+To preserve memory and improve performance, PHP uses a copy-on-write strategy for variables that are copies of one another. This copy-on-write strategy has no direct im\-pact on alias analysis whatsoever. Nevertheless, understanding this phenomenon is necessary in order to interpret all the reference counter correctly and to differentiate between real aliases and copy-on-write ZVALs.
 
 Let's have a look at an example:
 
@@ -291,9 +291,9 @@ y: (refcount=1, is_ref=0)=42
   \end{center}
 \end{figure}
 
-\paragraph{Note:} \texttt{xdebug\_debug\_zval} will never display a \texttt{refcount} of zero for a variable because \texttt{xdebug\_debug\_zval} cannot display variables that have been unset (and that, by definition, do not anymore exist at that point).
+\paragraph{Note:} \texttt{xdebug\_debug\_zval} will never display a \texttt{refcount} of zero for a variable because \texttt{xdebug\_debug\_zval} cannot display variables that have been unset (and that, by definition, do not exist anymore at that point).
 
-\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Just assigning the same value to both variables will not lead to both variables sharing one ZVAL. Thus, this behavior is different from the way the Java virtual machine handles strings in order to preserve memory.~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
+\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Mereley assigning the same value to both variables will not lead to both variables sharing one ZVAL. Thus, this behavior is different from the way the Java virtual machine handles strings in order to preserve memory.~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
 
 
 \subsection{References}
@@ -305,7 +305,7 @@ References in PHP are two variables pointing to the same ZVAL. The PHP manual ta
 References in PHP are a means to access the same variable content by different names. They are not like C pointers; for instance, you cannot perform pointer arithmetic using them, they are not actual memory addresses, and so on.
 \end{quote}
 
-There are several ways to create references in PHP: Assigning by reference, passing by reference and returning references. (This list includes all approaches that are mentioned in the PHP manual.~\cite{php-manual-references} As the PHP manual is the official source of documentation on PHP, this list should be quite complete.)
+There are several ways to create references in PHP: assigning by reference, passing by reference and returning references. This list includes all approaches that are mentioned in the PHP manual.~\cite{php-manual-references} As the PHP manual is the official source of documentation on PHP, this list should be quite complete.
 
 
 \subsubsection{Assigning by Reference}
@@ -315,7 +315,7 @@ There are several ways to create references in PHP: Assigning by reference, pass
 
 References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL instead of one variable pointing to the other, and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in the existing ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
 
-The corresponding ZVAL is marked with \texttt{is\_ref=1} (which is a 0/1 boolean flag, not a counter), and the reference count is increased (figure~\ref{fig:simple-reference} on page~\pageref{fig:simple-reference}):
+The corresponding ZVAL is marked with \texttt{is\_ref=1}---which is a 0/1 boolean flag, not a counter---, and the reference count is increased (figure~\ref{fig:simple-reference} on page~\pageref{fig:simple-reference}):
 
 \begin{phpcode}
 $a1 = 'foo';
@@ -333,7 +333,7 @@ a2: (refcount=2, is_ref=1)='bar'
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/a1_a2}
-    \caption{Two variables that are references to one another share the same ZVAL. Thus, changing the value of one variable automatically affect the other variable as well.}
+    \caption{Two variables that are references to one another share the same ZVAL. Thus, changing the value of one variable automatically affects the other variable as well.}
     \label{fig:simple-reference}
   \end{center}
 \end{figure}
@@ -397,9 +397,9 @@ p2: (refcount=2, is_ref=1)='bar'
 \paragraph{Dropping References and Reference Counting:}
 \index{reference counting}
 
-When a variable that is a reference is unset, PHP removes the variable from the symbol table\index{symbol table} of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed (or be allowed for garbage collection) as long as the reference count is greater than zero.
+When a variable that is a reference is unset, PHP removes the variable from the symbol table\index{symbol table} of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed---or be allowed for garbage collection---as long as the reference count is greater than zero.
 
-There is a difference between cases where there are at least two references to the same ZVAL and cases where there is only one reference left. For at least two references, the ZVAL will still be marked as \texttt{is\_ref=1}:
+There is a difference between cases of at least two references pointing to the same ZVAL and cases of only one reference being left. For at least two references, the ZVAL will still be marked as \texttt{is\_ref=1}:
 
 \begin{phpcode}
 $a1 = 'foo';
@@ -413,7 +413,7 @@ xdebug_debug_zval('a1');
 a1: (refcount=2, is_ref=1)='foo'
 \end{textcode}
 
-If there is only one reference to the ZVAL left, it will be marked as \texttt{is\_ref=0} (even if the variable that is left standing after all its fellows have been unset is not the original first variable):
+If there is only one reference to the ZVAL left, it will be marked as \texttt{is\_ref=0}---even if the variable that is left standing after all its fellows have been unset is not the original first variable:
 
 \begin{phpcode}
 $b1 = 'foo';
@@ -464,13 +464,13 @@ foo: (refcount=1, is_ref=0)=class Foo
   { public $property = (refcount=2, is_ref=1)=4 }
 \end{textcode}
 
-For returning by reference to actually work, both ampersand signs are necessary: the ampersand in the function declaration \texttt{function \&getProperty()} (for the function to return the value by reference) as well as the ampersand when using the return value \texttt{\$property = \&\$foo->getProperty();} (so that \texttt{\$property} is assigned by reference, not by value).
+For returning by reference to actually work, both ampersand signs are necessary: the ampersand in the function declaration \texttt{function \&getProperty()} (for the function to return the value by reference) as well as the ampersand when using the return value \texttt{\$property = \&\$foo->getProperty();} so that \texttt{\$property} is assigned by reference, not by value.
 
 
 \subsubsection{Passing by Reference}
 \index{passing by reference}
 
-Variables can also be passed to functions---and methods---by reference. \cite{php-manual-passing-by-reference} This allows the function to change the value of the passed variable. (By default, function parameters are passed by value, not by reference.)
+Variables can also be passed to functions---and methods---by reference. \cite{php-manual-passing-by-reference} This allows the function to change the value of the passed variable. Note that by default, function parameters are passed by value, not by reference.
 
 \begin{phpcode}
 function changeParameter(&$parameter) {
@@ -487,7 +487,7 @@ xdebug_debug_zval('a');
 a: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-Note: In the context of the function, the ZVAL's reference count is two (because \texttt{\$parameter} is a reference to \texttt{\$a}). As the scope of \texttt{\$parameter} ends with the end of the function, causing the variable to be destroyed, the reference count in the ZVAL decreased back to one.
+Note: In the context of the function, the ZVAL's reference count is two (because \texttt{\$parameter} is a reference to \texttt{\$a}). As the scope of \texttt{\$parameter} ends with the end of the function, this causes the variable to be destroyed, decreasing the reference count in the ZVAL back to one.
 
 
 \subsection{References and Objects}
@@ -498,11 +498,11 @@ Starting from PHP~5, objects are always passed by reference---in a way:~\cite{ph
 In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).
 \end{quote}
 
-\bb{In a nutshell, PHP does not pass objects by reference, but instead by default passes copies of the object handle}---and all copies of one object handle point to the same object instance. So PHP does not pass direct references, but indirect references. This causes PHP to exhibit a strange mix of behavior---in some regards, it feels like objects are actually passed by reference, while there are some puzzling exceptions and edge-cases.
+In a nutshell, PHP does not pass objects by reference, but instead by default passes copies of the object handle---and all copies of one object handle point to the same object instance. So PHP does not pass direct references, but indirect references. This causes PHP to exhibit a strange mix of behavior---in some regards, it looks as though objects are actually passed by reference, while there are some puzzling exceptions and edge-cases.
 
-Technically speaking, if a variable is an object instance, the ZVAL contains a \emph{handle} (or object \emph{identifier}) for the object, not the object itself. So if variables (indirectly) point to the same object, the variables actually contain \emph{copies} of the indentifier.~\cite{php-manual-oop-references}
+Technically speaking, if a variable is an object instance, the ZVAL contains a \emph{handle} (or object \emph{identifier}) for the object, not the object itself. Thus, if variables (indirectly) point to the same object, the variables actually contain \emph{copies} of the indentifier.~\cite{php-manual-oop-references}
 
-As long as the object is merely accessed, object variables work just like references (figure~\ref{fig:objects-as-references} on page~\pageref{fig:objects-as-references}):
+As long as the object is merely accessed, object variables work just like references (figure \ref{fig:objects-as-references} on page~\pageref{fig:objects-as-references}):
 
 \begin{phpcode}
 $instance = new StdClass();
@@ -527,11 +527,10 @@ instance2: (refcount=2, is_ref=0)=class stdClass
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/instance_instance2}
-    \caption{Objects use the ZVAL just for the object identifier/handle, not for the actual data contained in the object.}
+    \caption{Objects use the ZVAL merely for the object identifier/handle, not for the actual data contained in the object.}
     \label{fig:objects-as-references}
   \end{center}
 \end{figure}
-
 
 However, if we start to use the object variables like real references and try to overwrite one object by setting the other object, the difference to real references becomes apparent (figure~\ref{fig:false-object-references} on page~\pageref{fig:false-object-references}):
 
@@ -555,12 +554,12 @@ instance2: (refcount=1, is_ref=0)=42
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.8]{images/someInstance_instance2}
-    \caption{Overwriting an object variable overwrites just the ZVAL. This is a good example of object references not working like real references.}
+    \caption{Overwriting an object variable overwrites the ZVAL only. This is a good example of object ``references'' not working like real references.}
     \label{fig:false-object-references}
   \end{center}
 \end{figure}
 
-However, object variables can also be used as real references---again by using the ampersand \texttt{\&} operator (figure~\ref{fig:real-object-references} on page~\pageref{fig:real-object-references}):
+Object variables can also be used as real references though---again by using the ampersand (\texttt{\&}) operator (figure~\ref{fig:real-object-references} on page~\pageref{fig:real-object-references}):
 
 \begin{phpcode}
 $someInstance = new StdClass();
@@ -587,7 +586,7 @@ instanceReference: (refcount=2, is_ref=1)=42
 \end{figure}
 
 
-\section{Register\_globals (READY FOR FEEDBACK)}
+\section{Register\_globals (READY FOR FEEDBACK, PROOFREAD)}
 \label{register-globals}\index{register\_globals}
 
 In the PHP configuration, there is an option \texttt{register\_globals}. If this option is set to \texttt{On}, uninitialized variables are automatically initialized with data from the request using the same key as the variable name.
@@ -607,7 +606,7 @@ echo '<h2>Welcome back, ' . $escapedUserName . '!</h2>';
 
 If no user is logged in, the \texttt{\$escapedUserName} variable is uninitialized in line 6, causing the code to be susceptible to cross-site-scripting via the \texttt{escapedUserName} request parameter. (See section~\ref{xss} for details on cross-site scripting.)
 
-\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables need to be regarded as tainted.
+\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables still need to be regarded as tainted.
 
 
 \section{Big Changes in Recent PHP Versions (TODO)}
