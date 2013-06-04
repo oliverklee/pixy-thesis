@@ -3,6 +3,63 @@
 
 For this thesis, an existing scanner was needed that already worked reasonably well and could be modified (\ie it needed to be under an Open Source license like the Gnu Public License).
 
+
+
+\section{SWAAT}
+\label{swaat}\index{SWAAT}
+SWAAT~\cite{swaat} is closed-source freeware or open source (depending on whether the enclosed FAQ file or the web site should be considered the more current source), programmed in .NET. It solely relies on string matching. On the test suite, it listed practically all SQL queries as ``security sensitive functionality'', recommending ``manual source code review''. Effectively, it produced many false positive and did not find any of the existing XSS issues.
+
+This project has been orphaned, \ie development and maintenance have ceased.
+
+\section{CodeSecure Verifier}
+\label{armorize}\index{Code Secure Verifier}\index{Armorize Code Secure Verifier}
+Armorize CodeSecure Verifier~\cite{codesecure, verifier} is a closed-source, commercial source code scanner that is available in hardware and as software-as-a-service (SaaS). It provides data-flow and control-flow analysis, thus detecting most tainted-object-propagation vulnerabilities.
+
+This scanner is based on the research published in \cite{huang-securing}.
+
+\section{PHP-SAT}
+\label{php-sat}\index{PHP-SAT}
+PHP-SAT~\cite{php-sat} is an Open Source tool programmed in Stratego/XT~\cite{stratego} that uses intraprocedural data-flow analysis. It is based on PHP-front~\cite{php-front} and is able to work on code written in PHP~4 and 5. There is no stable release yet, and development has ceased in 2007.
+
+This tool does not compile on the used testing environment Ubuntu, and has very scarce documentation.
+
+\section{Pixy}
+\label{pixy-comparison}\index{Pixy}
+Pixy~\cite{pixy} is an Open Source tool programmed in Java using interprocedural data-flow analysis.
+
+Pixy currently works only on PHP 4 code. After changing the test suite to PHP 4-only, Pixy found all vulnerabilities that did not use PHP~5 autoloading.
+
+\section{Yasca---Yet Another Source Code Analyzer}
+\label{yasca}\index{Yasca}
+Yasca~\cite{yasca} is an Open Source tool programmed in PHP that combines its own pattern-matching search with the output of other scanners included as plug-ins, among them Pixy and PHPlint.
+
+Using only its own scanning engine, Yasca was not able to find a single vulnerability.
+
+
+\section{Deciding on a Scanner for the Thesis}
+
+This is an overview of the desired properties for a scanner which could be used as a basis for the thesis:
+
+\myTable{
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+ & \bb{Open Source} & \bb{runs at all} & \bb{good recall} & \bb{good precision} \\
+\hline
+SWAAT & (unclear) & \checkmark & --- & --- \\
+\hline
+Code Secure Verifier & --- & (\checkmark) & (not tested) & (not tested) \\
+\hline
+PHP-SAT & \checkmark & --- & (not tested) & (not tested) \\
+\hline
+Pixy & \checkmark & \checkmark & \checkmark & \checkmark   \\
+\hline
+Yasca & \checkmark & \checkmark & --- & (nothing found) \\
+\hline
+\end{tabular}
+}{Reviewed PHP security scanners}{scanners-overview}
+
+Pixy was the only scanner tested that had a clear Open Source license, worked in the first place, and had both a reasonable recall and precision. Thus the decision was to build on Pixy for this thesis.
+
 \section{Used Test Suite}
 The author created a small test suite that was used to check the abilities of the various scanners. The test suite contains several instances of XSS and SQL injection in various forms:
 \begin{itemize}
@@ -364,59 +421,3 @@ echo $object->someProperty;
 \end{phpcode}
 \normalsize
 
-
-
-\section{SWAAT}
-\label{swaat}\index{SWAAT}
-SWAAT~\cite{swaat} is closed-source freeware or open source (depending on whether the enclosed FAQ file or the web site should be considered the more current source), programmed in .NET. It solely relies on string matching. On the test suite, it listed practically all SQL queries as ``security sensitive functionality'', recommending ``manual source code review''. Effectively, it produced many false positive and did not find any of the existing XSS issues.
-
-This project has been orphaned, \ie development and maintenance have ceased.
-
-\section{CodeSecure Verifier}
-\label{armorize}\index{Code Secure Verifier}\index{Armorize Code Secure Verifier}
-Armorize CodeSecure Verifier~\cite{codesecure, verifier} is a closed-source, commercial source code scanner that is available in hardware and as software-as-a-service (SaaS). It provides data-flow and control-flow analysis, thus detecting most tainted-object-propagation vulnerabilities.
-
-This scanner is based on the research published in \cite{huang-securing}.
-
-\section{PHP-SAT}
-\label{php-sat}\index{PHP-SAT}
-PHP-SAT~\cite{php-sat} is an Open Source tool programmed in Stratego/XT~\cite{stratego} that uses intraprocedural data-flow analysis. It is based on PHP-front~\cite{php-front} and is able to work on code written in PHP~4 and 5. There is no stable release yet, and development has ceased in 2007.
-
-This tool does not compile on the used testing environment Ubuntu, and has very scarce documentation.
-
-\section{Pixy}
-\label{pixy-comparison}\index{Pixy}
-Pixy~\cite{pixy} is an Open Source tool programmed in Java using interprocedural data-flow analysis.
-
-Pixy currently works only on PHP 4 code. After changing the test suite to PHP 4-only, Pixy found all vulnerabilities that did not use PHP~5 autoloading.
-
-\section{Yasca---Yet Another Source Code Analyzer}
-\label{yasca}\index{Yasca}
-Yasca~\cite{yasca} is an Open Source tool programmed in PHP that combines its own pattern-matching search with the output of other scanners included as plug-ins, among them Pixy and PHPlint.
-
-Using only its own scanning engine, Yasca was not able to find a single vulnerability.
-
-
-\section{Deciding on a Scanner for the Thesis}
-
-This is an overview of the desired properties for a scanner which could be used as a basis for the thesis:
-
-\myTable{
-\begin{tabular}{|l|l|l|l|l|}
-\hline
- & \bb{Open Source} & \bb{runs at all} & \bb{good recall} & \bb{good precision} \\
-\hline
-SWAAT & (unclear) & \checkmark & --- & --- \\
-\hline
-Code Secure Verifier & --- & (\checkmark) & (not tested) & (not tested) \\
-\hline
-PHP-SAT & \checkmark & --- & (not tested) & (not tested) \\
-\hline
-Pixy & \checkmark & \checkmark & \checkmark & \checkmark   \\
-\hline
-Yasca & \checkmark & \checkmark & --- & (nothing found) \\
-\hline
-\end{tabular}
-}{Reviewed PHP security scanners}{scanners-overview}
-
-Pixy was the only scanner tested that had a clear Open Source license, worked in the first place, and had both a reasonable recall and precision. Thus the decision was to build on Pixy for this thesis.
