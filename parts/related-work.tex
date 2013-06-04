@@ -1,0 +1,16 @@
+\chapter{Related Work (READY FOR FEEDBACK)}
+\label{related-work}
+
+In \cite{phpc-thesis} and \cite{phpc-paper}, the author presents a compiler \texttt{phpc} that compiles from PHP to C. Unlike the HipHop PHP parser created by Facebook~\cite{hiphop}, the author strives to model the complete PHP language model instead of striving to achieve better performance at the cost of reduced PHP compatibility. The compiler closely emulates PHP's memory model including references and reference counting. It does not create a full alias analysis at compile time, though---as this is not necessary for the compiler step.
+
+\cite{xss-via-grammar} strive to find cross-site scripting by building a context-free grammar for any web application. Using this grammar, the author's approach is based on trying to inject script tags via the request, and then testing whether the grammar allows the script tags to get displayed on the page. This approach does not take into account that cross-site scripting is also possible without script tags, for example using event handlers on DOM nodes.
+
+In \cite{phantom-1} and \cite{phantom-2}, the authors present a type analysis tool \emph{Phantm} for PHP code that detects type errors. This concept does not directly help mitigate security vulnerabilities, but it can help improve code quality by working around PHP's loose type system.
+
+\cite{wassermann-sound} have created a technique for finding SQL injections by building context-free grammars for the strings used in SQL queries, resulting in a scanner with a low false positive rate.
+
+In \cite{static-php}, the authors present a static analysis algorithm for finding security vulnerabilities in PHP. For this, their algorithm builds an abstract syntax tree and control-flow graphs. Then each basic block gets simulated in its execution, resulting in a \emph{function summary} of what happens in the basic block.
+
+In \cite{rips}, the author describes the security scanner RIPS that uses PHP's built-in tokenizer extension that splits PHP source code into tokens. The tool uses taint analysis and provides detailed configuration options on the level of conservatism or paranoia the user wants the tool to exhibit.
+
+\cite{php-parser-popov} is a PHP parser written in PHP. It makes use of PHP's tokenizer and the language definition provided with the PHP source code. On top of this tool, \cite{php-analyzer} is a static code analyzer that claims to be able to find bugs and automatically fix some of them.

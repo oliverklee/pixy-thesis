@@ -26,4 +26,6 @@ Currently, the approach for taint analysis for objects is merely a theoretical c
 
 \section{Further Steps and Obstacles}
 
-Currently, the java compiler warnings for Pixy are down to 4. Still, the next steps should be further clean-up, refactoring and documentation to get Pixy in a maintainable state. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
+Currently, the java compiler warnings for Pixy are down to 4. Still, the next steps should be further clean-up, refactoring and documentation to get Pixy in a maintainable state---currently, Pixy still is far from maintainable. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
+
+At the moment, there are some promising new tools that make use of PHP's built-in tokenizer and its provided language definition, \eg \cite{php-parser-popov} and \cite{php-analyzer}. For Pixy, the language definition and the parser need to be updated manually. So switching to the the new tools looks like a path woth being explored.
