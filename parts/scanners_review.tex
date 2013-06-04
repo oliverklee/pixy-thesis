@@ -1,4 +1,4 @@
-\chapter{Review of Existing Static PHP Vulnerability Scanners (READY FOR FEEDBACK, PROOFREAD)}
+\chapter{Review of Existing Static PHP Vulnerability Scanners (READY FOR FEEDBACK, partly PROOFREAD)}
 \label{scanners}
 
 For this thesis, an existing scanner was needed that already worked reasonably well and could be modified (\ie it needed to be under an Open Source license like the Gnu Public License).
@@ -60,7 +60,9 @@ Yasca & \checkmark & \checkmark & --- & (nothing found) \\
 
 Pixy was the only scanner tested that had a clear Open Source license, worked in the first place, and had both a reasonable recall and precision. Thus the decision was to build on Pixy for this thesis.
 
-\section{Used Test Suite}
+
+
+\section{Used Test Suite (READY FOR FEEDBACK)}
 The author created a small test suite that was used to check the abilities of the various scanners. The test suite contains several instances of XSS and SQL injection in various forms:
 \begin{itemize}
  \item source and sink within the same line
