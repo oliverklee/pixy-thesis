@@ -1,4 +1,4 @@
-\chapter{The PHP Security Scanner Pixy (WORK IN PROGRESS)}
+\chapter{The PHP Security Scanner Pixy (READY FOR FEEDBACK)}
 \label{pixy}\index{Pixy}\index{PhpParser}
 Pixy~\cite{pixy} was created 2006/2007 as part of a dissertation by Nenad Jovanovic~\cite{pixy-dissertation}. It uses interprocedural data-flow analysis and includes the dedicated PhpParser tool~\cite{phpparser}. Pixy's approach is documented in~\cite{pixy-short, pixy-long, pixy-technical, pixy-dissertation}.
 
@@ -24,7 +24,7 @@ As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data
  \end{center}
 \end{figure}
 
-\section{P-TAC as an Intermediate Representation in the Control-Flow Graph (READY FOR FEEDBACK)}
+\section{P-TAC as an Intermediate Representation in the Control-Flow Graph}
 \label{p-tac}\index{P-TAC}
 
 As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow grap} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place}
