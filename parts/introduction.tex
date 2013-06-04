@@ -17,6 +17,8 @@ Currently, there is no free and high-quality static code analysis tool available
 
 This thesis aims to move the PHP security scanner \bb{Pixy}~(\cite{pixy}, page~\pageref{pixy}) and its subproject \bb{PhpParser}~\cite{phpparser} one big step forward towards being able to scan PHP~5 code and find security potential vulnerabilities that have been made possible with the recent changes in PHP. Particularly, it provides an approach for finding tainted-object-propagation\footnote{See section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation} for details.} vulnerabilities in object fields, include the fields into Pixy's alias analysis, and model the default pass-by-reference behavior for objects in PHP~5.
 
+In addition, this thesis includes an overview over common vulnerabilities in PHP web applications as well as the theoretical foundation for static code analysis and security scanning.
+
 Code quality matters---in particular, for an open-source tool like Pixy, code quality is important to attract more contributors to the project. Thus, this thesis also aims at getting Pixy to work with the current Java~7\index{Java} without any warnings and making Pixy's code more maintainable.
 
 These technical goals are mostly necessary due to the fact that the Pixy code base had not been maintained (or even touched) since 2006, and both PHP (\ie the scanned language) as well as Java (i.e., the scanner's language) had evolved in the meantime.

@@ -1,2 +1,29 @@
-\chapter{Conclusions (TODO)}
+\chapter{Conclusions (READY FOR FEEDBACK)}
 \label{conclusions}
+
+This chapter describes the contributions of this thesis, the current state concerning implementing the contributed concepts, and the necessary further stays and some obstacles that might lie ahead.
+
+\section{Contributions}
+
+This thesis introduces a sound approach for providing taint analysis for object fields, building on top of the security vulnerability scanner Pixy. For this, it includes an algorithm for mapping chained field accesses to TAC places. It also contains an approach for conducting alias analysis on object-field level, again levering Pixy's existing capabilities.
+
+
+\section{Implementation}
+
+\subsection{Pixy Clean-up}
+
+During the research for this thesis and its creation, Pixy underwent lots of refactorings, including moving and renaming classes, method extraction to reduce code complexity, new and improved comments, and code simplification.
+
+In addition, Pixy and PhpParser were adapted for Java~7, reducing the number of Java compilation warnings from 688 down to 4.
+
+However, this has been only a first step. Pixy still needs more clean-up and refactoring to get it into a maintainable state so that new features can be added.
+
+
+\subsection{Taint Analysis for Objects}
+
+Currently, the approach for taint analysis for objects is merely a theoretical concept. During the writing of this thesis, it turned out that Pixy still needed far more refactoring, clean-up and more unit tests before major new features can be added.
+
+
+\section{Further Steps and Obstacles}
+
+Currently, the java compiler warnings for Pixy are down to 4. Still, the next steps should be further clean-up, refactoring and documentation to get Pixy in a maintainable state. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
