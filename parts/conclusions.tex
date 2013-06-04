@@ -1,7 +1,7 @@
 \chapter{Conclusions (READY FOR FEEDBACK)}
 \label{conclusions}
 
-This chapter describes the contributions of this thesis, the current state concerning implementing the contributed concepts, and the necessary further stays and some obstacles that might lie ahead.
+This chapter describes the contributions of this thesis, the current state concerning implementing the contributed concepts, and the necessary further steps and some obstacles that might lie ahead.
 
 \section{Contributions}
 
@@ -12,7 +12,7 @@ This thesis introduces a sound approach for providing taint analysis for object 
 
 \subsection{Pixy Clean-up}
 
-During the research for this thesis and its creation, Pixy underwent lots of refactorings, including moving and renaming classes, method extraction to reduce code complexity, new and improved comments, and code simplification.
+During the research for this thesis and its creation, the author conducted a great number of refactorings for Pixy, including moving and renaming classes, method extraction to reduce code complexity, new and improved comments, and code simplification.
 
 In addition, Pixy and PhpParser were adapted for Java~7, reducing the number of Java compilation warnings from 688 down to 4.
 
@@ -26,6 +26,6 @@ Currently, the approach for taint analysis for objects is merely a theoretical c
 
 \section{Further Steps and Obstacles}
 
-Currently, the java compiler warnings for Pixy are down to 4. Still, the next steps should be further clean-up, refactoring and documentation to get Pixy in a maintainable state---currently, Pixy still is far from maintainable. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
+Currently, the Java compiler warnings for Pixy are down to 4. Still, the next steps should be further clean-up, refactoring and documentation to get Pixy in a maintainable state---currently, Pixy still is far from maintainable. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
 
-At the moment, there are some promising new tools that make use of PHP's built-in tokenizer and its provided language definition, \eg \cite{php-parser-popov} and \cite{php-analyzer}. For Pixy, the language definition and the parser need to be updated manually. So switching to the the new tools looks like a path woth being explored.
+At the moment, there are some promising new tools that make use of PHP's built-in tokenizer and its provided language definition, \eg \cite{php-parser-popov} and \cite{php-analyzer}. For Pixy, the language definition and the parser need to be updated manually. So switching to the the new tools as a base for a new security scanner and applying the principles learned with Pixy looks like a path worth being explored.

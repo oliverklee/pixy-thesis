@@ -9,7 +9,7 @@ This chapter describes a concept for adding taint analysis for member variables 
 
 \subsection{Class Declaration}
 
-For the following code for declaring a class with one field, the corresponding subtree of the PHP parse tree is depicted in figure~\ref{fig:parse-tree-foo-class} on page~\pageref{fig:parse-tree-foo-class}.
+For the following code that declares a class with one field, the corresponding subtree of the PHP parse tree is depicted in figure~\ref{fig:parse-tree-foo-class} on page~\pageref{fig:parse-tree-foo-class}.
 
 \begin{phpcode}
 class Foo {
@@ -27,7 +27,7 @@ Note: This piece of code still uses the PHP~4 way of declaring member variables.
   \end{center}
 \end{figure}
 
-At the point where the \texttt{TacConverter} class encounters the class definition, it would be neither necessary nor helpful to save the taint state\footnote{See section~\ref{taint-state} on page~\pageref{taint-state} for details.}\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
+At the point where Pixy's \texttt{TacConverter}\footnote{See section~\ref{tacconverter} on page~\pageref{tacconverter} for details.} class encounters the class definition, it would be neither necessary nor helpful to save the taint state\footnote{See section~\ref{taint-state} on page~\pageref{taint-state} for details.}\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
 
 In addition, the list of declared fields might be only a subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
 
@@ -133,7 +133,9 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either. Instead, this approach uses Pixy's special place \emph{specialPlaceForVariableVariables} that keeps this place out of taint analysis.
 
-Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. So this approach expands the \texttt{cvar} function to also return places for field accesses.
+Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. In other words: A \texttt{cvar} node in the parse tree is equivalent with a variable being access, \eg \texttt{\$a} or \texttt{\$foo->bar}.
+
+This approach expands the \texttt{cvar} function to also return places for field accesses.
 
 \paragraph{Note:} The listed pseudo-code takes a few shortcuts: It assumes that there are some convenience functions available for tree walking, array processing and string processing, and that functions like \texttt{cvar} return \texttt{AbstractPlace} instead of a \texttt{TacAttributes} wrapper.
 
@@ -290,7 +292,7 @@ AbstractPlace expr_without_variable(ParseNode subtreeRoot) {
 }
 \end{textcode}
 
-\paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because is occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
+\paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because it occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
 
 For the sake of brevity, this pseudo-code omits the part about creating temporary variables if a variable already is present in the symbol table. This feature already exists in Pixy and does not need to be changed.
 

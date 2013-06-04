@@ -9,7 +9,7 @@ In \cite{phantom-1} and \cite{phantom-2}, the authors present a type analysis to
 
 \cite{wassermann-sound} have created a technique for finding SQL injections by building context-free grammars for the strings used in SQL queries, resulting in a scanner with a low false positive rate.
 
-In \cite{static-php}, the authors present a static analysis algorithm for finding security vulnerabilities in PHP. For this, their algorithm builds an abstract syntax tree and control-flow graphs. Then each basic block gets simulated in its execution, resulting in a \emph{function summary} of what happens in the basic block.
+In \cite{static-php}, the authors present a static analysis algorithm and implementation for finding security vulnerabilities in PHP. For this, their algorithm builds an abstract syntax tree and control-flow graphs. Then each basic block gets simulated in its execution, resulting in a \emph{function summary} of what happens in the basic block.
 
 In \cite{rips}, the author describes the security scanner RIPS that uses PHP's built-in tokenizer extension that splits PHP source code into tokens. The tool uses taint analysis and provides detailed configuration options on the level of conservatism or paranoia the user wants the tool to exhibit.
 

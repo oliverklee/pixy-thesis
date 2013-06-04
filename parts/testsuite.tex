@@ -1,0 +1,362 @@
+\chapter{Test Suite Used For Evaluating the Scanners}
+\label{testsuite}
+
+The author created a small test suite that was used to check the abilities of the various scanners. The test suite contains several instances of XSS and SQL injection in various forms:
+\begin{itemize}
+ \item source and sink within the same line, \eg \texttt{sqlInjIntegerForSourceInline}
+ \item source and sink on different lines within the same method, \eg \texttt{sqlInjIntegerForSourceInFunctionSanitizedInSource}
+ \item source, sanitation and sink on different lines within the same method, \eg \texttt{sqlInjStringInFunctionSanitizedInSource}
+ \item sanitation using PHP's built-in sanitation functions \texttt{mysql\_real\_escape\_string} or \texttt{intval}, \eg \texttt{sqlInjIntegerForSourceInFunctionSanitizedInSink}
+ \item sanitation or source in other method in the same class, \eg \texttt{sqlInjIntegerForSourceFromOtherFunctionInSameClass}
+ \item sanitation or source in method of an instance of an included class, \eg \texttt{sqlInjIntegerForSourceInStaticFunctionInIncludedClass}
+ \item sanitation or source in method in a static function of an included class, \eg \texttt{sqlInjIntegerForSourceFromStaticFunctionInAutoloadedClass}
+ \item sanitation or source in method in a static function of a class that is \emph{not} included, but expected to be autoloaded, \eg \texttt{sqlInjIntegerForSourceFromStaticFunctionInAutoloadedClass}
+\end{itemize}
+
+The test suite includes the file listed below.
+
+
+
+\section*{Test.php}
+\begin{phpcode}
+require_once('IncludedGetter.php');
+
+/**
+ * This class contains various vulnerabilities to test some
+ * vulnerability scanners.
+ */
+class Test {
+  function get($key) {
+    return $_GET[$key];
+  }
+
+
+  //////////////////
+  // SQL injection
+  //////////////////
+
+  function sqlInjIntegerForSourceInline() {
+    mysql_query('SELECT * FROM users WHERE id = ' . $_GET['id'] . ';');
+  }
+
+  function sqlInjIntegerForSourceInFunction() {
+    $id = $_GET['id'];
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerForSourceInFunctionSanitizedInSource() {
+    $id = intval($_GET['id']);
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjStringInFunctionSanitizedInSource() {
+    $username = mysql_real_escape_string($_GET['username']);
+    mysql_query('SELECT * FROM users WHERE username = "' .
+    $username . '";');
+  }
+
+  function sqlInjIntegerForSourceInFunctionSanitizedInSink() {
+    $id = $_GET['id'];
+    mysql_query('SELECT * FROM users WHERE id = ' . intval($id) . ';');
+  }
+\end{phpcode}
+
+\begin{phpcode}
+  function sqlInjIntegerForSourceFromOtherFunctionInSameClass() {
+    $id = $this->get('id');
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerForSourceInStaticFunctionInIncludedClass() {
+    $id = IncludedGetter::staticGet('id');
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerForSourceFromInstanceOfIncludedClass() {
+    $getter = new IncludedGetter();
+    $id = $getter->get('id');
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerForSourceFromStaticFunctionInAutoloadedClass() {
+    $id = AutoloadedGetter::staticGet('id');
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerForSourceFromInstanceOfAutoloadedClass() {
+    $getter = new AutoloadedGetter();
+    $id = $getter->get('id');
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerForSourceT3libDiv() {
+    $id = t3lib_div::_GP('id');
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjIntegerInFunctionTypo3SanitizedInSource() {
+    $id = t3lib_div::intval_positive($_GET['id']);
+    mysql_query('SELECT * FROM users WHERE id = ' . $id . ';');
+  }
+
+  function sqlInjStringInFunctionTypo3SanitizedInSource() {
+    $username = $GLOBALS['TYPO3_DB']
+      ->fullQuoteStr($_GET['username'], 'users');
+    mysql_query('SELECT * FROM users WHERE username = ' .
+      $username . ';');
+  }
+
+  function sqlInjIntegerForSourceInFunctionAndTypo3Sink() {
+    $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'users', 'id = ' .
+      $_GET['id'] . ';');
+  }
+\end{phpcode}
+
+\begin{phpcode}
+  /////////////////////////
+  // Cross-site scripting
+  /////////////////////////
+
+  function xssForSourceInline() {
+    echo 'Hello ' . $_GET['name'] . '!';
+  }
+
+  function xssForSourceInFunction() {
+    $name = $_GET['name'];
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceInFunctionSanitizedInSource() {
+    $name = htmlspecialchars($_GET['name']);
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceInFunctionSanitizedInSink() {
+    $name = $_GET['name'];
+    echo 'Hello ' . htmlspecialchars($name) . '!';
+  }
+
+  function xssForSourceFromOtherFunctionInSameClass() {
+    $name = $this->get('name');
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceFromStaticFunctionInIncludedClass() {
+    $name = IncludedGetter::staticGet('name');
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceFromInstanceOfIncludedClass() {
+    $getter = new IncludedGetter();
+    $name = $getter->get('name');
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceFromStaticFunctionInAutoloadedClass() {
+    $name = AutoloadedGetter::staticGet('name');
+    echo 'Hello ' . $name . '!';
+  }
+\end{phpcode}
+
+\begin{phpcode}
+  function xssForSourceFromInstanceOfAutoloadedClass() {
+    $getter = new AutoloadedGetter();
+    $name = $getter->get('name');
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceT3libDiv() {
+    $name = t3lib_div::_GP('name');
+    echo 'Hello ' . $name . '!';
+  }
+
+  function xssForSourceInFunctionTypo3SanitizedInSource() {
+    $name = t3lib_div::removeXSS($_GET['name']);
+    echo 'Hello ' . $name . '!';
+  }
+}
+\end{phpcode}
+
+\begin{phpcode}
+$test = new Test();
+$test->sqlInjIntegerForSourceInline();
+$test->sqlInjIntegerForSourceInFunction();
+$test->sqlInjIntegerForSourceInFunctionSanitizedInSource();
+$test->sqlInjStringInFunctionSanitizedInSource();
+$test->sqlInjIntegerForSourceInFunctionSanitizedInSink();
+$test->sqlInjIntegerForSourceFromOtherFunctionInSameClass();
+$test->sqlInjIntegerForSourceFromStaticFunctionInIncludedClass();
+$test->sqlInjIntegerForSourceFromInstanceOfIncludedClass();
+$test->sqlInjIntegerForSourceFromStaticFunctionInAutoloadedClass();
+$test->sqlInjIntegerForSourceFromInstanceOfAutoloadedClass();
+$test->sqlInjIntegerForSourceT3libDiv();
+$test->sqlInjIntegerInFunctionTypo3SanitizedInSource();
+$test->sqlInjStringInFunctionTypo3SanitizedInSource();
+$test->sqlInjIntegerForSourceInFunctionAndTypo3Sink();
+$test->xssForSourceInline();
+$test->xssForSourceInFunction();
+$test->xssForSourceInFunctionSanitizedInSource();
+$test->xssForSourceInFunctionSanitizedInSink();
+$test->xssForSourceFromOtherFunctionInSameClass();
+$test->xssForSourceFromStaticFunctionInIncludedClass();
+$test->xssForSourceFromInstanceOfIncludedClass();
+$test->xssForSourceFromStaticFunctionInAutoloadedClass();
+$test->xssForSourceFromInstanceOfAutoloadedClass();
+$test->xssForSourceT3libDiv();
+$test->xssForSourceInFunctionTypo3SanitizedInSource();
+\end{phpcode}
+\normalsize
+
+
+
+\section*{IncludedGetter.php}
+\small
+\begin{phpcode}
+/**
+ * This class contains two wrappers for _GET and is included by the
+ * main Test class.
+ */
+class IncludedGetter {
+  function staticGet($key) {
+    return $_GET[$key];
+  }
+
+  function get($key) {
+    return $_GET[$key];
+  }
+}
+\end{phpcode}
+\normalsize
+
+
+
+
+\section*{AutoloadedGetter.php}
+\small
+\begin{phpcode}
+/**
+ * This class contains two wrappers for _GET and is _not_ included by
+ * the main Test class, but could be autoloaded.
+ */
+class AutoloadedGetter {
+  function staticGet($key) {
+    return $_GET[$key];
+  }
+
+  function get($key) {
+    return $_GET[$key];
+  }
+}
+\end{phpcode}
+\normalsize
+
+
+
+\section*{ClassTest.php}
+\small
+\begin{phpcode}
+class Foo {
+  function unsafeSource() {
+    return $_GET['number'];
+  }
+
+  function safeSource() {
+    return intval($_GET['number']);
+  }
+
+  function unsafeSink($number) {
+    echo($number);
+  }
+
+  function safeSink($number) {
+    echo(intval($number));
+  }
+
+  function doItDoubleSafely() {
+    $this->safeSink($this->safeSource());
+  }
+
+  function doItWithSafeSink() {
+    $this->safeSink($this->unsafeSource());
+  }
+
+  function doItWithSafeSource() {
+    $this->unsafeSink($this->safeSource());
+  }
+
+  function doItCompletelyUnsafe() {
+    $this->unsafeSink($this->unsafeSource());
+  }
+}
+\end{phpcode}
+
+\begin{phpcode}
+class EmptyFoo extends Foo {
+  function safeSink($number) {
+    echo($number);
+  }
+
+  function safeSource() {
+    return $_GET['number'];
+  }
+  function doItCompletelyUnsafe() {
+    $this->unsafeSink($this->unsafeSource());
+  }
+}
+\end{phpcode}
+
+\begin{phpcode}
+$foo = new Foo();
+
+echo($foo->safeSource());
+echo($foo->unsafeSource());
+echo(Foo::unsafeSource());
+
+$foo->safeSink($_GET['number']);
+$foo->safeSink(intval($_GET['number']));
+
+$foo->unsafeSink($_GET['number']);
+Foo::unsafeSink($_GET['number']);
+$foo->unsafeSink(intval($_GET['number']));
+
+$foo->safeSink($foo->safeSource());
+$foo->safeSink($foo->unsafeSource());
+Foo::safeSink(Foo::unsafeSource());
+
+$foo->unsafeSink($foo->safeSource());
+Foo::unsafeSink(Foo::safeSource());
+$foo->unsafeSink($foo->unsafeSource());
+Foo::unsafeSink(Foo::unsafeSource());
+
+$foo->doItDoubleSafely();
+$foo->doItWithSafeSink();
+$foo->doItWithSafeSource();
+
+$foo->doItCompletelyUnsafe();
+
+$emptyFoo = new Foo();
+$emptyFoo->doItCompletelyUnsafe();
+$emptyFoo->doItDoubleSafely();
+$emptyFoo->safeSink($emptyFoo->safeSource());
+\end{phpcode}
+\normalsize
+
+
+
+\section*{PassByReference.php}
+\small
+\begin{phpcode}
+class Foo {
+  var $someProperty = '';
+}
+
+function modifyProperty($object, $propertyContent) {
+  $object->someProperty = $propertyContent;
+}
+
+$object = new Foo();
+modifyProperty($object, $_GET['name']);
+
+echo $object->someProperty;
+\end{phpcode}
+\normalsize

@@ -1,6 +1,6 @@
 \chapter{Alias Analysis (READY FOR FEEDBACK, PRROFREAD)}
 
-When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good recall is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them---or stop using the tool.~\cite{understanding-value}
+When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good precision is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them---or stop using the tool.~\cite{understanding-value}
 
 For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus, a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
 
@@ -68,7 +68,7 @@ if (...) {
 \end{phpcode}
 $mustAliases = \{(a, b)\}, mayAliases = \{(c, d, e\}$
 
-To ease processing, the alias tuples with more than two elements are split into separate pairs:
+For further processing, the alias tuples with more than two elements are split into separate pairs so that Pixy's algorithms merely need to work on pairs instead of sets:
 
 $mustAliases = \{(a, b)\}, mayAliases = \{(c, d), (c, e), (d, e)\}$
 
@@ -129,7 +129,7 @@ $mustAliases = \{(foo.a1, foo.a2), (m.x1, m.x2)\}, mayAliases = \{\}$
 
 At this point of the control flow within the function, the local variables \texttt{\$a1} and \texttt{\$a2} are must-aliases to each other---as are the global variables \texttt{\$x1} and \texttt{\$x2}. This is just applying the intraprocedural techniques described in section~\ref{sec:intraprocedural-alias-analysis}.
 
-Now, when the function \texttt{foo} calls another function \texttt{bar}, only alias information on global variables is propagated into \texttt{bar} (as there are not parameters):
+Now, when the function \texttt{foo} calls another function \texttt{bar}, only alias information on global variables is propagated into \texttt{bar} (as there are no parameters):
 
 \begin{phpcode}
 foo();
@@ -190,7 +190,7 @@ By default, PHP passes function parameters by value. However, it also is possibl
 
 When the callee has two parameters that are passed by reference, and the caller passes two variables that are aliases, the alias analysis needs to propagate this information into the callee.
 
-Let's have a look an an example:
+Let's have a look at an example:
 
 \begin{phpcode}
 function foo() {
@@ -204,7 +204,7 @@ function foo() {
 function bar(&$b1, &$b2) {
 \end{phpcode}
 
-At the point where \texttt{bar} is called, the alias information looks like this in the \texttt{foo} function:
+At the point where \texttt{bar} is called, we have the following alias information in the \texttt{foo} function:
 
 $mustAliases = \{(foo.a1, foo.a2)\}, mayAliases = \{\}$
 
@@ -231,7 +231,7 @@ function foo() {
 function bar(&$b1, &$b2) {
 \end{phpcode}
 
-At the point where \texttt{bar} is called, the alias information looks like this in the \texttt{foo} function:
+At the point in the \texttt{foo} function where \texttt{bar} is called, the alias information looks like this:
 
 $mustAliases = \{\}, mayAliases = \{(foo.a1, foo.a2)\}$
 
@@ -269,7 +269,7 @@ function foo() {
 function bar(&$b1, &$b2, &$b3) {
 \end{phpcode}
 
-At the point where \texttt{bar} is called, the alias information looks like this in the \texttt{foo} function (again using the \texttt{m} function as a fake scope for global variables):
+At the point where \texttt{bar} is called, the alias information in the \texttt{foo} function is as following (again using the \texttt{m} function as a fake scope for global variables):
 
 $mustAliases = \{(foo.a1, m.a1)\}, mayAliases = \{(foo.a2, m.a2)\}$
 
