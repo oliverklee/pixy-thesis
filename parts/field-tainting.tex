@@ -133,7 +133,7 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either. Instead, this approach uses Pixy's special place \emph{specialPlaceForVariableVariables} that keeps this place out of taint analysis.
 
-Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as needed. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. So this approach expands the \texttt{cvar} function to also return places for field accesses.
+Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. So this approach expands the \texttt{cvar} function to also return places for field accesses.
 
 \paragraph{Note:} The listed pseudo-code takes a few shortcuts: It assumes that there are some convenience functions available for tree walking, array processing and string processing, and that functions like \texttt{cvar} return \texttt{AbstractPlace} instead of a \texttt{TacAttributes} wrapper.
 
@@ -253,7 +253,7 @@ Variable getOrCreateVariableInSymbolTable(
 
 When a class gets instantiated, the \texttt{TacConverter} needs to create a symbol table entry to store a new \texttt{ObjectVariable} instance in.
 
-In the following code example, class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
+In the following code example, the class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
 
 \begin{phpcode}
 $foo = new Foo();
@@ -297,7 +297,7 @@ For the sake of brevity, this pseudo-code omits the part about creating temporar
 
 \section{Alias Analysis for Objects and Fields}
 
-An alias analysis for objects needs to take two aspects into account: that objects are passed by reference (see section~\ref{object-references} on page~\pageref{object-references}, and the alias relationships between fields. This is important because objects cannot have a taint status, but their fields can.
+An alias analysis for objects needs to take two aspects into account: that objects are passed by reference (see section~\ref{object-references} on page~\pageref{object-references}), and the alias relationships between fields. This is an important aspect because objects cannot have a taint status, while their fields can.
 
 
 \subsection{Object References}
@@ -344,7 +344,7 @@ $bar = 42;
 
 $mustReferences = \{\}, mayReferences = \{\}$
 
-All of these steps can be repeated with several commands, causing the reference sets to change accordingly. For example, a variable can first used for a reference and then be overwritten with a different reference, causing the first reference to be deleted and the new reference to be created:
+All of these steps can be repeated with several commands, causing the reference sets to change accordingly. For example, a variable can first be used for a reference and then be overwritten with a different reference, causing the first reference to be deleted and the new reference to be created:
 
 \begin{phpcode}
 $foo = new Foo();
@@ -356,7 +356,7 @@ $bar = $foo2;
 
 $mustReferences = \{(bar, foo2)\}, mayReferences = \{\}$
 
-If a must-reference is overwritten during a codition, it gets changed to a may-reference, and the new reference is added as a may-reference just as in the example above:
+If a must-reference is overwritten during a condition, it gets changed to a may-reference, and the new reference is added as a may-reference just as in the example above:
 
 \begin{phpcode}
 $foo = new Foo();
@@ -405,7 +405,7 @@ At this point within the \texttt{otherFunction} function, there is a must-refere
 
 $mustReferences = \{(someFunction.foo, otherFunction.foo)\}, mayReferences = \{\}$
 
-The dot notation for the function name in the variable names in the reference sets is the as in the alias sets used in section~\ref{sec:aliases-globals}.
+The dot notation for the function name in the variable names within the reference sets is the same as in the alias sets used in section~\ref{sec:aliases-globals}.
 
 
 \subsection{Member Field Aliases}
@@ -425,7 +425,9 @@ The basic rules at that point are:
 \end{itemize}
 
 
-\paragraph{Object aliases:} Let's have a look at an example for object aliases first. At the beginning, we already have one must-alias and one may-alias for some objects:
+\paragraph{Object aliases}
+
+Let's have a look at an example for object aliases first. At the beginning, we already have one must-alias and one may-alias for some objects:
 
 $mustAliases = \{(a, b)\}, mayAliases = \{(a, c)\}$
 
@@ -440,7 +442,9 @@ Before any further alias information for this line of code is evaluated, the ali
 $mustAliases = \{(a, b), (a.name, b.name)\}, mayAliases = \{(a, c), (a.name, c.name)\}$
 
 
-\paragraph{Object references:} A similar example with object references instead of object aliases works basically the same:
+\paragraph{Object references}
+
+A similar example with object references instead of object aliases works basically the same:
 
 $\begin{array}{llll}
 mustReferences & = \{(a, b)\}, & mayReferences & = \{(a, c)\} \\
