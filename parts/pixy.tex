@@ -17,9 +17,11 @@ The Pixy project (including the source code, wiki and issue tracker) currently r
 As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data-structures}, Pixy uses a several-steps approach between the raw source code and the final data flow analysis. It makes use of the (modified) external libraries JFlex and CUP (and a Lex syntax definition file for PHP) to create the abstract syntax tree.\index{JFlex}\index{CUP}
 
 \begin{figure}[htb]
- \includegraphics[scale=0.8]{images/Pixy-Arbeitsweise}
- \caption{From the PHP parse tree, Pixy generates a control-flow graph and P-TAC, using these for the dependency analysis and the taint analysis.}
- \label{fig:pixy-data-structures}
+ \begin{center}
+   \includegraphics[scale=0.75]{images/Pixy-Arbeitsweise}
+   \caption{From the PHP parse tree, Pixy generates a control-flow graph and P-TAC, using these for the dependency analysis and for the taint analysis.}
+   \label{fig:pixy-data-structures}
+ \end{center}
 \end{figure}
 
 \section{P-TAC as an Intermediate Representation in the Control-Flow Graph (READY FOR FEEDBACK)}

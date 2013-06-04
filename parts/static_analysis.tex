@@ -155,7 +155,7 @@ if ($x > $y) {
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 70mm 0mm 0mm 0mm, scale=0.9]{images/parse-tree}
+    \includegraphics[scale=0.84, trim=54mm 0mm 0mm 0mm]{images/parse-tree}
     \caption{A parse tree contains all the syntactic details of the original code, making it extremely verbose.}
     \label{fig:parse-tree}
   \end{center}
@@ -233,7 +233,7 @@ echo $output;
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.6]{images/cfg}
+    \includegraphics[scale=0.54, trim=10mm 0mm 0mm 0mm]{images/cfg}
     \caption{A control-flow graph represents all possible paths through a program.}
     \label{fig:cfg}
   \end{center}
@@ -285,8 +285,8 @@ Thus, a variable's \emph{taint state}\index{taint state}\label{taint-state} at s
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=0.75]{images/taint-and-clean}
-   \caption{Tainted data gets sanitized for XSS using \texttt{htmlspecialchars}.}
-   \label{fig:taint-and-clean}
+    \caption{Tainted data gets sanitized for XSS using \texttt{htmlspecialchars}.}
+    \label{fig:taint-and-clean}
   \end{center}
 \end{figure}
 

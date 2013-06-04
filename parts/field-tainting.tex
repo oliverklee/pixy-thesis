@@ -21,9 +21,9 @@ Note: This piece of code still uses the PHP~4 way of declaring member variables.
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.5]{images/parsetree-foo-class-declaration}
-   \caption{The subtree of the PHP parse tree for declaring a class \texttt{Foo} with a single field \texttt{\$field} that has a default value of \texttt{42}.}
-   \label{fig:parse-tree-foo-class}
+    \includegraphics[width=\linewidth, height=.9\textheight, keepaspectratio]{images/parsetree-foo-class-declaration}
+    \caption{The subtree of the PHP parse tree for declaring a class \texttt{Foo} with a single field \texttt{\$field} that has a default value of \texttt{42}.}
+    \label{fig:parse-tree-foo-class}
   \end{center}
 \end{figure}
 
@@ -77,57 +77,57 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 30mm 0mm 50mm 10mm, scale=0.8]{images/simple-variable-assignment}
-   \caption{The PHP parse subtree of \texttt{\$x = 42;}}
-   \label{fig:simple-variable-assignment}
+    \includegraphics[scale=.7, trim=30mm 0mm 0mm 0mm]{images/simple-variable-assignment}
+    \caption{The PHP parse subtree of \texttt{\$x = 42;}}
+    \label{fig:simple-variable-assignment}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 60mm 0mm 0mm 20mm, scale=0.8]{images/one-level-field-access-left}
-   \caption{The PHP parse subtree of \texttt{\$foo->bar = 42;}}
-   \label{fig:one-level-field-access-left}
+    \includegraphics[scale=.73, trim=40mm 0mm 0mm 0mm]{images/one-level-field-access-left}
+    \caption{The PHP parse subtree of \texttt{\$foo->bar = 42;}}
+    \label{fig:one-level-field-access-left}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 40mm 0mm 0mm 10mm, scale=0.9]{images/one-level-field-access-right}
-   \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar;}}
-   \label{fig:one-level-field-access-right}
+    \includegraphics[scale=.85, trim=55mm 0mm 0mm 0mm]{images/one-level-field-access-right}
+    \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar;}}
+    \label{fig:one-level-field-access-right}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 50mm 0mm 0mm 25mm, scale=0.75]{images/multi-level-field-access-left}
-   \caption{The PHP parse subtree of \texttt{\$foo->bar->baz = 42;}}
-   \label{fig:multi-level-field-access-left}
+    \includegraphics[scale=.7, trim=35mm 0mm 0mm 0mm]{images/multi-level-field-access-left}
+    \caption{The PHP parse subtree of \texttt{\$foo->bar->baz = 42;}}
+    \label{fig:multi-level-field-access-left}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 30mm 0mm 0mm 20mm, scale=0.8]{images/multi-level-field-access-right}
-   \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar->baz;}}
-   \label{fig:multi-level-field-access-right}
+    \includegraphics[scale=.74, trim=42mm 0mm 0mm 0mm]{images/multi-level-field-access-right}
+    \caption{The PHP parse subtree of \texttt{\$x = \$foo->bar->baz;}}
+    \label{fig:multi-level-field-access-right}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 60mm 0mm 0mm 10mm, scale=0.8]{images/variable-field-access-left}
-   \caption{The PHP parse subtree of \texttt{\$foo->\$fieldName = 42;}.}
-   \label{fig:variable-field-access-left}
+    \includegraphics[scale=.78, trim=46mm 0mm 0mm 0mm]{images/variable-field-access-left}
+    \caption{The PHP parse subtree of \texttt{\$foo->\$fieldName = 42;}}
+    \label{fig:variable-field-access-left}
   \end{center}
 \end{figure}
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[trim = 40mm 0mm 0mm 20mm, scale=0.8]{images/variable-field-access-right}
-   \caption{The PHP parse subtree of \texttt{\$x = \$foo->\$fieldName;}.}
-   \label{fig:variable-field-access-right}
+    \includegraphics[scale=.9, trim=60mm 0mm 0mm 0mm]{images/variable-field-access-right}
+    \caption{The PHP parse subtree of \texttt{\$x = \$foo->\$fieldName;}}
+    \label{fig:variable-field-access-right}
   \end{center}
 \end{figure}
 
@@ -261,9 +261,9 @@ $foo = new Foo();
 
 \begin{figure}[htb]
   \begin{center}
-    \includegraphics[scale=0.5]{images/parsetree-new-foo}
-   \caption{The subtree of the PHP parse tree for creating an instance \texttt{\$foo} of the class \texttt{Foo}.}
-   \label{fig:parse-tree-new-foo}
+    \includegraphics[width=\linewidth, height=.9\textheight, keepaspectratio]{images/parsetree-new-foo}
+    \caption{The subtree of the PHP parse tree for creating an instance \texttt{\$foo} of the class \texttt{Foo}.}
+    \label{fig:parse-tree-new-foo}
   \end{center}
 \end{figure}
 
@@ -468,7 +468,7 @@ mustAliases & = \{(a, b), (x, y), (a.name, b.name), (x.name, y.name)\} \\
 mayAliases & = \{(a, c), (x, z), (a.name, c.name), (x.name, z.name)\}
 \end{array}$
 
-Now \texttt{\$a} is unset:
+Now \texttt{\$a} gets unset:
 
 \begin{phpcode}
 unset($a);
