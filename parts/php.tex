@@ -69,6 +69,34 @@ protected function foo(array $bar) {
 \end{phpcode}
 
 
+\section{PHP Version History}
+
+PHP currently is in version 5.4.x (as of June 2013). Since PHP 4.x, the language has undergone a huge number of changes.~\cite{php-history, php-50, php-51, php-52, php-53, php-54} This section lists the most important changes that were introduced in addition to new functions, performance improvements and bug fixes.
+
+\subsection{PHP 5.0}
+
+Most promimently, PHP 5.0 brought a new object model that changed objects to get passed by reference by default instead of by value. This also included visibility modifiers, the \texttt{static} keyword for fields and methods, and class constants.
+
+
+\subsection{PHP 5.1}
+
+The biggest change PHP 5.1 were a clean-up of the reference handling and new date functions.
+
+
+\subsection{PHP 5.2}
+
+PHP 5.2 brought mostly small changes, but no big concepts that would have been completely new.
+
+
+\subsection{PHP 5.3}
+
+PHP 5.3 was the function that introduced class namespaces, late static binding and closures.
+
+
+\subsection{PHP 5.4}
+
+PHP 5.4 introduced traits and dropped support for the \texttt{safe\_mode} and deprecated \texttt{register\_globals}. In addition, call-time pass by reference was removed.
+
 
 \section{Variables, References and Aliases (READY FOR FEEDBACK, PROOFREAD)}
 \label{php-variables}\index{variables in PHP}
@@ -609,6 +637,3 @@ If no user is logged in, the \texttt{\$escapedUserName} variable is uninitialize
 
 \texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables still need to be regarded as tainted.
 
-
-\section{Big Changes in Recent PHP Versions (TODO)}
-TODO: Integrate chapter~\ref{sec:php54} on page~\pageref{sec:php54} into this section.
