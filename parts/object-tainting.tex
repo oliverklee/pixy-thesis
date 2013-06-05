@@ -36,7 +36,7 @@ In addition, the list of declared fields might be a mere subset of the fields th
 \subsection{Storing Objects with Member Variables as Places for Three-Address Code (TAC)}
 \index{member variables}\index{fields}\index{three-address code}
 
-Pixy models variables as ``places''\index{places} for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). The corresponding classes is named \texttt{AbstractPlace}\index{AbstractPlace}. For taint analysis, it uses this \emph{place} abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
+Pixy models variables as ``places''\index{place} for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). The corresponding classes is named \texttt{AbstractPlace}\index{AbstractPlace}. For taint analysis, it uses this \emph{place} abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
 
 Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter}\index{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
 
@@ -305,7 +305,7 @@ An alias analysis for objects needs to take two aspects into account: that objec
 \subsection{Object References}
 \index{object references}
 
-In addition to the must-aliases and may-aliases, Pixy needs to track references between objects. In order to do so, Pixy needs to leverage its existing type detection for variables. The approach to object references is quite similar to that for variables aliases: As with may-aliases and must-aliases for variables, the analysis tracks \emph{must-references}\index{must-references} and \emph{may-references}\index{may-references} for objects.
+In addition to the must-aliases and may-aliases, Pixy needs to track references between objects. In order to do so, Pixy needs to leverage its existing type detection for variables. The approach to object references is quite similar to that for variables aliases: As with may-aliases and must-aliases for variables, the analysis tracks \emph{must-references}\index{must-reference}\index{reference!must \see{must-reference}} and \emph{may-references}\index{may-reference}\index{reference!may \see{may-reference}} for objects.
 
 In the object reference analysis, the same cases are relevant as with the alias analysis: assignments, \texttt{unset} calls, and function calls with parameters.
 
@@ -373,7 +373,7 @@ if (...) {
 
 $mustReferences = \{\}, mayReferences = \{(bar, foo), (bar, foo2)\}$
 
-\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and are handled accordingly.\index{assign-by-reference}
+\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and are handled accordingly.\index{assigning by reference}
 
 
 \subsubsection{Unset Calls}
@@ -414,7 +414,7 @@ $mustReferences = \{(someFunction.foo, otherFunction.foo)\}, mayReferences = \{\
 
 
 \subsection{Field Aliases}
-\index{field aliases}\index{member variable aliases \see{field aliases}}
+\index{field alias}\index{member variable alias \see{field alias}}
 
 As mentioned further above in section~\ref{fields-not-saved-on-new}, it is not helpful to store the fields of an object at the point of instantiation as far as tainting is concerned. Instead, the fields need to be added on the fly as they are read or written.
 
@@ -433,7 +433,7 @@ The basic rules at that point are:
 
 
 \paragraph{Object aliases}
-\index{object aliases}
+\index{object alias}
 
 Let's have a look at an example for object aliases first. At the beginning, we already have one must-alias and one may-alias for some objects:
 
@@ -497,7 +497,7 @@ mayAliases & = \{(x, z), (x.name, z.name)\}
 
 
 \subsubsection{Changing Must-Aliases to May-Aliases}
-\index{may-aliases}
+\index{may-alias}
 
 When a must-alias for an object is changed to a may-alias or a must-reference is changed to a may-reference, the field alias information need to be changed accordingly.
 

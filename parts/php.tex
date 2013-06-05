@@ -7,7 +7,7 @@ This chapter gives an overview of the challenges associated with static analysis
 
 \section{Challenges in Static Analysis for PHP}
 
-In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This comparable to pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces the analysis to fall back on approximations.
+In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables \see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This comparable to pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces the analysis to fall back on approximations.
 
 For example, the following constructs are possible, making static analysis a lot harder than for less dynamic languages like Java:
 
@@ -49,7 +49,7 @@ $bar = new MyClass();
 \end{phpcode}
 
 In addition, PHP starting from version 5 makes use of so-called \emph{autoloading}, \ie the file with the code of a class gets loaded dynamically when the class is used for the first time. PHP does not provide a default autoloader; instead, programmers need to define their own autoloading routines and register these with PHP.~\cite{php-manual-autoloading}
-\index{autoloading}\index{autoloader|see{autoloading}}
+\index{autoloading}\index{autoloader \see{autoloading}}
 
 \begin{phpcode}
 // The class file for this class has not been included and will be
@@ -73,23 +73,23 @@ protected function foo(array $bar) {
 
 PHP currently is in version 5.4.x (as of June 2013). Since PHP 4.x, the language has undergone a huge number of changes.~\cite{php-history, php-50, php-51, php-52, php-53, php-54} This section lists the most important changes that were introduced in addition to new functions, performance improvements and bug fixes.
 
-\paragraph*{PHP 5.0}\index{PHP 5.0}
-Most promimently, PHP 5.0 brought a new object model that changed objects to get passed by reference\index{pass-by-reference} by default instead of by value. This also included visibility modifiers, the \texttt{static}\index{static (keyword)} keyword for fields and methods, and class constants.\index{class constants}
+\paragraph*{PHP 5.0}
+Most promimently, PHP 5.0 brought a new object model that changed objects to get passed by reference\index{passing by reference} by default instead of by value. This also included visibility modifiers, the \texttt{static}\index{static (keyword)} keyword for fields and methods, and class constants.\index{class constants}\index{constants \see{class constantes}}
 
 
-\paragraph*{PHP 5.1}\index{PHP 5.1}
+\paragraph*{PHP 5.1}
 The biggest change this version was a clean-up of the reference handling and new date functions.
 
 
-\paragraph*{PHP 5.2}\index{PHP 5.2}
+\paragraph*{PHP 5.2}
 This version brought mostly small changes, but no big concepts that would have been completely new.
 
 
-\paragraph*{PHP 5.3}\index{PHP 5.3}
+\paragraph*{PHP 5.3}
 PHP 5.3 was the version that introduced class namespaces, late static binding and closures.\index{namespaces}\index{late static binding}\index{closures}\index{anonymous functions}
 
 
-\paragraph*{PHP 5.4}\index{PHP 5.4}
+\paragraph*{PHP 5.4}
 The 5.4 version introduced traits, dropped support for the \texttt{safe\_mode} and deprecated \texttt{register\_globals}. In addition, call-time pass-by-reference was removed.\index{traits}\index{safe\_mode}\index{register\_globals}\index{call-time pass-by-reference}
 
 
@@ -108,7 +108,7 @@ Variables in PHP can have one of two scopes: local and global.~\cite{php-manual-
 \index{symbol table}
 
 \subsubsection{Global Scope}
-\index{global scope}\index{global variables|see{global scope}}\index{scope!global|see{global scope}}\index{variables!global|see{global scope}}
+\index{global scope}\index{global variables \see{global scope}}\index{scope!global \see{global scope}}\index{variables!global \see{global scope}}
 
 Any variable that is defined outside of a function of method is considered to be \emph{global}. By default, global variables are available only in the context outside of functions---even in files other than where they have been defined (but only \emph{after} they have been declared, of course).
 
@@ -121,7 +121,7 @@ include('otherFile.php');
 
 
 \subsubsection{Local Function Scope}
-\index{local scope}\index{local variables|see{local scope}}\index{scope!local|see{local scope}}\index{variables!local|see{local scope}}
+\index{local scope}\index{local variables \see{local scope}}\index{scope!local \see{local scope}}\index{variables!local \see{local scope}}
 
 A variable defined within a function is by default only available in the local function scope, i.\,e., in the function's symbol table. In the following example, there is a global variable \texttt{\$beverage} as well as a local variable \texttt{\$beverage}:
 
@@ -170,7 +170,7 @@ breakfast();
 Let's have some coffee!
 \end{textcode}
 
-\paragraph{Note:} Using the \texttt{global} keyword is perfectly valid (as of PHP 5.4)\index{PHP 5.4}, but its usage is not recommended as this will make distinguishing between local and globals variables harder when reading the code. Instead, it is recommended to use the \texttt{\$GLOBALS} superglobal to make the access more explicit. ~\cite{typo3-cgl-php-syntax-formatting}
+\paragraph{Note:} Using the \texttt{global} keyword is perfectly valid (as of PHP 5.4), but its usage is not recommended as this will make distinguishing between local and globals variables harder when reading the code. Instead, it is recommended to use the \texttt{\$GLOBALS} superglobal to make the access more explicit. ~\cite{typo3-cgl-php-syntax-formatting}
 
 
 
@@ -202,7 +202,7 @@ typedef union _zvalue_value {
 } zvalue_value;
 \end{ccode}
 
-Hence, a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.\index{reference counting}\index{reference counter\see{reference counting}}
+Hence, a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.\index{reference counting}\index{reference counter \see{reference counting}}
 
 \paragraph{Note:} This applies to basic data types like integers, strings or floats. For objects, things are a bit more complicated (see below).
 
@@ -227,12 +227,12 @@ x: (refcount=1, is_ref=0)=42
   \end{center}
 \end{figure}
 
-The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}\index{garbage collection}\index{garbage collector\see{garbage collection}}
+The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}\index{garbage collection}\index{garbage collector \see{garbage collection}}
 
 
 \subsubsection{Copy-on-Write Variables}
 \label{sec:copy-on-write}
-\index{copy-on-write variables}\index{variables!copy-on-write|see{copy-on-write variables}}
+\index{copy-on-write}\index{variables!copy-on-write \see{copy-on-write}}
 
 To preserve memory and improve performance, PHP uses a copy-on-write strategy for variables that are copies of one another. This copy-on-write strategy has no direct im\-pact on alias analysis whatsoever. Nevertheless, understanding this phenomenon is necessary in order to interpret all the reference counter correctly and to differentiate between real aliases and copy-on-write ZVALs.
 
@@ -264,7 +264,7 @@ y: (refcount=2, is_ref=0)=42
 \subsubsection{Removing (Unsetting) Copy-on-Write Variables from the Symbol Table}
 \label{sec:unsetting}
 \index{symbol table}
-\index{unsetting variables}\index{variables!unsetting|see{unsetting variables}}\index{unset\see{unsetting variables}}
+\index{unsetting variables}\index{variables!unsetting \see{unsetting variables}}\index{unset (keyword) \see{unsetting variables}}
 
 When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, and the reference counter is decreased again (figure~\ref{fig:reference-count-decreased} on page~\pageref{fig:reference-count-decreased}):
 
@@ -450,7 +450,7 @@ xdebug_debug_zval('b2');
 b2: (refcount=1, is_ref=0)='foo'
 \end{textcode}
 
-\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}\index{PHP 5.0}}, but not to literal values or expressions:
+\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}}, but not to literal values or expressions:
 
 \begin{phpcode}
 $answer =& 42;
@@ -631,5 +631,5 @@ echo '<h2>Welcome back, ' . $escapedUserName . '!</h2>';
 
 If no user is logged in, the \texttt{\$escapedUserName} variable is uninitialized in line 6, causing the code to be susceptible to cross-site-scripting via the \texttt{escapedUserName} request parameter. (See section~\ref{xss} for details on cross-site scripting.)
 
-\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables still need to be regarded as tainted.\index{PHP 5.3}\index{PHP 5.4}
+\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables still need to be regarded as tainted.
 

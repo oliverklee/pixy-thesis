@@ -8,11 +8,11 @@ This chapter describes static code analysis, the difference to other analysis ty
 Generally, there are two basic approaches to program analysis, differentiated by the time the analysis is performed: \emph{static analysis} and \emph{dynamic analysis}.
 
 \subsection{Static Analysis}
-\index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
+\index{static analysis}\index{SA \see{static analysis}}\index{static code analysis|see{static analysis}}
 
 \emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the way code of a program (the source code\index{source code}, bytecode\index{bytecode} or machine code\index{machine code}) will execute instead of---or before---actually running it. The analysis is performed on an abstract level, \ie it does not use concrete data for checking.~\cite{static-code-analysis}
 
-The aim of static analysis is to find bugs, structural problems, code smells\index{smells\see{code smells}}\index{code smells} or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, \eg as markers in their development environment, or as feedback from a tool that is run in parallel.
+The aim of static analysis is to find bugs, structural problems, code smells\index{smells \see{code smells}}\index{code smells} or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, \eg as markers in their development environment, or as feedback from a tool that is run in parallel.
 
 Static analysis allows all possible program paths to be checked, independent of the program paths actually being executed during the particular set of data used during execution. In addition, the results of static code analysis are repeatable.~\cite{coverity-report}
 
@@ -70,7 +70,7 @@ Data-flow analysis is the most precise way of scanning statically for security v
 \subsection{Theorem Proving}
 \index{theorem proving}
 
-\emph{Theorem proving} relies on the programmer adding preconditions, postconditions and loop invariants to the source code as code annotations\index{code annotations\see{annotations}}\index{annotations}. The scanner then can analyze the program and check whether all conditions are met.~\cite{comparison-of-bug-finding-tools}
+\emph{Theorem proving} relies on the programmer adding preconditions, postconditions and loop invariants to the source code as code annotations\index{code annotations \see{annotations}}\index{annotations}. The scanner then can analyze the program and check whether all conditions are met.~\cite{comparison-of-bug-finding-tools}
 
 \emph{ESC/Java}\index{ESC/Java} is an example for this class of tools.
 
@@ -78,7 +78,7 @@ Data-flow analysis is the most precise way of scanning statically for security v
 \subsection{Model Checking}
 \index{model checking}
 
-Model checking relies on creating suitable models of the program---either manually or automatically by using code annotations\index{code annotations\see{annotations}}\index{annotations} that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs including library calls are practically impossible to check as it would be necessary to model their complete behavior, not just \eg the fact that they do (or do not) sanitize their inputs. This greatly reduces the 	feasibility of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
+Model checking relies on creating suitable models of the program---either manually or automatically by using code annotations\index{code annotations \see{annotations}}\index{annotations} that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs including library calls are practically impossible to check as it would be necessary to model their complete behavior, not just \eg the fact that they do (or do not) sanitize their inputs. This greatly reduces the 	feasibility of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
 
 \emph{Bandera}\index{Bandera} is a scanner that makes use of model checking.
 
@@ -108,12 +108,12 @@ The \emph{lexer} (also referred to as \emph{lexical analyzer}, \emph{scanner}\fo
 \subsection{Parser, Syntax Analyzer}
 \index{parser}\index{syntax analyzer}
 
-The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the to\-kens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}\index{three-address code}\index{TAC\see{three-address code}}
+The \emph{parser}---also referred to as \emph{syntax analyzer}---takes the lexemes (tokens) as input and creates a tree-like intermediate representation for the grammatical structure of the to\-kens. This usually either is an abstract syntax tree (AST) or a three-address code (TAC).~\cite{compilers, compiler-construction}\index{abstract syntax tree}\index{AST \see{abstract syntax tree}}\index{three-address code}\index{TAC \see{three-address code}}
 
 
 \section{Abstract Syntax Trees (AST)}
 \label{ast}
-\index{abstract syntax tree}\index{AST\see{abstract syntax tree}}
+\index{abstract syntax tree}\index{AST \see{abstract syntax tree}}
 
 An \emph{abstract syntax tree (AST)}~\cite{compiler-construction} is an abstract representation of the structure of a program. This representation is stripped of anything that is not essential for the semantics of the program: For example, the tree does not contain parenthesis; instead, the order of execution is represented in the order and hierarchy of the tree. Thus, it is not possible to reconstruct the exact source code back from an abstract syntax tree, while it still is possible to rebuild a program that has the same semantics as the original program.
 
@@ -164,7 +164,7 @@ if ($x > $y) {
 
 \section{Three-address Code (TAC)}
 \label{tac}
-\index{three-address code}\index{TAC\see{three-address code}}
+\index{three-address code}\index{TAC \see{three-address code}}
 
 \emph{Three-address code (TAC)}~\cite{compiler-construction, compilers} is a theoretical concept for an intermediate program representation that roughly resembles assembly code. Three-address codes each consist of a basic operation and up to three operands or eponymic ``addresses''.\index{addresses} Addresses can be variables\index{variables}, constants\index{constants}, literals\index{literals}, compiler-generated temporaries\index{temporaries}\index{compiler}, or jump targets.\index{jump targets}
 
@@ -212,7 +212,7 @@ This is still the same three-address code, just written a bit differently.
 
 \section{Control-flow Graphs}
 \label{cfg}
-\index{control-flow graph}\index{CFG\see{control-flow graph}}\index{flow graph\see{control-flow graph}}
+\index{control-flow graph}\index{CFG \see{control-flow graph}}\index{flow graph \see{control-flow graph}}
 
 A \emph{control-flow graph (CFG)}~\cite{chess-west} or \emph{flow graph}~\cite{compilers} is a directed graph built on top of an abstract syntax tree or a parse tree that models the different paths through a program. Control-flow graphs are an important structure used in data-flow analysis.
 

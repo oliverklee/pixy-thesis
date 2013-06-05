@@ -27,7 +27,7 @@ As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data
 \section{P-TAC as an Intermediate Representation in the Control-Flow Graph}
 \label{p-tac}\index{P-TAC}
 
-As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code}\index{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow grap} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place} Pixy represents \emph{places} in the class \texttt{AbstractPlace}.\index{AbstractPlace}
+As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code}\index{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow graph} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place} Pixy represents \emph{places} in the class \texttt{AbstractPlace}.\index{AbstractPlace}
 
 As described in~\cite{pixy-dissertation}, the main types of control-flow graph nodes are listed in table~\ref{table:p-tac} on page~\pageref{table:p-tac}.
 
@@ -77,4 +77,4 @@ As described in~\cite{pixy-dissertation}, the main types of control-flow graph n
 \end{tabular}
 }{The main types of control-flow graph nodes in P-TAC as used by Pixy. The class names are within the package \texttt{pixy.conversion.cfgnodes}.}{table:p-tac}
 
-In Pixy, the class \texttt{TacConverter} is responsible for converting the PHP parse tree to P-TAC and a control-flow graph.\index{tacconverter}\label{tacconverter}
+In Pixy, the class \texttt{TacConverter} is responsible for converting the PHP parse tree to P-TAC and a control-flow graph.\index{TacConverter}\label{tacconverter}
