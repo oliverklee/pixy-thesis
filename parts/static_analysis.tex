@@ -10,9 +10,9 @@ Generally, there are two basic approaches to program analysis, differentiated by
 \subsection{Static Analysis}
 \index{static analysis}\index{SA\see{static analysis}}\index{static code analysis|see{static analysis}}
 
-\emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the way code of a program (the source code, byte code or machine code) will execute instead of---or before---actually running it. The analysis is performed on an abstract level, \ie it does not use concrete data for checking.~\cite{static-code-analysis}
+\emph{Static analysis (SA)} or \emph{Static code analysis} is defined as analyzing the way code of a program (the source code\index{source code}, bytecode\index{bytecode} or machine code\index{machine code}) will execute instead of---or before---actually running it. The analysis is performed on an abstract level, \ie it does not use concrete data for checking.~\cite{static-code-analysis}
 
-The aim of static analysis is to find bugs, structural problems, code smells or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, \eg as markers in their development environment, or as feedback from a tool that is run in parallel.
+The aim of static analysis is to find bugs, structural problems, code smells\index{smells\see{code smells}}\index{code smells} or to help in understanding the system that is analyzed very early in the development cycle.~\cite{data-flow-analysis, chess-west} Optimally, the developer will be able to see the problems directly during development, \eg as markers in their development environment, or as feedback from a tool that is run in parallel.
 
 Static analysis allows all possible program paths to be checked, independent of the program paths actually being executed during the particular set of data used during execution. In addition, the results of static code analysis are repeatable.~\cite{coverity-report}
 
@@ -21,7 +21,7 @@ Static analysis allows all possible program paths to be checked, independent of 
 
 \emph{Dynamic analysis} is code analysis that happens when the code is executed. This usually comes with a performance penalty, but it also increases precision because the analysis works on the actual data instead of a general model of the data.~\cite{chess-west} However, it also considerably reduces the callback as the dynamic analysis always works on a concrete set of data, and the analysis will not find problems that only occur with different data.~\cite{static-code-analysis}
 
-Examples of automated dynamic analysis would be penetration tests for the outside view or unit tests.
+Examples of automated dynamic analysis would be penetration tests\index{penetration tests} for the outside view or unit tests\index{unit tests}.
 
 
 
@@ -42,15 +42,15 @@ The scanner checks for security vulnerabilities by scanning for certain commands
 
 Still, it is possible to use this approach for finding some vulnerabilities, for example using \emph{Google Code Search}\index{Google Code Search}.~\cite{google-code-search}
 
-The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}) as the tools do not use any data-flow analysis and thus cannot distinguish between a potentially unsafe command being executed with data that is in fact unsafe and those cases where the data is already ensured to be safe at that point.
+The main drawback of this approach is that there are lots of false positives (\eg with the tool SWAAT~\cite{swaat}\index{SWAAT}) as the tools do not use any data-flow analysis and thus cannot distinguish between a potentially unsafe command being executed with data that is in fact unsafe and those cases where the data is already ensured to be safe at that point.
 
-The most basic way of applying this code analysis is by simply using the text search function of a text editor---possibly with regular expressions\index{regular expressions}---or text-search command line tools like \emph{grep}.
+The most basic way of applying this code analysis is by simply using the text search function of a text editor---possibly with regular expressions\index{regular expressions}---or text-search command line tools like \emph{grep}.\index{grep}
 
 
 \subsection{Syntactic Bug Pattern Detection (``Style Checking'')}
 \index{style checking}\index{syntactic bug pattern detection}
 
-Syntactic bug pattern detection means the scanner works on a model of the code and its structure, for example a stream of tokens or an abstract syntax tree (section~\ref{ast}). However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, \eg in continuous integration (CI)\index{continuous integration} environments like \emph{Jenkins}~\cite{jenkins}. Hence, these scanners also are called ``style checkers''.
+Syntactic bug pattern detection means the scanner works on a model of the code and its structure, for example a stream of tokens or an abstract syntax tree (section~\ref{ast}). However, this kind of scanner does not apply any interprocedural control-flow or data-flow analysis. This type of scanner often is used for enforcing coding style guidelines, \eg in continuous integration (CI)\index{continuous integration} environments like \emph{Jenkins}\index{Jenkins}~\cite{jenkins}. Hence, these scanners also are called ``style checkers''.
 
 Compared to string pattern matching for finding bugs, this approach greatly reduces the number of false positives and makes the scanner a lot more useful.~\cite{comparison-of-bug-finding-tools}. Tools like \emph{PHPCodeSniffer}\index{PHPCodeSniffer}, \emph{PMD}\index{PMD} or \emph{FindBugs}\index{FindBugs} fall into this category.
 
@@ -64,13 +64,13 @@ Data flow analysis consists of \emph{intraproceducal data-flow analysis}\index{i
 
 Data-flow analysis is the most precise way of scanning statically for security vulnerabilities without having to annotate the source code in any way.~\cite{comparison-of-bug-finding-tools}
 
-\emph{Pixy}~\cite{pixy} is an example of a security scanner using data-flow analysis.
+\emph{Pixy}~\cite{pixy}\index{Pixy} is an example of a security scanner using data-flow analysis.
 
 
 \subsection{Theorem Proving}
 \index{theorem proving}
 
-\emph{Theorem proving} relies on the programmer adding preconditions, postconditions and loop invariants to the source code as code annotations. The scanner then can analyze the program and check whether all conditions are met.~\cite{comparison-of-bug-finding-tools}
+\emph{Theorem proving} relies on the programmer adding preconditions, postconditions and loop invariants to the source code as code annotations\index{code annotations\see{annotations}}\index{annotations}. The scanner then can analyze the program and check whether all conditions are met.~\cite{comparison-of-bug-finding-tools}
 
 \emph{ESC/Java}\index{ESC/Java} is an example for this class of tools.
 
@@ -78,7 +78,7 @@ Data-flow analysis is the most precise way of scanning statically for security v
 \subsection{Model Checking}
 \index{model checking}
 
-Model checking relies on creating suitable models of the program---either manually or automatically by using code annotations that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs including library calls are practically impossible to check as it would be necessary to model their complete behavior, not just \eg the fact that they do (or do not) sanitize their inputs. This greatly reduces the 	feasibility of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
+Model checking relies on creating suitable models of the program---either manually or automatically by using code annotations\index{code annotations\see{annotations}}\index{annotations} that state what should be checked.~\cite{data-flow-analysis} One drawback of this class of scanners is that programs including library calls are practically impossible to check as it would be necessary to model their complete behavior, not just \eg the fact that they do (or do not) sanitize their inputs. This greatly reduces the 	feasibility of this approach for real-world programs.~\cite{comparison-of-bug-finding-tools}
 
 \emph{Bandera}\index{Bandera} is a scanner that makes use of model checking.
 
@@ -86,9 +86,9 @@ Model checking relies on creating suitable models of the program---either manual
 
 \section{The Components of a Code Analyzer using Data-flow Analysis}
 
-The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzers and compilers can start with the source code as a plain text file and need some abstract semantic information on the program to work with.
+The components at the start of the processing chain of a code analyzer using data-flow analysis basically are the same components that compilers\index{compiler} use (figure~\ref{fig:compiler-parts} on page~\pageref{fig:compiler-parts}). The reason for this is that both static code analyzers and compilers can start with the source code as a plain text file and need some abstract semantic information on the program to work with.
 
-If the static code analyzer works on a later product of the compiler tool chain (such as bytecode or machine code), the static code analyzer of course does not need to have the components that already have been used by the compiler. For example, JLint works on Java bytecode~\cite{comparison-of-bug-finding-tools}, and Bytekit works on the bytecode generated during the PHP interpreter's compilation phase, providing control flow graphs.~\cite{bytekit, bytekit-cli}\index{bytecode}
+If the static code analyzer works on a later product of the compiler tool chain (such as bytecode\index{bytecode} or machine code\index{machine code}), the static code analyzer of course does not need to have the components that already have been used by the compiler. For example, JLint\index{JLint} works on Java bytecode~\cite{comparison-of-bug-finding-tools}, and Bytekit\index{Bytekit} works on the bytecode generated during the PHP interpreter's compilation phase, providing control flow graphs.~\cite{bytekit, bytekit-cli}\index{bytecode}
 
 \begin{figure}[htb]
   \begin{center}
@@ -125,7 +125,7 @@ if ($x > $y) {
 }
 \end{phpcode}
 
-An abstract syntax tree is still mostly human-readable---provided the reader knows how to read a tree using a pre-order walk.
+An abstract syntax tree is still mostly human-readable---provided the reader knows how to read a tree using a pre-order walk.\index{pre-order walk}
 
 \begin{figure}[htb]
   \begin{center}
@@ -143,7 +143,7 @@ An abstract syntax tree is still mostly human-readable---provided the reader kno
 
 A \emph{concrete syntax tree} or \emph{parse tree}~\cite{compiler-construction, compilers} contains all elements of the original source code in a semantic structure, including parenthesis, and comments. It is possible to fully reconstruct the original code from a parse tree---except for some indentation details---, making a parse tree also useful for transformations within the source code. On the downside, parse trees are very verbose in comparison to abstract syntax trees, which are reduced to the bare semantics.
 
-For the following code example (which is the same as in section~\ref{ast}), figure~\ref{fig:parse-tree} on page~\pageref{fig:parse-tree} shows the corresponding PHP parse tree as created by the PhpParser package. The difference in size---for the exact same source code---is striking. The figure shows that the PHP opcodes also are listed with their opcode name, \eg \emph{T\_CLOSE\_BRACES}.
+For the following code example (which is the same as in section~\ref{ast}), figure~\ref{fig:parse-tree} on page~\pageref{fig:parse-tree} shows the corresponding PHP parse tree as created by the PhpParser\index{PhpParser} package. The difference in size---for the exact same source code---is striking. The figure shows that the PHP opcodes also are listed with their opcode name, \eg \emph{T\_CLOSE\_BRACES}.
 
 \begin{phpcode}
 if ($x > $y) {
@@ -166,7 +166,7 @@ if ($x > $y) {
 \label{tac}
 \index{three-address code}\index{TAC\see{three-address code}}
 
-\emph{Three-address code (TAC)}~\cite{compiler-construction, compilers} is a theoretical concept for an intermediate program representation that roughly resembles assembly code. Three-address codes each consist of a basic operation and up to three operands or eponymic ``addresses''. Addresses can be variables, constants, literals, compiler-generated temporaries, or jump targets.
+\emph{Three-address code (TAC)}~\cite{compiler-construction, compilers} is a theoretical concept for an intermediate program representation that roughly resembles assembly code. Three-address codes each consist of a basic operation and up to three operands or eponymic ``addresses''.\index{addresses} Addresses can be variables\index{variables}, constants\index{constants}, literals\index{literals}, compiler-generated temporaries\index{temporaries}\index{compiler}, or jump targets.\index{jump targets}
 
 Three-address code breaks down deep expressions and loops into a relatively simple, linearized structure with conditions and jumps, making it particularly useful for data-flow analysis.
 
@@ -212,7 +212,7 @@ This is still the same three-address code, just written a bit differently.
 
 \section{Control-flow Graphs}
 \label{cfg}
-\index{control-flow graph}\index{CFG\see{control-flow graph}}\index{flow graphs\see{control-flow graphs}}
+\index{control-flow graph}\index{CFG\see{control-flow graph}}\index{flow graph\see{control-flow graph}}
 
 A \emph{control-flow graph (CFG)}~\cite{chess-west} or \emph{flow graph}~\cite{compilers} is a directed graph built on top of an abstract syntax tree or a parse tree that models the different paths through a program. Control-flow graphs are an important structure used in data-flow analysis.
 
@@ -240,9 +240,9 @@ echo $output;
 
 There are two special nodes in this graph---called \emph{ENTRY} and \emph{EXIT}. Those nodes do not represent any executable code, but are mere markers for the control-flow. The \emph{ENTRY} must not have any incoming edges, and the \emph{EXIT} nodes must not have any outgoing edges---actually, they are the only nodes without any outgoing edges. A control-flow graph may have only one entry node, but several exit nodes.
 
-Note that a non-entry node without any incoming nodes is not reachable, \ie the code contained in that node is \emph{dead code}.
+Note that a non-entry node without any incoming nodes is not reachable, \ie the code contained in that node is \emph{dead code}.\index{dead code}
 
-A node may contain several instructions. These multi-instruction nodes are called \emph{basic blocks}. However, an incoming edge can only point to a node, not to an individual instruction within a node. Thus, if an instruction is the target of the jump, the instruction needs to be the first one of a basic block.
+A node may contain several instructions. These multi-instruction nodes are called \emph{basic blocks}.\index{basic blocks} However, an incoming edge can only point to a node, not to an individual instruction within a node. Thus, if an instruction is the target of the jump, the instruction needs to be the first one of a basic block.
 
 The same goes for outgoing edges which can only be attached to a complete node, not to individual instructions within that node. Thus, if an instruction contains a jump, it needs to be the last instruction in a basic block, and the following instructions need to be placed within another basic block.
 
@@ -252,7 +252,7 @@ This allows for control-flow graphs to model all possible execution paths throug
 
 \section{Static Analysis for Finding Vulnerabilities}
 
-Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems such as unintentionally ignored expressions, use-after-free~\cite{use-after-free-definition} or buffer overflows. Coverty~\cite{coverity-report}\index{Coverity} regularly uses their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
+Tools for static code analysis can find real bugs in production software \cite{findbugs, evaluating}, including security problems such as unintentionally ignored expressions, use-after-free~\cite{use-after-free-definition}\index{use-after-free} or buffer overflows\index{buffer overflows}. Coverty~\cite{coverity-report}\index{Coverity} regularly uses their scanner to scan some open source projects for free, provide the bug reports to the projects, and publish regular reports on their efforts and the results, including numbers on the different vulnerability types found by their tool.
 
 \cite{chess-west} explains in detail the way static analysis of code works and the techniques to use it to find bugs and vulnerabilities.
 
@@ -275,9 +275,9 @@ The data is used during an \texttt{echo} call, outputting the data in the reques
   \end{center}
 \end{figure}
 
-Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo} call is a sink for cross-site scripting, but it is not a sink for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query} call is a sink for SQL injection, but not for cross-site scripting. Sources, however, are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
+Sinks are specific to certain kinds of vulnerabilities. For example, the \texttt{echo}\index{echo} call is a sink for cross-site scripting, but it is not a sink for SQL injection~(section~\ref{sql-injection} on page~\pageref{sql-injection}), whereas a \texttt{mysql\_query}\index{mysql\_query} call is a sink for SQL injection\index{SQL injection}, but not for cross-site scripting\index{cross-site scripting}. Sources, however, are not vulnerability-specific---either the data from a source generally is to be trusted, or it is considered untrusted.
 
-Data originating in a source (\ie untrusted data) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars} call does not make the data safe concerning SQL injection.
+Data originating in a source (\ie untrusted data) is called \bb{tainted}\index{tainting} as long as it does not get \bb{sanitized}\index{sanitation}. In the second example (figure \ref{fig:taint-and-clean} on page \pageref{fig:taint-and-clean}), the \texttt{htmlspecialchars}\index{htmlspecialchars} call---which escapes all HTML entities---makes the tainted data safe in regards to cross-site scripting. Like sinks, sanitation is specific to certain kinds of vulnerabilities: For example, the \texttt{htmlspecialchars}\index{htmlspecialchars} call does not make the data safe concerning SQL injection.
 
 Thus, a variable's \emph{taint state}\index{taint state}\label{taint-state} at some point of the program execution can either be \emph{tainted} or \emph{untainted}.
 
@@ -293,7 +293,7 @@ A tainted object propagation scanner uses data-flow analysis\index{data-flow ana
 
 In their scanner \emph{Pixy}~\cite{pixy-short, pixy-long, pixy-dissertation}\index{Pixy}, the authors apply the tainted object propagation scanning approach to PHP.
 
-In the author's experience in the TYPO3 security team~\cite{security-team-members}, most programmers have a rough understanding of the tainted object  propagation concept, but lack in understanding which sinks and which sanitation functions relate to what type of vulnerability. A common e-mail exchange about a vulnerable TYPO3 extension would go like this:
+In the author's experience in the TYPO3 Security Team~\cite{security-team-members}\index{TYPO3 Security Team}, most programmers have a rough understanding of the tainted object  propagation concept, but lack in understanding which sinks and which sanitation functions relate to what type of vulnerability. A common e-mail exchange about a vulnerable TYPO3 extension would go like this:
 
 \begin{quote}
 

@@ -9,7 +9,7 @@ This chapter gives an overview of the challenges associated with static analysis
 
 In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This comparable to pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces the analysis to fall back on approximations.
 
-For example, the following constructs are possible, making static analysis a lot harder than \eg for Java:
+For example, the following constructs are possible, making static analysis a lot harder than for less dynamic languages like Java:
 
 \begin{phpcode}
 // bar contains the name of the class to instantiate.
@@ -57,7 +57,7 @@ In addition, PHP starting from version 5 makes use of so-called \emph{autoloadin
 $container = new SmartContainer();
 \end{phpcode}
 
-In addition, type-hinted parameters can be overwritten within a function:\index{type hinting}
+In addition, type-hinted\index{type hinting} parameters can be overwritten within a function:\index{type hinting}
 
 \begin{phpcode}
 protected function foo(array $bar) {
@@ -73,24 +73,24 @@ protected function foo(array $bar) {
 
 PHP currently is in version 5.4.x (as of June 2013). Since PHP 4.x, the language has undergone a huge number of changes.~\cite{php-history, php-50, php-51, php-52, php-53, php-54} This section lists the most important changes that were introduced in addition to new functions, performance improvements and bug fixes.
 
-\paragraph*{PHP 5.0}
-Most promimently, PHP 5.0 brought a new object model that changed objects to get passed by reference by default instead of by value. This also included visibility modifiers, the \texttt{static} keyword for fields and methods, and class constants.
+\paragraph*{PHP 5.0}\index{PHP 5.0}
+Most promimently, PHP 5.0 brought a new object model that changed objects to get passed by reference\index{pass-by-reference} by default instead of by value. This also included visibility modifiers, the \texttt{static}\index{static (keyword)} keyword for fields and methods, and class constants.\index{class constants}
 
 
-\paragraph*{PHP 5.1}
+\paragraph*{PHP 5.1}\index{PHP 5.1}
 The biggest change this version was a clean-up of the reference handling and new date functions.
 
 
-\paragraph*{PHP 5.2}
+\paragraph*{PHP 5.2}\index{PHP 5.2}
 This version brought mostly small changes, but no big concepts that would have been completely new.
 
 
-\paragraph*{PHP 5.3}
-PHP 5.3 was the version that introduced class namespaces, late static binding and closures.
+\paragraph*{PHP 5.3}\index{PHP 5.3}
+PHP 5.3 was the version that introduced class namespaces, late static binding and closures.\index{namespaces}\index{late static binding}\index{closures}\index{anonymous functions}
 
 
-\paragraph*{PHP 5.4}
-The 5.4 version introduced traits, dropped support for the \texttt{safe\_mode} and deprecated \texttt{register\_globals}. In addition, call-time pass by reference was removed.
+\paragraph*{PHP 5.4}\index{PHP 5.4}
+The 5.4 version introduced traits, dropped support for the \texttt{safe\_mode} and deprecated \texttt{register\_globals}. In addition, call-time pass-by-reference was removed.\index{traits}\index{safe\_mode}\index{register\_globals}\index{call-time pass-by-reference}
 
 
 \section{Variables, References and Aliases}
@@ -98,7 +98,7 @@ The 5.4 version introduced traits, dropped support for the \texttt{safe\_mode} a
 
 To be able to conduct alias analysis for PHP, it is important to fully understand the way variables and references in PHP work. The following section covers this, including the implementation details of variables in PHP as well as the various types of references that are possible in PHP.
 
-Many of these language details are referenced in the PHP manual, which---together with the reference implementation---is the authoritative source for details on the PHP language.
+Many of these language details are referenced in the PHP manual~\cite{php-manual}\index{PHP manual}, which---together with the reference implementation---is the authoritative source for details on the PHP language.
 
 
 \subsection{Local and Global Variable Scope}
@@ -170,7 +170,7 @@ breakfast();
 Let's have some coffee!
 \end{textcode}
 
-\paragraph{Note:} Using the \texttt{global} keyword is perfectly valid (as of PHP 5.4), but its usage is not recommended as this will make distinguishing between local and globals variables harder when reading the code. Instead, it is recommended to use the \texttt{\$GLOBALS} superglobal to make the access more explicit. ~\cite{typo3-cgl-php-syntax-formatting}
+\paragraph{Note:} Using the \texttt{global} keyword is perfectly valid (as of PHP 5.4)\index{PHP 5.4}, but its usage is not recommended as this will make distinguishing between local and globals variables harder when reading the code. Instead, it is recommended to use the \texttt{\$GLOBALS} superglobal to make the access more explicit. ~\cite{typo3-cgl-php-syntax-formatting}
 
 
 
@@ -202,7 +202,7 @@ typedef union _zvalue_value {
 } zvalue_value;
 \end{ccode}
 
-Hence, a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.\index{reference counting}
+Hence, a variable basically consists of a name (which is stored outside the ZVAL structure~\cite{php-extensions-zval}), a type, a value, and a reference counter.\index{reference counting}\index{reference counter\see{reference counting}}
 
 \paragraph{Note:} This applies to basic data types like integers, strings or floats. For objects, things are a bit more complicated (see below).
 
@@ -213,7 +213,7 @@ $x = 42;
 xdebug_debug_zval('x');
 \end{phpcode}
 
-The command \texttt{xdebug\_debug\_zval} from the Xdebug PHP extension~\cite{xdebug-functions} outputs detailed information on the variable (figure~\ref{fig:simple-variable} on page~\pageref{fig:simple-variable}):
+The command \texttt{xdebug\_debug\_zval}\index{xdebug\_debug\_zval}\index{Xdebug} from the Xdebug PHP extension~\cite{xdebug-functions} outputs detailed information on the variable (figure~\ref{fig:simple-variable} on page~\pageref{fig:simple-variable}):
 
 \begin{textcode}
 x: (refcount=1, is_ref=0)=42
@@ -227,7 +227,7 @@ x: (refcount=1, is_ref=0)=42
   \end{center}
 \end{figure}
 
-The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}
+The reference count is used both by the garbage collector as well as to save memory by using a copy-on-write strategy.~\cite{php-manual-reference-counting}\index{copy-on-write}\index{garbage collection}\index{garbage collector\see{garbage collection}}
 
 
 \subsubsection{Copy-on-Write Variables}
@@ -264,7 +264,7 @@ y: (refcount=2, is_ref=0)=42
 \subsubsection{Removing (Unsetting) Copy-on-Write Variables from the Symbol Table}
 \label{sec:unsetting}
 \index{symbol table}
-\index{unsetting variables}\index{variables!unsetting|see{unsetting variables}}
+\index{unsetting variables}\index{variables!unsetting|see{unsetting variables}}\index{unset\see{unsetting variables}}
 
 When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, and the reference counter is decreased again (figure~\ref{fig:reference-count-decreased} on page~\pageref{fig:reference-count-decreased}):
 
@@ -316,11 +316,12 @@ y: (refcount=1, is_ref=0)=42
 
 \paragraph{Note:} \texttt{xdebug\_debug\_zval} will never display a \texttt{refcount} of zero for a variable because \texttt{xdebug\_debug\_zval} cannot display variables that have been unset (and that, by definition, do not exist anymore at that point).
 
-\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Mereley assigning the same value to both variables will not lead to both variables sharing one ZVAL. Thus, this behavior is different from the way the Java virtual machine handles strings in order to preserve memory.~\cite[chapter~2]{jvm-spec}\index{Java}\index{strings in Java}
+\paragraph{Note:} To get PHP to actually use copy-on-write, it is necessary to directly copy the value of one variable to another variable. Mereley assigning the same value to both variables will not lead to both variables sharing one ZVAL. Thus, this behavior is different from the way the Java virtual machine handles strings in order to preserve memory.~\cite[chapter~2]{jvm-spec}\index{Java virtual machine}\index{strings in Java}
 
 
 \subsection{References}
 \label{sec:references}
+\index{references}
 
 References in PHP are two variables pointing to the same ZVAL. The PHP manual takes particular care to make clear the difference to C pointers:~\cite{php-manual-what-references-are}\cite{php-manual-what-references-are-not}\index{references}\index{C/C++ pointers}\index{pointers in C/C++}
 
@@ -336,7 +337,7 @@ There are several ways to create references in PHP: assigning by reference, pass
 
 \paragraph{Creating References:}
 
-References from one variable to another are set using the \texttt{=\&} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL instead of one variable pointing to the other, and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in the existing ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
+References from one variable to another are set using the \texttt{=\&}\index{\texttt{=\&} operator} operator.~\cite[page 129]{wenz-php53}\cite{php-manual-what-references-do} After this, both variables refer to the same ZVAL instead of one variable pointing to the other, and it is not possible to distinguish between the referenced variable and the referencing variable anymore. Changing the value of one of the variables then changes the value in the existing ZVAL (and thus for both variables). However, it does \emph{not} create a new ZVAL.
 
 The corresponding ZVAL is marked with \texttt{is\_ref=1}---which is a 0/1 boolean flag, not a counter---, and the reference count is increased (figure~\ref{fig:simple-reference} on page~\pageref{fig:simple-reference}):
 
@@ -418,7 +419,7 @@ p2: (refcount=2, is_ref=1)='bar'
 
 
 \paragraph{Dropping References and Reference Counting:}
-\index{reference counting}
+\index{reference counting}\index{dropping references}
 
 When a variable that is a reference is unset, PHP removes the variable from the symbol table\index{symbol table} of the current scope (i.\,e., it cuts the connection between the variable name and the ZVAL) and decreases the reference count. The ZVAL will not be destroyed---or be allowed for garbage collection---as long as the reference count is greater than zero.
 
@@ -449,7 +450,7 @@ xdebug_debug_zval('b2');
 b2: (refcount=1, is_ref=0)='foo'
 \end{textcode}
 
-\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}}, but not to literal values or expressions:
+\paragraph{Note:} References can only be created to variables\footnote{References to objects created with \texttt{new} in the same call are also possible. However, this usage of references has been deprecated in PHP 5.0.~\cite{php-manual-what-references-do}\index{PHP 5.0}}, but not to literal values or expressions:
 
 \begin{phpcode}
 $answer =& 42;
@@ -510,19 +511,19 @@ xdebug_debug_zval('a');
 a: (refcount=1, is_ref=0)=42
 \end{textcode}
 
-Note: In the context of the function, the ZVAL's reference count is two (because \texttt{\$parameter} is a reference to \texttt{\$a}). As the scope of \texttt{\$parameter} ends with the end of the function, this causes the variable to be destroyed, decreasing the reference count in the ZVAL back to one.
+Note: In the context of the function, the ZVAL's reference count is 2 (because \texttt{\$parameter} is a reference to \texttt{\$a}). As the scope of \texttt{\$parameter} ends with the end of the function, this causes the variable to be destroyed, decreasing the reference count in the ZVAL back to 1.
 
 
 \subsection{References and Objects}
 \label{object-references}
 
-Starting from PHP~5, objects are always passed by reference---in a way:~\cite{php-manual-migration5-oop, php-src-rfc-object-handles}
+Starting from PHP~5, objects are always passed by reference---in a way:~\cite{php-manual-migration5-oop, php-src-rfc-object-handles}\index{by-default pass-by-reference}
 
 \begin{quote}
-In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).\index{object handles}
+In PHP 5 there is a new Object Model. PHP's handling of objects has been completely rewritten, allowing for better performance and more features. In previous versions of PHP, objects were handled like primitive types (for instance integers and strings). The drawback of this method was that semantically the whole object was copied when a variable was assigned, or passed as a parameter to a method. In the new approach, objects are referenced by handle, and not by value (one can think of a handle as an object's identifier).\index{object handles}\index{object identifiers}
 \end{quote}
 
-In a nutshell, PHP does not pass objects by reference, but instead by default passes copies of the object handle---and all copies of one object handle point to the same object instance. So PHP does not pass direct references, but indirect references. This causes PHP to exhibit a strange mix of behavior---in some regards, it looks as though objects are actually passed by reference, while there are some puzzling exceptions and edge-cases.
+In a nutshell, PHP does not pass objects by reference, but instead by default passes copies of the object handle---and all copies of one object handle point to the same object instance. So PHP does not pass direct references, but \emph{indirect} references. This causes PHP to exhibit a strange mix of behavior---in some regards, it looks as though objects are actually passed by reference, while there are some puzzling exceptions and edge-cases.
 
 Technically speaking, if a variable is an object instance, the ZVAL contains a \emph{handle} (or object \emph{identifier}) for the object, not the object itself. Thus, if variables (indirectly) point to the same object, the variables actually contain \emph{copies} of the indentifier.~\cite{php-manual-oop-references}
 
@@ -630,5 +631,5 @@ echo '<h2>Welcome back, ' . $escapedUserName . '!</h2>';
 
 If no user is logged in, the \texttt{\$escapedUserName} variable is uninitialized in line 6, causing the code to be susceptible to cross-site-scripting via the \texttt{escapedUserName} request parameter. (See section~\ref{xss} for details on cross-site scripting.)
 
-\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables still need to be regarded as tainted.
+\texttt{register\_globals} has been deprecated in PHP 5.3 and removed in PHP 5.4.~\cite{php-manual-register-globals} Hence, unless a program is ensured to be only executed in an environment running PHP 5.4 or higher, uninitialized variables still need to be regarded as tainted.\index{PHP 5.3}\index{PHP 5.4}
 

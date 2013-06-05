@@ -1,7 +1,7 @@
 \chapter{Taint Analysis for Objects}
 \label{field-tainting}
 
-This chapter describes a concept for adding taint analysis for member variables of objects to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
+This chapter describes a concept for adding a sound taint analysis for member variables of objects to Pixy---the 2007 release of Pixy explicitly mentions this as a ``missing feature''.
 
 
 \section{Modeling Objects and Member Variables}
@@ -17,7 +17,7 @@ class Foo {
 }
 \end{phpcode}
 
-\paragraph{Note:} This piece of code still uses the PHP~4 way of declaring member variables. Using the PHP~5 way with access keywords like \texttt{public}, \texttt{protected} or \texttt{private} would work correspondingly.
+\paragraph{Note:} This piece of code still uses the PHP~4 way of declaring member variables. Using the PHP~5 way with access keywords\index{access keywords} like \texttt{public}, \texttt{protected} or \texttt{private} would work correspondingly.\index{public (keyword)}\index{protected (keyword)}\index{private (keyword)}
 
 \begin{figure}[htb]
   \begin{center}
@@ -27,25 +27,25 @@ class Foo {
   \end{center}
 \end{figure}
 
-At the point where Pixy's \texttt{TacConverter} (section~\ref{tacconverter} on page~\pageref{tacconverter}) class encounters the class definition, it would be neither necessary nor helpful to save the taint state (section~\ref{taint-state} on page~\pageref{taint-state})\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
+At the point where Pixy's \texttt{TacConverter}\index{TacConverter} (section~\ref{tacconverter} on page~\pageref{tacconverter}) class encounters the class definition, it would be neither necessary nor helpful to save the taint state (section~\ref{taint-state} on page~\pageref{taint-state})\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized member variables cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals} on page~\pageref{register-globals}).
 
-In addition, the list of declared fields might be a mere subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
+In addition, the list of declared fields might be a mere subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field\index{undeclared fields}, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
 
 
 
 \subsection{Storing Objects with Member Variables as Places for Three-Address Code (TAC)}
 \index{member variables}\index{fields}\index{three-address code}
 
-Pixy models variables as ``places'' for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). For taint analysis, it uses this ``place'' abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
+Pixy models variables as ``places''\index{places} for three-address code (see section~\ref{tac} on page~\pageref{tac} for details). The corresponding classes is named \texttt{AbstractPlace}\index{AbstractPlace}. For taint analysis, it uses this \emph{place} abstraction---instead of the variable directly from the parse tree---to model the flow of data through the program.
 
-Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
+Hence, we need a way to convert access to member variables from the PHP parse tree into TAC places. This needs to happen within the \texttt{TacConverter}\index{TacConverter} class which is responsible for the task of creating both the control-flow graph as well as the three-address code from the PHP parse tree.
 
-The \texttt{TacConverter} already adds a \texttt{Variable} entry into the current function's symbol table. To closely model the way PHP stores object instances with a separate symbol table per instance (see section~\ref{php-variables} on page~\pageref{php-variables}~ff.), we need a subclass \texttt{ObjectVariable extends Object} that holds a reference to a symbol table instance---which then holds references to several \texttt{AbstractPlace} instances that represent the member variables.
+The \texttt{TacConverter} already adds a \texttt{Variable} entry into the current function's symbol table. To closely model the way PHP stores object instances with a separate symbol table per instance (see section~\ref{php-variables} on page~\pageref{php-variables}~ff.), we need a subclass \texttt{ObjectVariable extends Object}\index{ObjectVariable} that holds a reference to a symbol table instance---which then holds references to several \texttt{AbstractPlace} instances that represent the member variables.
 
 
 \subsection{Field Access}
 
-To track tainting for member variables, Pixy needs to create ``places'' for all member variables that are accessed---even for those that have not been declared beforehand. (PHP will however happily create it on the fly while issuing a PHP warning.)
+To track tainting for member variables, Pixy needs to create \emph{places} for all member variables that are accessed---even for those that have not been declared beforehand. (PHP will however happily create it on the fly while issuing a PHP warning.)
 
 Both for the left side of assignments as well as for all expressions, we need to add a way to handle field access as places. In addition to the already existing cases (\eg function calls, literals, normal variables etc.), the following cases are new and need to be modeled:
 
@@ -72,7 +72,7 @@ Both for the left side of assignments as well as for all expressions, we need to
 \end{tabular}
 }{Field accesses that need to be modeled}{table:field-access-cases}
 
-\paragraph{Note:} Method chaining in PHP is possible, as is field access chaining. After field chaining, method calls are possible. However, even if a method returns an object, chained field accesses on that object are not possible. This approach does not cover method call after field accesses as Pixy already is quite versed at finding out which method from which class gets called.
+\paragraph{Note:} Method chaining\index{method chaining} in PHP is possible, as is field access chaining\index{field access chaining}. After field chaining, method calls are possible. However, even if a method returns an object, chained field accesses on that object are not possible. This approach does not cover method call after field accesses as Pixy already is quite versed at finding out which method from which class gets called.
 
 
 \begin{figure}[htb]
@@ -131,9 +131,9 @@ Both for the left side of assignments as well as for all expressions, we need to
   \end{center}
 \end{figure}
 
-As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either. Instead, this approach uses Pixy's special place \emph{specialPlaceForVariableVariables} that keeps this place out of taint analysis.
+As Pixy currently does not model the---relatively rare---case of variable variables\index{variable variables}, this approach does not model them on the field level either. Instead, this approach uses Pixy's special place \emph{specialPlaceForVariableVariables}\index{specialPlaceForVariableVariables} that keeps this place out of taint analysis.
 
-Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. In other words: A \texttt{cvar} node in the parse tree is equivalent to a variable being accessed, \eg \texttt{\$a} or \texttt{\$foo->bar}.
+Looking at the big picture, both for left-side\index{left-side expressions} and right-side expressions\index{right-side expressions}, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar}\index{cvar} node in it. In other words: A \texttt{cvar} node in the parse tree is equivalent to a variable being accessed, \eg \texttt{\$a} or \texttt{\$foo->bar}.
 
 This approach expands the \texttt{cvar} function to also return places for field accesses.
 
@@ -159,10 +159,10 @@ AbstractPlace cvar(
  * or chained field names from it. The dollar sign from the first
  * variable is omitted.
  *
- * For example, for a variable $foo, this function returns:
+ * For example, for a variable foo, this function returns:
  * ["foo"]
  *
- * For a variable $foo->bar->$baz, this function returns:
+ * For a variable foo->bar->$baz, this function returns:
  * ["foo", "bar", "$baz"]
  */
 String[] flattenCvarTreeToNameChain(ParseNode subtreeRoot) {
@@ -253,7 +253,7 @@ Variable getOrCreateVariableInSymbolTable(
 
 \subsection{Class Instantiation}
 
-When a class gets instantiated, the \texttt{TacConverter} needs to create a symbol table entry to store a new \texttt{ObjectVariable} instance in.
+When a class gets instantiated, the \texttt{TacConverter} needs to create a symbol table entry to store a new \texttt{ObjectVariable}\index{ObjectVariable} instance in.
 
 In the following code example, the \texttt{Foo} class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
 
@@ -269,7 +269,7 @@ $foo = new Foo();
   \end{center}
 \end{figure}
 
-In pseudo-code, processing this assignment would look like this:
+In pseudo-code, processing this assignment would look like this:\index{expr\_without\_variable}
 
 \begin{javacode}
 /**
@@ -303,8 +303,9 @@ An alias analysis for objects needs to take two aspects into account: that objec
 
 
 \subsection{Object References}
+\index{object references}
 
-In addition to the must-aliases and may-aliases, Pixy needs to track references between objects. In order to do so, Pixy needs to leverage its existing type detection for variables. The approach to object references is quite similar to that for variables aliases: As with may-aliases and must-aliases for variables, the analysis tracks \emph{must-references} and \emph{may-references} for objects.
+In addition to the must-aliases and may-aliases, Pixy needs to track references between objects. In order to do so, Pixy needs to leverage its existing type detection for variables. The approach to object references is quite similar to that for variables aliases: As with may-aliases and must-aliases for variables, the analysis tracks \emph{must-references}\index{must-references} and \emph{may-references}\index{may-references} for objects.
 
 In the object reference analysis, the same cases are relevant as with the alias analysis: assignments, \texttt{unset} calls, and function calls with parameters.
 
@@ -372,10 +373,11 @@ if (...) {
 
 $mustReferences = \{\}, mayReferences = \{(bar, foo), (bar, foo2)\}$
 
-\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and are handled accordingly.
+\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and are handled accordingly.\index{assign-by-reference}
 
 
 \subsubsection{Unset Calls}
+\index{unset}
 
 An \texttt{unset} call removes the corresponding object variable from all must-references and may-references:
 
@@ -389,6 +391,7 @@ $mustReferences = \{\}, mayReferences = \{\}$
 
 
 \subsubsection{Function Calls}
+\index{function calls}
 
 As function parameters are passed by value---which in the case of objects means a copy of object handle pointing to one and the same object---, this creates a reference from the caller's object variable and the callee's parameter.
 
@@ -407,15 +410,17 @@ At this point within the \texttt{otherFunction} function, there is a must-refere
 
 $mustReferences = \{(someFunction.foo, otherFunction.foo)\}, mayReferences = \{\}$
 
-The dot notation for the function name in the variable names within the reference sets is the same as in the alias sets used in section~\ref{sec:aliases-globals}.
+\paragraph{Note:} The dot notation for the function name in the variable names within the reference sets is the same as in the alias sets used in section~\ref{sec:aliases-globals} on page~\pageref{sec:aliases-globals}.
 
 
-\subsection{Member Field Aliases}
+\subsection{Field Aliases}
+\index{field aliases}\index{member variable aliases \see{field aliases}}
 
 As mentioned further above in section~\ref{fields-not-saved-on-new}, it is not helpful to store the fields of an object at the point of instantiation as far as tainting is concerned. Instead, the fields need to be added on the fly as they are read or written.
 
 
 \subsubsection{Field Accesses}
+\index{field accesses}
 
 When a field is written or read, the alias analyzer needs to check and update alias information for that field and then take the corresponding line of code into further alias analysis. After a field has been added as a must-alias or may-alias, Pixy's existing alias analysis can kick in.
 
@@ -428,6 +433,7 @@ The basic rules at that point are:
 
 
 \paragraph{Object aliases}
+\index{object aliases}
 
 Let's have a look at an example for object aliases first. At the beginning, we already have one must-alias and one may-alias for some objects:
 
@@ -445,6 +451,7 @@ $mustAliases = \{(a, b), (a.name, b.name)\}, mayAliases = \{(a, c), (a.name, c.n
 
 
 \paragraph{Object references}
+\index{object references}
 
 A similar example with object references instead of object aliases works basically the same:
 
@@ -464,6 +471,7 @@ mustAliases & = \{(a.name, b.name)\}, & mayAliases & = \{(a.name, c.name)\}
 
 
 \subsubsection{Unset: Removing aliases or references}
+\index{unset}
 
 When an object variable is dropped from the symbol table via \texttt{unset}, all occurrences of this object's fields need to be removed from all must-aliases and may-aliases.
 
@@ -489,6 +497,7 @@ mayAliases & = \{(x, z), (x.name, z.name)\}
 
 
 \subsubsection{Changing Must-Aliases to May-Aliases}
+\index{may-aliases}
 
 When a must-alias for an object is changed to a may-alias or a must-reference is changed to a may-reference, the field alias information need to be changed accordingly.
 

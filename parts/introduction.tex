@@ -2,12 +2,12 @@
 
 \section{Motivation: Why a Current Static PHP Security Scanner Is Important}
 \index{PHP}
-At present, there is no free and high-quality static code analysis tool available---and still maintained---that can find vulnerabilities in PHP 5.4.x code. This is a problem because new vulnerabilities in web applications are found almost daily~\cite{osvdb} even in official sites like the German government's site~\cite{xss-bundesregierung}, and---as of June 2013---PHP is used for more than 75 \% of the top-million sites~\cite{w3techs-php-usage}, including Facebook, Wikipedia and WordPress.com~\cite{w3techs-php-sites}. Figure~\ref{fig:php-percentage} shows the percentages of the major server-side programming languages.
+At present, there is no free and high-quality static code analysis tool available---and still maintained---that can find vulnerabilities in PHP 5.4.x code. This is a problem because new vulnerabilities in web applications are found almost daily~\cite{osvdb} even in official sites like the German government's site~\cite{xss-bundesregierung}. Furthermore ---as of June 2013---, PHP is used for more than 75 \% of the top-million sites~\cite{w3techs-php-usage}, including Facebook, Wikipedia and WordPress.com~\cite{w3techs-php-sites}. Figure~\ref{fig:php-percentage} shows the percentages of the major server-side programming languages.\index{server-side programming languages}
 
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[scale=1.0]{images/language-percentage}
-    \caption{As of June 2013, PHP by far has the largest percentage of server-side programming languages.~\cite{w3techs-php-usage} Note that this only includes the languages of sides where the language actually is known, and that some sites may use more than one language.}
+    \caption{As of June 2013, PHP by far has the largest percentage of server-side programming languages.~\cite{w3techs-php-usage} Note that this only includes the languages of sides where the language actually is known, and that some sites may use more than one language.}\index{PHP}\index{ASP.NET}\index{Java}\index{ColdFusion}\index{Perl}\index{Ruby}\index{Python}
     \label{fig:php-percentage}
   \end{center}
 \end{figure}
@@ -19,6 +19,6 @@ This thesis aims to move the PHP security scanner \bb{Pixy}~(\cite{pixy}, page~\
 
 In addition, this thesis includes an overview over common vulnerabilities in PHP web applications as well as the theoretical foundation for static code analysis and security scanning.
 
-Code quality matters---in particular, for an open-source tool like Pixy, code quality is important to attract more contributors to the project. Thus, this thesis also aims at getting Pixy to work with the current Java~7\index{Java} without any warnings and making Pixy's code more maintainable.
+Code quality\index{code quality} matters. In particular, for an open-source\index{open source} tool like Pixy, code quality is important to attract more contributors to the project. Thus, this thesis also aims at getting Pixy to work with the current Java~7\index{Java 7} without any warnings and at making Pixy's code more maintainable.
 
-These technical goals are mostly necessary due to the fact that the Pixy code base had not been maintained (or even touched) since 2006, yet both PHP (\ie the scanned language) as well as Java (i.e., the scanner's language) had evolved in the meantime.
+These technical goals are mostly necessary due to the fact that the Pixy code base had not been maintained (or even touched) since 2007, yet both PHP (\ie the scanned language) as well as Java (i.e., the scanner's language) had evolved in the meantime.

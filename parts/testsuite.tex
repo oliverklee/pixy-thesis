@@ -1,7 +1,7 @@
 \chapter{Test Suite Used For Evaluating the Scanners}
 \label{testsuite}
 
-The author created a small test suite that was used to check the abilities of the various scanners. The test suite contains several instances of XSS and SQL injection in various forms:
+The author created a small test suite that was used to check the abilities of the various security vulnerability scanners. The test suite contains several instances of cross-site-scripting (XSS) and SQL injection in various forms:\index{cross-site scripting}\index{SQL injection}
 \begin{itemize}
  \item source and sink within the same line, \eg \texttt{sqlInjIntegerForSourceInline}
  \item source and sink on different lines within the same method, \eg \texttt{sqlInjIntegerForSourceInFunctionSanitizedInSource}

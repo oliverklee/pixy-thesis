@@ -14,7 +14,7 @@ The Pixy project (including the source code, wiki and issue tracker) currently r
 
 \section{Technical Details}
 
-As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data-structures}, Pixy uses a several-steps approach between the raw source code and the final data flow analysis. It makes use of the (modified) external libraries JFlex and CUP (and a Lex syntax definition file for PHP) to create the abstract syntax tree.\index{JFlex}\index{CUP}
+As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data-structures}, Pixy uses a several-steps approach between the raw source code and the final data flow analysis. It makes use of the (modified) external libraries JFlex and CUP (and a Lex syntax definition file for PHP) to create a PHP parse tree.\index{JFlex}\index{CUP}
 
 \begin{figure}[htb]
  \begin{center}
@@ -27,7 +27,7 @@ As shown in figure~\ref{fig:pixy-data-structures} on page~\pageref{fig:pixy-data
 \section{P-TAC as an Intermediate Representation in the Control-Flow Graph}
 \label{p-tac}\index{P-TAC}
 
-As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow grap} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place}
+As an intermediate representation, Pixy uses a combination of a modified version of \emph{three-address code}\index{three-address code} (see section~\ref{tac}) called \emph{P-TAC} together with a control-flow graph (CFG).\index{control-flow grap} For addresses that contain data (variables, constants, literals), Pixy uses the general term \emph{place}.\index{place} Pixy represents \emph{places} in the class \texttt{AbstractPlace}.\index{AbstractPlace}
 
 As described in~\cite{pixy-dissertation}, the main types of control-flow graph nodes are listed in table~\ref{table:p-tac} on page~\pageref{table:p-tac}.
 

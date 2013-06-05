@@ -8,10 +8,10 @@
 
 PHP is the language that is most widely-used as a programming language for dynamic web sites, including Facebook, Wikipedia and WordPress.com. As PHP is very easy to learn, not every PHP developer has sufficient training in developing secure PHP code. This results in vulnerabilities in web applications being found almost daily.
 
-Automated static code analysis tools that scan code for security vulnerabilities can help developers discover potential problems early in the development process. The open-source security vulnerability scanner \emph{Pixy} uses a tainted object-propagation scanning approach for finding cross-site scripting (XSS), SQL injection and file inclusion vulnerabilities. Pixy also provides a sophisticated alias analysis to increase precision and recall.
+Automated static code analysis tools that scan code for security vulnerabilities can help developers discover potential problems early in the development process---particularly, before any vulnerable code goes live. The open-source security vulnerability scanner \emph{Pixy} uses a tainted object-propagation scanning approach for finding cross-site scripting (XSS), SQL injection and file inclusion vulnerabilities. Pixy also includes a sophisticated alias analysis to increase precision and recall.
 
 However, in its original 2007 version, Pixy was not able to scan PHP~5 code. Particularly, it did not extend its tainting model on object fields, and its alias analysis did not cover that objects are passed by reference by default in PHP~5.
 
-This thesis contributes a sound approach for conducting taint analysis for object fields, taking object references into account.
+This thesis contributes a sound approach for conducting taint analysis for object field while taking object references into account.
 
 %\end{minipage}
