@@ -1,10 +1,10 @@
 \chapter{The PHP Security Scanner Pixy}
 \label{pixy}\index{Pixy}\index{PhpParser}
-Pixy~\cite{pixy} was created 2006/2007 as part of a dissertation by Nenad Jovanovic~\cite{pixy-dissertation}. It uses interprocedural data-flow analysis and includes the dedicated PhpParser tool~\cite{phpparser}. Pixy's approach is documented in~\cite{pixy-short, pixy-long, pixy-technical, pixy-dissertation}.
+Pixy~\cite{pixy} was created in 2006/2007 as part of a dissertation by Nenad Jovanovic~\cite{pixy-dissertation}. It uses interprocedural data-flow analysis and includes the dedicated PhpParser tool~\cite{phpparser}. Pixy's approach is documented in~\cite{pixy-short, pixy-long, pixy-technical, pixy-dissertation}.
 
 Pixy is able to recognize sources, sinks and sanitation functions specific for each vulnerability type. However, in its 2007 version, it only recognized simple functions, not method calls on objects or static function calls for a class.
 
-Pixy could currently only scan one file at a time (including its dependencies) and only scans functions that actually are executed. This means that it could not scan the code of a complete class if there was no caller.
+Pixy could currently only scan one file at a time (including its dependencies), and it scans only functions that actually are executed. This means that it could not scan the code of a complete class if there was no caller.
 
 Development of Pixy had ceased after 2007. However, one of the original authors of Pixy had agreed to hand over maintenance so Pixy can be officially continued.
 

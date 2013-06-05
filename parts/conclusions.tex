@@ -1,7 +1,7 @@
 \chapter{Conclusions}
 \label{conclusions}
 
-This chapter describes the contributions of this thesis, the current state concerning implementing the contributed concepts, and the necessary further steps and some obstacles that might lie ahead.
+This chapter describes the contributions of this thesis, the current state concerning implementing the contributed concepts, and the necessary further steps as well as some obstacles that might lie ahead.
 
 \section{Contributions}
 
@@ -16,16 +16,16 @@ During the research for this thesis and its creation, the author conducted a gre
 
 In addition, Pixy and PhpParser were adapted for Java~7, reducing the number of Java compilation warnings from 688 down to 4.
 
-However, this has been only a first step. Pixy still needs more clean-up and refactoring to get it into a maintainable state so that new features can be added.
+However, this has been only a first step. Pixy still needs more cleaning up and refactoring to get it into a maintainable state so that new features can be added.
 
 
 \subsection{Taint Analysis for Objects}
 
-Currently, the approach for taint analysis for objects is merely a theoretical concept. During the writing of this thesis, it turned out that Pixy still needed far more refactoring, clean-up and more unit tests before major new features can be added.
+Currently, the approach for taint analysis for objects is merely a theoretical concept. During the writing of this thesis, it turned out that Pixy still needed far more refactoring, code polishing and more unit tests before major new features can be added.
 
 
 \section{Further Steps and Obstacles}
 
-Currently, the Java compiler warnings for Pixy are down to 4. Still, the next steps should be further clean-up, refactoring and documentation to get Pixy in a maintainable state---currently, Pixy still is far from maintainable. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
+At presents, the Java compiler warnings for Pixy are down to 4. Nevertheless, the next steps need to be further refactoring, documentation and more unit tests to get Pixy in a maintainable state---currently, Pixy still is far from maintainable. After that, there are quite a few steps to be done to get Pixy to fully parse and scan PHP~5 code. Implementing the approach presented in this theses is one of them.
 
 At the moment, there are some promising new tools that make use of PHP's built-in tokenizer and its provided language definition, \eg \cite{php-parser-popov} and \cite{php-analyzer}. For Pixy, the language definition and the parser need to be updated manually. So switching to the the new tools as a base for a new security scanner and applying the principles learned with Pixy looks like a path worth being explored.

@@ -3,11 +3,11 @@
 
 PHP~\cite{php-in-action} is a powerful object-oriented, dynamically typed server-side web scripting language.
 
-This chapter gives an overview over the challenges associated with static analysis for PHP as well as the inner workings of PHP that are relevant for conducting alias analysis on PHP code.
+This chapter gives an overview of the challenges associated with static analysis for PHP as well as the inner workings of PHP that are relevant for conducting alias analysis on PHP code.
 
 \section{Challenges in Static Analysis for PHP}
 
-In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This practically is the same as multiple pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces static analysis to fall back on approximations.
+In PHP, it is possible to use variables for variable names (which is called ``variable variables'')\index{variable variables|see{variables!variable}}\index{variables!variable}, field names, class names or for the inclusion of other classes. This comparable to pointers in C++, and poses a problem for static analysis~\cite{tamper-resistance} that forces the analysis to fall back on approximations.
 
 For example, the following constructs are possible, making static analysis a lot harder than \eg for Java:
 
@@ -78,11 +78,11 @@ Most promimently, PHP 5.0 brought a new object model that changed objects to get
 
 
 \paragraph*{PHP 5.1}
-The biggest change of PHP 5.1 was a clean-up of the reference handling and new date functions.
+The biggest change this version was a clean-up of the reference handling and new date functions.
 
 
 \paragraph*{PHP 5.2}
-PHP 5.2 brought mostly small changes, but no big concepts that would have been completely new.
+This version brought mostly small changes, but no big concepts that would have been completely new.
 
 
 \paragraph*{PHP 5.3}
@@ -90,7 +90,7 @@ PHP 5.3 was the version that introduced class namespaces, late static binding an
 
 
 \paragraph*{PHP 5.4}
-PHP 5.4 introduced traits, dropped support for the \texttt{safe\_mode} and deprecated \texttt{register\_globals}. In addition, call-time pass by reference was removed.
+The 5.4 version introduced traits, dropped support for the \texttt{safe\_mode} and deprecated \texttt{register\_globals}. In addition, call-time pass by reference was removed.
 
 
 \section{Variables, References and Aliases}
@@ -139,7 +139,7 @@ Note: Local scope works exactly the same way for functions and class methods---w
 \subsubsection{The ``global'' Keyword and \$GLOBALS}
 \label{sec:globals}\index{global (keyword)}\index{\$GLOBALS}
 
-Using the \texttt{global} keyword, it is possible to create a reference from a local variable to a global variable with the same name:
+Using the \texttt{global} keyword, it is possible to create a reference from a local variable to a global variable, using the same name:
 
 \begin{phpcode}
 function breakfast() {
@@ -266,7 +266,7 @@ y: (refcount=2, is_ref=0)=42
 \index{symbol table}
 \index{unsetting variables}\index{variables!unsetting|see{unsetting variables}}
 
-When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, the reference counter is decreased again (figure~\ref{fig:reference-count-decreased} on page~\pageref{fig:reference-count-decreased}):
+When one of the variables is unset, the unset variable gets removed from the symbol table\index{symbol table} of the current scope, and the reference counter is decreased again (figure~\ref{fig:reference-count-decreased} on page~\pageref{fig:reference-count-decreased}):
 
 \begin{phpcode}
 $x = 42;
@@ -291,7 +291,7 @@ x: (refcount=1, is_ref=0)=42
 \subsubsection{Overwriting Copy-on-Write Variables}
 \label{sec:overwriting}
 
-When one of the variables is overwritten later, PHP creates a new ZVAL for the new value and decreases the reference count of the first ZVAL(figure~\ref{fig:new-zval-after-copy-on-write} on page~\pageref{fig:new-zval-after-copy-on-write}):
+When one of the variables is overwritten later, PHP creates a new ZVAL for the new value and decreases the reference count of the first ZVAL (figure~\ref{fig:new-zval-after-copy-on-write} on page~\pageref{fig:new-zval-after-copy-on-write}):
 
 \begin{phpcode}
 $x = 42;

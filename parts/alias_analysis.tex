@@ -2,19 +2,19 @@
 
 When performing static code analysis, a good alias analysis is helpful as it can both increase recall and precision. A good recall is important as it will allow Pixy to find more vulnerabilities. A good precision is important to reduce noise, thus making the results more meaningful for the developers: If there are too many meaningless warnings, developers just tend to ignore them---or stop using the tool.~\cite{understanding-value}
 
-For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP (which is quite different from the way aliases work e.\,g., in C or Java). Thus, a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
+For understanding the intricacies of alias analysis for PHP, it is important to first have a firm grip on the way references work in PHP---which is quite different from the way aliases work e.\,g., in C or Java. Thus, a big part of the exiting work on alias analysis does not directly apply to PHP.~\cite[page~24]{pixy} Subsection~\ref{sec:references} on page~\pageref{sec:references} provides more information on this.
 
 \section{Alias Analysis in Pixy}
 
 For its alias analysis, Pixy uses a modified version of the points-to-analysis described by Khedker et.\,al~\cite[page 119ff]{data-flow-analysis}, including the concept of ``must'' and ``may'' aliases.
 
-\paragraph{Must-aliases} are relationships between variables that are aliases to the same ZVAL independent of the actual executed program path.
+\paragraph{Must-aliases} are relationships between variables that are aliases to the same ZVAL, independent of the actual executed program path.
 \index{must-alias}\index{alias!must-|see{must-alias}}
 
 \paragraph{May-aliases} are relationships between variables that are aliases only for some executed program paths.
 \index{may-alias}\index{alias!may-|see{may-alias}}
 
-This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b} are tainted and \texttt{\$a} gets sanitized. If \texttt{\$a} and \texttt{\$b} are must-aliases, \texttt{\$b} can safely be marked to be sanitized as well. However, if both variables are may-aliases, the scanner should make a conservative decision and regard \texttt{\$b} as still to be tainted.
+This separation helps in cases where two variables \texttt{\$a} and \texttt{\$b} are tainted and the variable \texttt{\$a} gets sanitized. If \texttt{\$a} and \texttt{\$b} are must-aliases, \texttt{\$b} can safely be marked to be sanitized as well. However, if both variables are may-aliases, the scanner should make a conservative decision and regard \texttt{\$b} as still to be tainted.
 
 This concept comes into use both for intraprocedural as well as interprocedural alias analysis.
 
@@ -24,9 +24,9 @@ This concept comes into use both for intraprocedural as well as interprocedural 
 
 This section describes how Pixy conducts alias analysis within a function or method (as explained in~\cite{pixy}).
 
-Pixy keeps record for all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
+Pixy keeps record of all must-aliases and may-aliases for each line of program code. The must-aliases are represented as unordered and disjoint sets of variables that are certain to be references to the same ZVAL at a certain point at the program. May-aliases are represented the same way. Let's have a look at an example.
 
-Note: In these examples, the sets of must-aliases and may-aliases always refer to point of execution after the last code line listed above.
+\paragraph{Note:} In these examples, the sets of must-aliases and may-aliases always refer to point of execution after the last code line listed above.
 
 At the beginning of a function or method, the sets of may-aliases and must-aliases are empty:
 
@@ -103,7 +103,7 @@ After control flow has been returned from a method, the following alias informat
 
 For tracking global variables, the notation of must-aliases and may-aliases is changed by adding a method name prefix to the variable name. For the global symbol table, Pixy uses a ``special'' function \texttt{m} (for \texttt{main}).
 
-Let's have an example:
+Let's have at look at an example:
 
 At the beginning, there are no must-aliases or may-aliases. This information (particularly, the information on the global aliases) then gets propagated into the function:
 
@@ -186,7 +186,7 @@ $mustAliases = \{(foo.a1, foo.a2), (m.x1, m.x2, m.x3)\}, mayAliases = \{\}$
 
 \subsubsection{Aliases Between Function Parameters Passed by Reference}
 
-By default, PHP passes function parameters by value. However, it also is possible to have function parameters passed by referenced by using an ampersand in the function declaration. These cases are relevant for the alias analysis.
+By default, PHP passes function parameters by value. However, it also is possible to have function parameters passed by reference by using an ampersand in the function declaration. These cases are relevant for the alias analysis.
 
 When the callee has two parameters that are passed by reference, and the caller passes two variables that are aliases, the alias analysis needs to propagate this information into the callee.
 
@@ -284,7 +284,7 @@ $mustAliases = \{(bar.b1, m.a1), (bar.b3, m.a3)\}, mayAliases = \{(bar.b2, m.a2)
 
 When a tainted object propagation scanner (see section~\ref{tainted-object-propagation} on page~\pageref{tainted-object-propagation}) tracks the taint state of variables, alias information is very important both for increasing recall (\ie reducing the number of false negatives) as well as for increasing precision (\ie reducing the number of false positives).
 
-For tainted object propagation analysis, variables can have one of two possible states: tainted or untainted. A variable gets marked as tainted when it is assigned a values that originates from a sink---be it directly, or via another tainted variable. A variable gets marked as untainted either when it is assigned a safe value (\eg a literal or an untainted variable), or when it gets sanitized.
+For tainted object propagation analysis, variables can have one of two possible states: tainted or untainted. A variable gets marked as tainted when it is assigned a value that originates from a sink---be it directly, or via another tainted variable. A variable gets marked as untainted either when it is assigned a safe value (\eg a literal or an untainted variable), or when it gets sanitized.
 
 The impact of must-aliases on tainting is very simple: When a variable is marked as tainted, all its must-aliases get marked as tainted as well. The same goes for the variable being marked as untainted.
 

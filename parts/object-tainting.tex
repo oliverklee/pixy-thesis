@@ -17,7 +17,7 @@ class Foo {
 }
 \end{phpcode}
 
-Note: This piece of code still uses the PHP~4 way of declaring member variables. Using the PHP~5 way with access keywords like \texttt{public}, \texttt{protected} or \texttt{private} would work correspondingly.
+\paragraph{Note:} This piece of code still uses the PHP~4 way of declaring member variables. Using the PHP~5 way with access keywords like \texttt{public}, \texttt{protected} or \texttt{private} would work correspondingly.
 
 \begin{figure}[htb]
   \begin{center}
@@ -27,9 +27,9 @@ Note: This piece of code still uses the PHP~4 way of declaring member variables.
   \end{center}
 \end{figure}
 
-At the point where Pixy's \texttt{TacConverter}\footnote{See section~\ref{tacconverter} on page~\pageref{tacconverter} for details.} class encounters the class definition, it would be neither necessary nor helpful to save the taint state\footnote{See section~\ref{taint-state} on page~\pageref{taint-state} for details.}\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
+At the point where Pixy's \texttt{TacConverter} (section~\ref{tacconverter} on page~\pageref{tacconverter}) class encounters the class definition, it would be neither necessary nor helpful to save the taint state (section~\ref{taint-state} on page~\pageref{taint-state})\label{fields-not-saved-on-new} of the fields for new class instances: Member variables that have not been written yet by any code can always be considered untainted as the PHP interpreter only allows literals as default values, and Pixy always assumes literals to be untainted. Furthermore, uninitialized \emph{member variables} cannot be overwritten using request parameters even if \texttt{register\_globals}\index{register\_globals} is enabled. This is different to the way PHP handles uninitialized local or global variables (see section~\ref{register-globals}).
 
-In addition, the list of declared fields might be only a subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
+In addition, the list of declared fields might be a mere subset of the fields that are actually accessed in the code: If the PHP interpreter finds a read or write access to an undeclared field, it creates this field for that particular instance on the fly, initializes it with \texttt{null}, and issues a PHP strict warning.
 
 
 
@@ -133,7 +133,7 @@ Both for the left side of assignments as well as for all expressions, we need to
 
 As Pixy currently does not model the---relatively rare---case of variable variables, this approach does not model them on the field level either. Instead, this approach uses Pixy's special place \emph{specialPlaceForVariableVariables} that keeps this place out of taint analysis.
 
-Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. In other words: A \texttt{cvar} node in the parse tree is equivalent with a variable being access, \eg \texttt{\$a} or \texttt{\$foo->bar}.
+Looking at the big picture, both for left-side and right-side expressions, the \texttt{TacConverter} walks the field access chain to the end, using existing fields in the object's symbol tables or creating new ones as required. There are two basic cases we need to cover: a write access to a place, \ie an assignment, and a read access---be it as the right part of an assignment, as part of a compound expression or as a parameter in a function call. In each and every case, the parse tree for the variable expression has a \texttt{cvar} node in it. In other words: A \texttt{cvar} node in the parse tree is equivalent to a variable being accessed, \eg \texttt{\$a} or \texttt{\$foo->bar}.
 
 This approach expands the \texttt{cvar} function to also return places for field accesses.
 
@@ -255,7 +255,7 @@ Variable getOrCreateVariableInSymbolTable(
 
 When a class gets instantiated, the \texttt{TacConverter} needs to create a symbol table entry to store a new \texttt{ObjectVariable} instance in.
 
-In the following code example, the class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
+In the following code example, the \texttt{Foo} class declared above gets instantiated in the \texttt{\$foo} variable. The corresponding subtree of the PHP parse tree looks like figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}.
 
 \begin{phpcode}
 $foo = new Foo();
@@ -306,7 +306,7 @@ An alias analysis for objects needs to take two aspects into account: that objec
 
 In addition to the must-aliases and may-aliases, Pixy needs to track references between objects. In order to do so, Pixy needs to leverage its existing type detection for variables. The approach to object references is quite similar to that for variables aliases: As with may-aliases and must-aliases for variables, the analysis tracks \emph{must-references} and \emph{may-references} for objects.
 
-In the object reference analysis, the same cases as with the alias analysis are relevant: assignments, \texttt{unset} calls, and function calls with parameters.
+In the object reference analysis, the same cases are relevant as with the alias analysis: assignments, \texttt{unset} calls, and function calls with parameters.
 
 
 \subsubsection{Assignments}
@@ -372,7 +372,7 @@ if (...) {
 
 $mustReferences = \{\}, mayReferences = \{(bar, foo), (bar, foo2)\}$
 
-\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and get handled accordingly.
+\paragraph{Note:} This only affects assignments by value. Assignments by reference (using the \texttt{=~\&} assigment operator) still are real aliases and are handled accordingly.
 
 
 \subsubsection{Unset Calls}
@@ -439,7 +439,7 @@ Now a field is accessed, causing the field to be created if it does not exist at
 $x = $a->name;
 \end{phpcode}
 
-Before any further alias information for this line of code is evaluated, the alias information gets updated as following:
+Before any further alias information for this line of code is evaluated, the alias information gets updated as follows:
 
 $mustAliases = \{(a, b), (a.name, b.name)\}, mayAliases = \{(a, c), (a.name, c.name)\}$
 
@@ -465,7 +465,7 @@ mustAliases & = \{(a.name, b.name)\}, & mayAliases & = \{(a.name, c.name)\}
 
 \subsubsection{Unset: Removing aliases or references}
 
-When an object variable is dropped from the symbol table via \texttt{unset}, all occurrences of this object's fields need to be removed from all must-aliases, and may-aliases.
+When an object variable is dropped from the symbol table via \texttt{unset}, all occurrences of this object's fields need to be removed from all must-aliases and may-aliases.
 
 For example, we have the following must-aliases and may-aliases:
 
@@ -501,7 +501,7 @@ if (...) {
   $b->name = $x;
 \end{phpcode}
 
-Still within the condition, \texttt{\$b} and \texttt{\$a} after must-references, and the fields corresponding are must-references.
+Still within the condition, \texttt{\$b} and \texttt{\$a} are must-references, and the fields correspondingly are must-aliases, too:
 
 $\begin{array}{llll}
 mustReferences & = \{(a, b)\}, & mayReferences & = \{\} \\
