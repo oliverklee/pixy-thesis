@@ -139,7 +139,7 @@ This approach expands the \texttt{cvar} function to also return places for field
 
 \paragraph{Note:} The listed pseudo-code takes a few shortcuts: It assumes that there are some convenience functions available for tree walking, array processing and string processing, and that functions like \texttt{cvar} return \texttt{AbstractPlace} instead of a \texttt{TacAttributes} wrapper.
 
-\begin{textcode}
+\begin{javacode}
 /**
  * Returns the AbstractPlace that corresponds to a cvar node in the
  * parse tree.
@@ -151,9 +151,9 @@ AbstractPlace cvar(
 
   return getLeftPlaceForNameChain(nameChain, functionSymbolTable);
 }
-\end{textcode}
+\end{javacode}
 
-\begin{textcode}
+\begin{javacode}
 /**
  * Walks a cvar parse node subtree and extracts the variable name
  * or chained field names from it. The dollar sign from the first
@@ -184,9 +184,9 @@ String[] flattenCvarTreeToNameChain(ParseNode subtreeRoot) {
 
   return nameChain;
 }
-\end{textcode}
+\end{javacode}
 
-\begin{textcode}
+\begin{javacode}
 /**
  * Gets the AbstractPlace for a variable name chain from symbolTable.
  *
@@ -226,9 +226,9 @@ AbstractPlace getLeftPlaceForNameChain(
     ((ObjectVariable) firstPlaceFromNameChain).symbolTable
   );
 }
-\end{textcode}
+\end{javacode}
 
-\begin{textcode}
+\begin{javacode}
 /**
  * Retrieves the Variable stored under the given variableName from
  * the symbolTable.
@@ -248,7 +248,7 @@ Variable getOrCreateVariableInSymbolTable(
 
   return newVariable;
 }
-\end{textcode}
+\end{javacode}
 
 
 \subsection{Class Instantiation}
@@ -271,7 +271,7 @@ $foo = new Foo();
 
 In pseudo-code, processing this assignment would look like this:
 
-\begin{textcode}
+\begin{javacode}
 /**
  * Processes an expr_without_variable node and returns the
  * AbstractPlace contained in the node (if any).
@@ -290,7 +290,7 @@ AbstractPlace expr_without_variable(ParseNode subtreeRoot) {
 
   // More existing code for processing variables and literals.
 }
-\end{textcode}
+\end{javacode}
 
 \paragraph{Note:} In the \texttt{TacConverter} class, the functions are named after the opcodes in the PHP parse tree. The function \texttt{expr\_without\_variable} is called twice because it occurs twice in the subtree (see figure~\ref{fig:parse-tree-new-foo} on page~\pageref{fig:parse-tree-new-foo}).
 
