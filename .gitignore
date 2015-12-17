@@ -34,3 +34,4 @@
 *.backup
 *.kilepr
 .DS_Store
+/_minted*
