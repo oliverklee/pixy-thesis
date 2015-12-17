@@ -183,6 +183,10 @@
 %----------------------------------------------------------------------------------
 %Packages and parameters
 %----------------------------------------------------------------------------------
+
+% avoid Warnings: \float@addtolists detected!
+\usepackage{scrhack}
+
 %inputencoding for UTF-8
 \usepackage[utf8]{inputenc}
 
@@ -216,7 +220,7 @@
 
 %Zitierbefehle
 %citation commands
-\newcommand{\fullcite}{\citep} %for "Author [1980]"
+\newcommand{\fullcite}{\citep} % for "Author [1980]"
 \renewcommand{\citeyear}{\citeyearpar} %for "[1980]"
 
 %paket für erweiterte kontrollstrukturen
